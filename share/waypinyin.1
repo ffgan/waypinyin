@@ -1,0 +1,48 @@
+.TH WAYPINYIN 1 "2026-11-14" "Waypinyin 0.1.0"
+.SH NAME
+waypinyin \- offline Pinyin input method for IBus
+.SH SYNOPSIS
+.B waypinyin
+.RI [ --settings " | " --check-data " | " --help " | " --version ]
+.SH DESCRIPTION
+Waypinyin provides Chinese Pinyin input through IBus, primarily for GNOME Wayland.
+Without arguments it serves as an IBus engine. Select Waypinyin in the desktop's
+input source settings after installation and a session restart.
+.SH OPTIONS
+.TP
+.B --settings
+Open input preferences and dictionary management.
+.TP
+.B --check-data
+Load and validate the dictionary, without requiring a display or an IBus connection.
+.TP
+.B --help, -h
+Show command help.
+.TP
+.B --version, -V
+Show the program version.
+.SH ENVIRONMENT
+.TP
+.B WAYPINYIN_LEXICON
+Override the dictionary image with an explicit file path. An invalid path is an error.
+Only use trusted dictionary images; do not modify or truncate an image while mapped.
+.TP
+.B XDG_DATA_HOME
+Absolute user data directory. Defaults to $HOME/.local/share.
+.TP
+.B XDG_CONFIG_HOME
+Absolute configuration directory. Defaults to $HOME/.config.
+.SH FILES
+.TP
+.I $XDG_CONFIG_HOME/waypinyin/config.toml
+Input preferences.
+.TP
+.I $XDG_DATA_HOME/waypinyin/user.txt
+Personal learning log. Contains locally stored typing choices.
+.TP
+.I $XDG_DATA_HOME/waypinyin/dictionaries/
+User-imported dictionaries, retained on package removal.
+.SH EXIT STATUS
+Zero on success; two for invalid arguments; nonzero for startup or data errors.
+.SH SEE ALSO
+.BR ibus (1)

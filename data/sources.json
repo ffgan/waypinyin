@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "note": "Historical claims are evidence to investigate, not clearance to redistribute. Checksums identify current local bytes, not an upstream snapshot.",
+  "files": [
+    {
+      "path": "data/sentences.txt",
+      "sha256": "568d1a32fe1c284805ac8541e8f91dc6776d4d3ea14b3b133a4b94177ad7007b",
+      "upstream_urls": [],
+      "upstream_revision": null,
+      "claimed_license": "MIT",
+      "copyright": "Copyright (c) 2026 emt",
+      "transformation": "Locally authored everyday examples; no external corpus or user typing history.",
+      "license_status": "verified-local",
+      "required_evidence": []
+    }
+  ],
+  "demo_files": [
+    {
+      "path": "tests/fixtures/demo/cedict.txt",
+      "sha256": "9878da1f9f5df82af367949881b23f2a5fbd5b29ea2a598a1beb46314ee73f03",
+      "claimed_license": "MIT",
+      "copyright": "2026 Waypinyin contributors",
+      "license_status": "verified-local",
+      "transformation": "Original eighteen-record demonstration vocabulary and artificial weights; not derived from third-party corpus data.",
+      "required_evidence": []
+    },
+    {
+      "path": "tests/fixtures/demo/dict.txt",
+      "sha256": "046320b05b3c2cc8797d742f6f585064bbe1c9f0cc2e2007fe882e7ecb58e39e",
+      "claimed_license": "MIT",
+      "copyright": "2026 Waypinyin contributors",
+      "license_status": "verified-local",
+      "transformation": "Original eighteen-record demonstration vocabulary and artificial weights; not derived from third-party corpus data.",
+      "required_evidence": []
+    },
+    {
+      "path": "tests/fixtures/demo/extra.txt",
+      "sha256": "9878da1f9f5df82af367949881b23f2a5fbd5b29ea2a598a1beb46314ee73f03",
+      "claimed_license": "MIT",
+      "copyright": "2026 Waypinyin contributors",
+      "license_status": "verified-local",
+      "transformation": "Original eighteen-record demonstration vocabulary and artificial weights; not derived from third-party corpus data.",
+      "required_evidence": []
+    },
+    {
+      "path": "tests/fixtures/demo/freq.txt",
+      "sha256": "d042c40a482e45bfdb2ef2883682fb65500aa3d14361ace53abe06559340c0e5",
+      "claimed_license": "MIT",
+      "copyright": "2026 Waypinyin contributors",
+      "license_status": "verified-local",
+      "transformation": "Original eighteen-record demonstration vocabulary and artificial weights; not derived from third-party corpus data.",
+      "required_evidence": []
+    },
+    {
+      "path": "tests/fixtures/demo/frost.txt",
+      "sha256": "9878da1f9f5df82af367949881b23f2a5fbd5b29ea2a598a1beb46314ee73f03",
+      "claimed_license": "MIT",
+      "copyright": "2026 Waypinyin contributors",
+      "license_status": "verified-local",
+      "transformation": "Original eighteen-record demonstration vocabulary and artificial weights; not derived from third-party corpus data.",
+      "required_evidence": []
+    },
+    {
+      "path": "tests/fixtures/demo/gb2312.txt",
+      "sha256": "2a0dbe17213160fa54f006143e60f9bfa960663bcb910aa6b55a0efe917364fc",
+      "claimed_license": "MIT",
+      "copyright": "2026 Waypinyin contributors",
+      "license_status": "verified-local",
+      "transformation": "Original eighteen-record demonstration vocabulary and artificial weights; not derived from third-party corpus data.",
+      "required_evidence": []
+    },
+    {
+      "path": "tests/fixtures/demo/pinyin.txt",
+      "sha256": "9878da1f9f5df82af367949881b23f2a5fbd5b29ea2a598a1beb46314ee73f03",
+      "claimed_license": "MIT",
+      "copyright": "2026 Waypinyin contributors",
+      "license_status": "verified-local",
+      "transformation": "Original eighteen-record demonstration vocabulary and artificial weights; not derived from third-party corpus data.",
+      "required_evidence": []
+    },
+    {
+      "path": "tests/fixtures/demo/terms.txt",
+      "sha256": "9878da1f9f5df82af367949881b23f2a5fbd5b29ea2a598a1beb46314ee73f03",
+      "claimed_license": "MIT",
+      "copyright": "2026 Waypinyin contributors",
+      "license_status": "verified-local",
+      "transformation": "Original eighteen-record demonstration vocabulary and artificial weights; not derived from third-party corpus data.",
+      "required_evidence": []
+    },
+    {
+      "path": "tests/fixtures/demo/ts-characters.txt",
+      "sha256": "9878da1f9f5df82af367949881b23f2a5fbd5b29ea2a598a1beb46314ee73f03",
+      "claimed_license": "MIT",
+      "copyright": "2026 Waypinyin contributors",
+      "license_status": "verified-local",
+      "transformation": "Original eighteen-record demonstration vocabulary and artificial weights; not derived from third-party corpus data.",
+      "required_evidence": []
+    }
+  ],
+  "excluded_files": [
+    {
+      "path": "data/cedict.txt",
+      "sha256": "707a515fa6ba56c003759c652aca92d22574d51aaba34d834bcc6fc72845c48f",
+      "upstream_urls": [
+        "https://www.mdbg.net/chinese/dictionary?page=cc-cedict",
+        "https://cc-cedict.org/wiki/"
+      ],
+      "upstream_revision": null,
+      "claimed_license": "CC-BY-SA-4.0",
+      "copyright": "CC-CEDICT contributors",
+      "transformation": "Simplified words with pinyin; historical snapshot and extraction script unavailable.",
+      "license_status": "unresolved",
+      "required_evidence": [
+        "Identify exact upstream snapshot and its license notices",
+        "Recover or document the historical extraction and mixing procedure",
+        "Confirm redistribution conditions for the shipped derivative"
+      ]
+    },
+    {
+      "path": "data/dict.txt",
+      "sha256": "0127667cd084ca5932a8e6c023bcde09b8220ce826fa3b1e6214f768c14cc922",
+      "upstream_urls": [
+        "https://github.com/fcitx/libime"
+      ],
+      "upstream_revision": null,
+      "claimed_license": "LGPL-2.1-or-later",
+      "copyright": "Copyright 2015-2022 CSSlayer",
+      "transformation": "Simplified dictionary; zero-frequency multi-character words receive score 1.",
+      "license_status": "unresolved",
+      "required_evidence": [
+        "Identify exact upstream snapshot and its license notices",
+        "Recover or document the historical extraction and mixing procedure",
+        "Confirm redistribution conditions for the shipped derivative"
+      ]
+    },
+    {
+      "path": "data/extra.txt",
+      "sha256": "deaea0c6bfff6231b6f50c0c55bf1893e3e4d9ca8495c5737a111bcf6aab2836",
+      "upstream_urls": [
+        "https://github.com/iDvel/rime-ice",
+        "https://android.googlesource.com/platform/packages/inputmethods/PinyinIME"
+      ],
+      "upstream_revision": null,
+      "claimed_license": "GPL-3.0-only AND Apache-2.0 AND CC-BY-3.0 AND LGPL-3.0-only AND MIT",
+      "copyright": "rime-ice authors; AOSP; upstream component authors",
+      "transformation": "Mixed word and frequency extraction; historical per-entry provenance not retained. See NOTICE.",
+      "license_status": "unresolved",
+      "required_evidence": [
+        "Identify exact upstream snapshot and its license notices",
+        "Recover or document the historical extraction and mixing procedure",
+        "Confirm redistribution conditions for the shipped derivative"
+      ]
+    },
+    {
+      "path": "data/freq.txt",
+      "sha256": "25599e00347b893e55c3058a748819b3fe19403291cd12f7c03af128e7f3fe45",
+      "upstream_urls": [],
+      "upstream_revision": null,
+      "claimed_license": null,
+      "copyright": "Unknown; described historically as OpenSubtitles 2018 word counts",
+      "transformation": "Exact download, license and extraction script are not recorded.",
+      "license_status": "unresolved",
+      "required_evidence": [
+        "Identify exact upstream snapshot and its license notices",
+        "Recover or document the historical extraction and mixing procedure",
+        "Confirm redistribution conditions for the shipped derivative"
+      ]
+    },
+    {
+      "path": "data/frost.txt",
+      "sha256": "09fd03745cc1cdf4b48fc09d7edfef052164a811640ef857946196c267deeb87",
+      "upstream_urls": [
+        "https://github.com/gaboolic/rime-frost"
+      ],
+      "upstream_revision": null,
+      "claimed_license": "GPL-3.0 (exact only/or-later choice unresolved)",
+      "copyright": "rime-frost and rime-ice authors",
+      "transformation": "Subset of base/ext dictionaries with historical reweighting; see NOTICE.",
+      "license_status": "unresolved",
+      "required_evidence": [
+        "Identify exact upstream snapshot and its license notices",
+        "Recover or document the historical extraction and mixing procedure",
+        "Confirm redistribution conditions for the shipped derivative"
+      ]
+    },
+    {
+      "path": "data/gb2312.txt",
+      "sha256": "e25cb237ca92dc4460a274f9bffe3a2bacc89ac64c545c29b436154f6142d578",
+      "upstream_urls": [],
+      "upstream_revision": null,
+      "claimed_license": null,
+      "copyright": "Unknown",
+      "transformation": "GB2312 character inventory; generating source and redistribution evidence unavailable.",
+      "license_status": "unresolved",
+      "required_evidence": [
+        "Identify exact upstream snapshot and its license notices",
+        "Recover or document the historical extraction and mixing procedure",
+        "Confirm redistribution conditions for the shipped derivative"
+      ]
+    },
+    {
+      "path": "data/pinyin.txt",
+      "sha256": "90c11bd680ccfe7f2617a6e25abdb1fb87b5540df3e6f011ca50aaf3c7263a89",
+      "upstream_urls": [
+        "https://github.com/mozillazg/pinyin-data"
+      ],
+      "upstream_revision": null,
+      "claimed_license": "MIT (repository claim; underlying Unihan data requires verification)",
+      "copyright": "mozillazg and upstream data contributors",
+      "transformation": "kMandarin readings; exact snapshot and transformation unavailable.",
+      "license_status": "unresolved",
+      "required_evidence": [
+        "Identify exact upstream snapshot and its license notices",
+        "Recover or document the historical extraction and mixing procedure",
+        "Confirm redistribution conditions for the shipped derivative"
+      ]
+    },
+    {
+      "path": "data/terms.txt",
+      "sha256": "1dae6c570965529622e45479fb3864ce822c9db926e265eee93e830c80b9b690",
+      "upstream_urls": [],
+      "upstream_revision": null,
+      "claimed_license": "MIT",
+      "copyright": "Waypinyin contributors",
+      "transformation": "Locally maintained terms and weights according to NOTICE; authorship of all historic entries awaits confirmation.",
+      "license_status": "unresolved",
+      "required_evidence": [
+        "Identify exact upstream snapshot and its license notices",
+        "Recover or document the historical extraction and mixing procedure",
+        "Confirm redistribution conditions for the shipped derivative"
+      ]
+    },
+    {
+      "path": "data/ts-characters.txt",
+      "sha256": "9ff46a7d30e5765375eb13d33f2b03a34d298913caf2b120380679f33ae1642d",
+      "upstream_urls": [
+        "https://github.com/BYVoid/OpenCC"
+      ],
+      "upstream_revision": null,
+      "claimed_license": "Apache-2.0",
+      "copyright": "OpenCC contributors",
+      "transformation": "Traditional-to-simplified character mapping; exact snapshot unavailable.",
+      "license_status": "unresolved",
+      "required_evidence": [
+        "Identify exact upstream snapshot and its license notices",
+        "Recover or document the historical extraction and mixing procedure",
+        "Confirm redistribution conditions for the shipped derivative"
+      ]
+    }
+  ],
+  "distribution": "public-source-with-original-demo-only"
+}

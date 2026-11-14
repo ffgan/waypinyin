@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Waypinyin Settings
+Name[zh_CN]=Waypinyin 输入设置
+Comment=Configure Pinyin input and dictionaries
+Comment[zh_CN]=配置拼音输入与词库
+Exec=waypinyin --settings
+Icon=waypinyin
+Categories=Settings;
+Terminal=false

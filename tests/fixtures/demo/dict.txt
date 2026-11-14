@@ -1,0 +1,19 @@
+# Original minimal demonstration vocabulary; MIT. Artificial weights.
+你	ni	1000
+好	hao	900
+你好	ni'hao	2000
+中	zhong	800
+国	guo	800
+中国	zhong'guo	1800
+我	wo	1000
+们	men	700
+我们	wo'men	1600
+的	de	1500
+人	ren	600
+民	min	500
+人民	ren'min	1000
+拼	pin	400
+音	yin	400
+拼音	pin'yin	900
+说	shuo	700
+手	shou	700

@@ -1,0 +1,89 @@
+Lexicon sources and historical attribution claims.
+The project's MIT license does NOT relicense third-party data or the compiled
+lexicon. This inventory is not redistribution clearance. data/sources.json
+records current file hashes and unresolved provenance. Public release is blocked
+until exact upstream versions, attribution and combination conditions are verified.
+Canonical license texts are in LICENSES/; their presence does not prove that a
+particular historical file is covered by that license.
+
+data/dict.txt
+    Simplified-Chinese pinyin dictionary from fcitx/libime (dict_sc.txt).
+    Copyright 2015-2022 CSSlayer.
+    License: LGPL-2.1-or-later.
+    https://github.com/fcitx/libime
+    A multi-character word with no positive frequency is kept at score 1,
+    so it stays typeable behind every word that has a real count.
+
+data/freq.txt
+    OpenSubtitles 2018 word counts. A word keeps this count when the newer
+    lists do not rank it higher.
+
+data/extra.txt
+    Additional words and higher counts for words the subtitle list ranked
+    too low. Counts come from 雾凇拼音 and the AOSP PinyinIME dictionary.
+    A word is kept when it is at least 5% as common as the best word of
+    the same spelling. If that spelling is also a single character, the
+    word stays just below that character.
+
+    雾凇拼音 cn_dicts/base.dict.yaml, cn_dicts/ext.dict.yaml, and
+    cn_dicts/tencent.dict.yaml.
+    Copyright the rime-ice authors.
+    License: GPL-3.0-only.
+    https://github.com/iDvel/rime-ice
+    base.dict.yaml merges, among other lists, 华宇野风系统词库 (public domain),
+    清华大学开源词库 THUOCL (MIT), and 腾讯词向量 (CC BY 3.0).
+    ext.dict.yaml adds longer words, including entries from 简化字八股文
+    (rime/rime-essay-simp, LGPL-3.0).
+    tencent.dict.yaml is the Tencent AI Lab word embedding list (CC BY 3.0),
+    arranged by rime-ice. Readings are the single rime-ice character reading
+    that holds at least 5% of that character's weight. Words with more than
+    one such reading are left out. These added words score 1, so a fuller
+    spelling can still find them without passing the words already ranked
+    from subtitles, base, and AOSP.
+
+    Android Open Source Project PinyinIME
+    jni/data/rawdict_utf16_65105_freq.txt
+    Copyright 2009, The Android Open Source Project.
+    License: Apache-2.0.
+    https://android.googlesource.com/platform/packages/inputmethods/PinyinIME
+
+data/ts-characters.txt
+    OpenCC traditional-to-simplified character table. Apache-2.0.
+
+data/pinyin.txt
+    kMandarin readings via https://github.com/mozillazg/pinyin-data.
+    A GB2312 character with one of these readings is kept even when the
+    subtitle list never counted it. That reading then scores 1.
+
+data/frost.txt
+    Words, readings, and weights from 白霜拼音 that were missing or ranked
+    lower here. Only cn_dicts/base.dict.yaml and cn_dicts/ext.dict.yaml.
+    A listed weight fills in a word the subtitle list does not count, or
+    raises a weight that came only from the older lists. It does not rise
+    above a subtitle count, and it does not lower one.
+    A new word is kept when it is at least 5% as common as the best word
+    of the same spelling, and just below that spelling's character.
+    A longer word below 5% of a word on its prefix is stored at weight 3,
+    so it stays findable without crowding that shorter word.
+    Copyright the rime-frost authors, based on 雾凇拼音.
+    License: GPL-3.0.
+    https://github.com/gaboolic/rime-frost
+
+data/terms.txt
+    Computer words the lists above left out or scored at zero, plus a few
+    characters the subtitle counts buried (栈, 帧, 宏, 库, 桩). Each listed
+    weight stays under the common homophone of the same spelling, and high
+    enough to land on the first page. Single characters stay on the first
+    two pages, still behind the everyday character.
+
+data/cedict.txt
+    Simplified words from CC-CEDICT that the lists above do not already
+    contain. Each scores 2, above the unscored tail and below a real count.
+    The same 5% spelling rule drops a word that would crowd a common reading.
+    License: CC BY-SA 4.0.
+    https://www.mdbg.net/chinese/dictionary?page=cc-cedict
+    https://cc-cedict.org/wiki/
+
+data/sentences.txt
+    Locally authored everyday-language examples for the lightweight sentence
+    decoder's character-pair prior. No external corpus or user typing history.

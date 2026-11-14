@@ -1,0 +1,34 @@
+[package]
+name = "waypinyin"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.99.1"
+license = "MIT"
+# Third-party data is not cleared for registry redistribution; see docs/RELEASE.md.
+publish = false
+readme = "README.md"
+repository = "https://github.com/ffgan/waypinyin"
+homepage = "https://github.com/ffgan/waypinyin"
+
+description = "Pinyin IME for GNOME Wayland via the IBus text-input path"
+
+[features]
+default = ["bundled-fonts"]
+bundled-fonts = ["eframe/default_fonts"]
+
+[dependencies]
+zbus = { version = "6", default-features = false, features = ["tokio", "service"] }
+tokio = { version = "1", features = ["macros", "rt"] }
+eframe = { version = "0.33", default-features = false, features = ["glow", "wayland", "x11"] }
+rfd = "0.15"
+plist = "1"
+encoding_rs = "0.8"
+flate2 = "1"
+
+[profile.dev.build-override]
+opt-level = 3
+debug = false
+
+[profile.release.build-override]
+opt-level = 3
+debug = false

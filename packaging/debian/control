@@ -1,0 +1,21 @@
+Source: waypinyin
+Section: utils
+Priority: optional
+Maintainer: ffgan <ffgandev@gmail.com>
+Build-Depends: debhelper-compat (= 13), dh-cargo, cargo (>= 1.99.1), rustc (>= 1.99.1),
+ python3 (>= 3.11), pkg-config, libfontconfig1-dev,
+ librust-zbus-6+tokio-dev, librust-zbus-6+service-dev,
+ librust-tokio-1+macros-dev, librust-tokio-1+rt-dev,
+ librust-eframe-0.33+glow-dev, librust-eframe-0.33+wayland-dev, librust-eframe-0.33+x11-dev,
+ librust-rfd-0.15-dev, librust-plist-1-dev, librust-encoding-rs-0.8-dev, librust-flate2-1-dev
+Standards-Version: 4.7.3
+Rules-Requires-Root: no
+Homepage: https://github.com/ffgan/waypinyin
+
+Package: waypinyin
+Architecture: amd64 arm64
+Depends: ${shlibs:Depends}, ${misc:Depends}, ibus, fontconfig
+Recommends: fonts-noto-cjk, xdg-desktop-portal
+Description: Offline Pinyin input method for IBus
+ Chinese Pinyin input for GNOME Wayland, with local learning, fuzzy Pinyin,
+ sentence composition and graphical dictionary management.
