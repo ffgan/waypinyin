@@ -14,7 +14,8 @@ jobs:
       - name: Native tools
         run: sudo apt-get update && sudo apt-get install -y libfontconfig1-dev desktop-file-utils
       - name: Prepare native Cargo dependencies
-        run: cargo fetch --locked --target "$(rustc -vV | sed -n 's/^host: //p')"
+        run: |
+          cargo fetch --locked --target "$(rustc -vV | sed -n 's/^host: //p')"
       - name: Format, lint, and tests
         run: |
           cargo fmt --all -- --check
