@@ -1,0 +1,350 @@
+{
+  "runs": 7,
+  "image_bytes": 141873016,
+  "dictionaries": 100,
+  "cold_faults_observed": true,
+  "median": {
+    "warm_startup": {
+      "before": {
+        "load_us": 37081,
+        "minor_faults": 2171,
+        "major_faults": 0
+      },
+      "after": {
+        "load_us": 35370,
+        "minor_faults": 2170,
+        "major_faults": 0
+      }
+    },
+    "cold_startup": {
+      "before": {
+        "load_us": 506293,
+        "minor_faults": 1087,
+        "major_faults": 1086
+      },
+      "after": {
+        "load_us": 152807,
+        "minor_faults": 2138,
+        "major_faults": 35
+      }
+    },
+    "input": {
+      "before": {
+        "load_us": 43080,
+        "minor_faults": 2170,
+        "major_faults": 0,
+        "compositions": 1000,
+        "p50_ns": 118504,
+        "p95_ns": 128592
+      },
+      "after": {
+        "load_us": 41932,
+        "minor_faults": 2170,
+        "major_faults": 0,
+        "compositions": 1000,
+        "p50_ns": 116860,
+        "p95_ns": 125957
+      }
+    }
+  },
+  "samples": {
+    "warm_startup": {
+      "before": [
+        {
+          "load_us": 36612,
+          "minor_faults": 2172,
+          "major_faults": 0
+        },
+        {
+          "load_us": 36492,
+          "minor_faults": 2172,
+          "major_faults": 0
+        },
+        {
+          "load_us": 37081,
+          "minor_faults": 2169,
+          "major_faults": 0
+        },
+        {
+          "load_us": 37833,
+          "minor_faults": 2171,
+          "major_faults": 0
+        },
+        {
+          "load_us": 36771,
+          "minor_faults": 2171,
+          "major_faults": 0
+        },
+        {
+          "load_us": 37685,
+          "minor_faults": 2170,
+          "major_faults": 0
+        },
+        {
+          "load_us": 37735,
+          "minor_faults": 2170,
+          "major_faults": 0
+        }
+      ],
+      "after": [
+        {
+          "load_us": 35757,
+          "minor_faults": 2170,
+          "major_faults": 0
+        },
+        {
+          "load_us": 35036,
+          "minor_faults": 2169,
+          "major_faults": 0
+        },
+        {
+          "load_us": 34949,
+          "minor_faults": 2169,
+          "major_faults": 0
+        },
+        {
+          "load_us": 35813,
+          "minor_faults": 2170,
+          "major_faults": 0
+        },
+        {
+          "load_us": 34761,
+          "minor_faults": 2170,
+          "major_faults": 0
+        },
+        {
+          "load_us": 36668,
+          "minor_faults": 2170,
+          "major_faults": 0
+        },
+        {
+          "load_us": 35370,
+          "minor_faults": 2170,
+          "major_faults": 0
+        }
+      ]
+    },
+    "cold_startup": {
+      "before": [
+        {
+          "load_us": 506293,
+          "minor_faults": 1085,
+          "major_faults": 1086
+        },
+        {
+          "load_us": 503777,
+          "minor_faults": 1086,
+          "major_faults": 1086
+        },
+        {
+          "load_us": 510453,
+          "minor_faults": 1086,
+          "major_faults": 1086
+        },
+        {
+          "load_us": 510182,
+          "minor_faults": 1088,
+          "major_faults": 1086
+        },
+        {
+          "load_us": 513214,
+          "minor_faults": 1087,
+          "major_faults": 1086
+        },
+        {
+          "load_us": 502997,
+          "minor_faults": 1089,
+          "major_faults": 1086
+        },
+        {
+          "load_us": 501373,
+          "minor_faults": 1087,
+          "major_faults": 1086
+        }
+      ],
+      "after": [
+        {
+          "load_us": 147118,
+          "minor_faults": 2137,
+          "major_faults": 35
+        },
+        {
+          "load_us": 147452,
+          "minor_faults": 2139,
+          "major_faults": 35
+        },
+        {
+          "load_us": 152955,
+          "minor_faults": 2138,
+          "major_faults": 35
+        },
+        {
+          "load_us": 152807,
+          "minor_faults": 2140,
+          "major_faults": 35
+        },
+        {
+          "load_us": 152836,
+          "minor_faults": 2139,
+          "major_faults": 35
+        },
+        {
+          "load_us": 158012,
+          "minor_faults": 2138,
+          "major_faults": 35
+        },
+        {
+          "load_us": 147575,
+          "minor_faults": 2138,
+          "major_faults": 35
+        }
+      ]
+    },
+    "input": {
+      "before": [
+        {
+          "load_us": 43042,
+          "minor_faults": 2170,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 118985,
+          "p95_ns": 128592
+        },
+        {
+          "load_us": 43239,
+          "minor_faults": 2172,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 118403,
+          "p95_ns": 126448
+        },
+        {
+          "load_us": 43616,
+          "minor_faults": 2170,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 118223,
+          "p95_ns": 130085
+        },
+        {
+          "load_us": 43080,
+          "minor_faults": 2170,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 118504,
+          "p95_ns": 133752
+        },
+        {
+          "load_us": 43153,
+          "minor_faults": 2171,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 118353,
+          "p95_ns": 125958
+        },
+        {
+          "load_us": 42869,
+          "minor_faults": 2169,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 119355,
+          "p95_ns": 129273
+        },
+        {
+          "load_us": 42756,
+          "minor_faults": 2172,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 118623,
+          "p95_ns": 127961
+        }
+      ],
+      "after": [
+        {
+          "load_us": 41315,
+          "minor_faults": 2170,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 116860,
+          "p95_ns": 125106
+        },
+        {
+          "load_us": 41630,
+          "minor_faults": 2170,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 117521,
+          "p95_ns": 124845
+        },
+        {
+          "load_us": 41988,
+          "minor_faults": 2171,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 116469,
+          "p95_ns": 134032
+        },
+        {
+          "load_us": 42278,
+          "minor_faults": 2170,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 116810,
+          "p95_ns": 134704
+        },
+        {
+          "load_us": 41932,
+          "minor_faults": 2171,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 115798,
+          "p95_ns": 133942
+        },
+        {
+          "load_us": 41149,
+          "minor_faults": 2170,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 117110,
+          "p95_ns": 125957
+        },
+        {
+          "load_us": 42047,
+          "minor_faults": 2170,
+          "major_faults": 0,
+          "compositions": 1000,
+          "p50_ns": 117020,
+          "p95_ns": 125396
+        }
+      ]
+    }
+  },
+  "environment": {
+    "date": "2026-11-16",
+    "os": "Fedora 45 x86_64",
+    "kernel": "7.3.3-300.fc45.x86_64",
+    "rust": "1.99.1",
+    "profile": "release",
+    "filesystem": "Btrfs on NVMe",
+    "baseline": "start-of-continuation worktree, dictionary inotify already present"
+  },
+  "image_sha256": "12f8997fdddf0320b52d00e1e409e20658076c336ec0e006762c22847e2e0dc7",
+  "probe_sha256": {
+    "before": "50659b852a6702bdf72ca1c9356f48d95bb104aaf83fbe1f7737e7352121b15c",
+    "after": "cef023f35322e1ae7a8f22cf40dc7de874c191ba1c357d4dc5024a2fab06ba34"
+  },
+  "config_syscalls_100_compositions_8_warmups": {
+    "before": {
+      "openat": 109,
+      "read": 218,
+      "statx": 109,
+      "close": 109
+    },
+    "after": {
+      "openat": 1,
+      "read": 2,
+      "statx": 1,
+      "close": 1
+    }
+  }
+}

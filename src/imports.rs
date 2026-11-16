@@ -334,6 +334,7 @@ pub fn root() -> PathBuf {
 pub(crate) struct Catalog {
     rows: BTreeMap<String, Vec<Record>>,
     stamp: Vec<(PathBuf, u64, Option<std::time::SystemTime>)>,
+    watch: Option<crate::watch::DirectoryWatch>,
 }
 impl Catalog {
     #[cfg(all(test, waypinyin_full_lexicon))]
@@ -346,9 +347,9 @@ impl Catalog {
         }
         c
     }
-    fn stamp() -> Vec<(PathBuf, u64, Option<std::time::SystemTime>)> {
+    fn stamp(root: &Path) -> Vec<(PathBuf, u64, Option<std::time::SystemTime>)> {
         let mut files = Vec::new();
-        if let Ok(entries) = fs::read_dir(root()) {
+        if let Ok(entries) = fs::read_dir(root) {
             for e in entries.flatten() {
                 if let Ok(m) = e.metadata() {
                     files.push((e.path(), m.len(), m.modified().ok()));
@@ -359,16 +360,43 @@ impl Catalog {
         files
     }
     pub fn refresh(&mut self) {
-        if self.stamp != Self::stamp() {
-            *self = Self::load();
+        self.refresh_from(&root());
+    }
+
+    fn refresh_from(&mut self, root: &Path) {
+        use crate::watch::Change;
+        match self
+            .watch
+            .as_mut()
+            .map(|watch| watch.poll())
+            .unwrap_or(Change::Reconcile)
+        {
+            Change::Unchanged => (),
+            Change::Changed => *self = Self::load_from(root),
+            Change::Reconcile => {
+                // Reconcile metadata without reparsing unchanged dictionaries.
+                // Renew the watch to detect replaced ancestor directories.
+                let watch = crate::watch::DirectoryWatch::new(root);
+                if self.stamp != Self::stamp(root) {
+                    *self = Self::load_from(root);
+                } else {
+                    self.watch = watch;
+                }
+            }
         }
     }
     pub fn load() -> Self {
+        Self::load_from(&root())
+    }
+
+    fn load_from(root: &Path) -> Self {
         let mut c = Self {
-            stamp: Self::stamp(),
+            // Subscribe before reading so concurrent changes remain queued.
+            watch: crate::watch::DirectoryWatch::new(root),
+            stamp: Self::stamp(root),
             ..Default::default()
         };
-        if let Ok(files) = fs::read_dir(root()) {
+        if let Ok(files) = fs::read_dir(root) {
             for f in files.flatten() {
                 if f.path().extension().is_some_and(|e| e == "tsv") {
                     if let Ok(t) = fs::read_to_string(f.path()) {
@@ -592,5 +620,66 @@ mod scel_version_tests {
         assert_eq!(d.records.len(), 1);
         assert_eq!(d.records[0].code, "a");
         assert_eq!(d.records[0].word, "阿");
+    }
+}
+
+#[cfg(test)]
+mod notification_tests {
+    use super::*;
+
+    #[test]
+    fn catalog_refreshes_on_rewrites_and_keeps_unchanged_rows() {
+        let root = std::env::temp_dir().join(format!("waypinyin-catalog-{}", std::process::id()));
+        fs::create_dir_all(&root).unwrap();
+        let file = root.join("test.tsv");
+        fs::write(&file, "ni\t你\t0\n").unwrap();
+        let mut catalog = Catalog::load_from(&root);
+        let allocation = catalog.rows["n"].as_ptr();
+        catalog.refresh_from(&root);
+        assert_eq!(catalog.rows["n"].as_ptr(), allocation);
+        catalog.watch.as_mut().unwrap().reconcile_next();
+        catalog.refresh_from(&root);
+        assert_eq!(catalog.rows["n"].as_ptr(), allocation);
+
+        // The notification must beat metadata equality, including restored mtime.
+        let modified = fs::metadata(&file).unwrap().modified().unwrap();
+        fs::write(&file, "ni\t呢\t0\n").unwrap();
+        fs::File::options()
+            .write(true)
+            .open(&file)
+            .unwrap()
+            .set_times(fs::FileTimes::new().set_modified(modified))
+            .unwrap();
+        catalog.refresh_from(&root);
+        assert_eq!(catalog.rows["n"][0].word, "呢");
+        fs::remove_file(&file).unwrap();
+        catalog.refresh_from(&root);
+        assert!(catalog.rows.is_empty());
+        fs::remove_dir(&root).unwrap();
+    }
+
+    #[test]
+    fn catalog_recovers_missing_and_replaced_ancestors() {
+        let base =
+            std::env::temp_dir().join(format!("waypinyin-catalog-ancestor-{}", std::process::id()));
+        fs::create_dir_all(&base).unwrap();
+        let root = base.join("parent/dictionaries");
+        let mut catalog = Catalog::load_from(&root);
+        fs::create_dir_all(&root).unwrap();
+        fs::write(root.join("test.tsv"), "ni\t你\t0\n").unwrap();
+        catalog.refresh_from(&root);
+        assert_eq!(catalog.rows["n"][0].word, "你");
+        fs::rename(base.join("parent"), base.join("old")).unwrap();
+        fs::create_dir_all(&root).unwrap();
+        fs::write(root.join("test.tsv"), "ni\t你们\t0\n").unwrap();
+        catalog.watch.as_mut().unwrap().reconcile_next();
+        catalog.refresh_from(&root);
+        assert_eq!(catalog.rows["n"][0].word, "你们");
+        // Confirm that the replacement directory, rather than the old inode,
+        // is now watched without needing the reconciliation timeout.
+        fs::write(root.join("test.tsv"), "ni\t呢\t0\n").unwrap();
+        catalog.refresh_from(&root);
+        assert_eq!(catalog.rows["n"][0].word, "呢");
+        fs::remove_dir_all(&base).unwrap();
     }
 }

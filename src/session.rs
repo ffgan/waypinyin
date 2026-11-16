@@ -5,6 +5,7 @@ use crate::lexicon::{match_reading, plan, Choice, Lexicon, Plan, Pool};
 use std::collections::HashMap;
 use std::fs::{self, File, OpenOptions};
 use std::io::{BufWriter, Read, Write};
+use std::os::unix::fs::OpenOptionsExt;
 use std::path::PathBuf;
 use std::sync::Arc;
 
@@ -32,6 +33,33 @@ const KEY_SHIFT_R: u32 = 0xffe2;
 const HALF_LIFE: u32 = 32;
 const MAX_USER_WORDS: usize = 4000;
 const LISTING_CACHE: usize = 32;
+const MAX_FREQUENT_INPUTS: usize = 128;
+const PRELOAD_FAVORITES: usize = 16;
+const INPUT_HALF_LIFE: u32 = 512;
+
+#[derive(Debug, Clone)]
+struct InputCount {
+    count: u32,
+    tick: u32,
+}
+
+fn input_weight(count: &InputCount, now: u32) -> u32 {
+    let steps = now.saturating_sub(count.tick) / INPUT_HALF_LIFE;
+    if steps >= 31 {
+        0
+    } else {
+        count.count >> steps
+    }
+}
+
+fn valid_input_pattern(raw: &str) -> bool {
+    (1..=128).contains(&raw.len())
+        && valid_reading(raw)
+        && !raw.starts_with('\'')
+        && !raw.ends_with('\'')
+        && !raw.contains("''")
+        && !matches!(raw, "rq" | "sj" | "xq" | "jt" | "mt" | "zt")
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct View {
@@ -86,6 +114,7 @@ struct Piece {
 #[derive(Debug, Default)]
 pub struct UserDict {
     tick: u32,
+    inputs: HashMap<String, InputCount>,
     /// Reading `ni'hao` → word → decayed-at-`tick` count.
     words: HashMap<String, HashMap<String, Entry>>,
     /// Old logs keyed by the exact letters the user typed.
@@ -103,6 +132,10 @@ impl UserDict {
         let Some(path) = user_dict_path() else {
             return Self::default();
         };
+        Self::load_from(&path)
+    }
+
+    fn load_from(path: &std::path::Path) -> Self {
         if let Some(dir) = path.parent() {
             let _ = fs::create_dir_all(dir);
         }
@@ -111,7 +144,8 @@ impl UserDict {
             .write(true)
             .create(true)
             .truncate(false)
-            .open(&path)
+            .mode(0o600)
+            .open(path)
         else {
             return Self::default();
         };
@@ -125,13 +159,33 @@ impl UserDict {
         let live = dict.live_len();
         if overflow || (lines > 32 && lines > live.saturating_mul(4)) {
             let body = dict.snapshot();
-            let tmp = path.with_extension("new");
-            if fs::write(&tmp, body).is_ok() {
-                let _ = fs::rename(&tmp, &path);
+            let tmp = path.with_extension(format!(
+                "new-{}-{}",
+                std::process::id(),
+                std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap_or_default()
+                    .as_nanos()
+            ));
+            if let Ok(mut compact) = OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .mode(0o600)
+                .open(&tmp)
+            {
+                if compact.write_all(body.as_bytes()).is_ok() {
+                    let _ = fs::rename(&tmp, path);
+                }
+                let _ = fs::remove_file(&tmp);
             }
         }
         drop(file);
-        if let Ok(appended) = OpenOptions::new().create(true).append(true).open(&path) {
+        if let Ok(appended) = OpenOptions::new()
+            .create(true)
+            .append(true)
+            .mode(0o600)
+            .open(path)
+        {
             dict.log = Some(BufWriter::new(appended));
         }
         dict
@@ -151,6 +205,18 @@ impl UserDict {
     fn ingest(&mut self, line: &str) {
         let cols: Vec<&str> = line.split('\t').collect();
         match cols.as_slice() {
+            ["P", tick, raw, count] => {
+                let (Ok(tick), Ok(count)) = (tick.parse::<u32>(), count.parse::<u32>()) else {
+                    return;
+                };
+                if valid_input_pattern(raw) && count > 0 {
+                    self.fold_input(raw, tick, count);
+                    self.trim_inputs(false);
+                }
+            }
+            ["R", raw] => {
+                self.inputs.remove(*raw);
+            }
             ["U", tick, reading, word, count, coined] => {
                 let (Ok(tick), Ok(count)) = (tick.parse::<u32>(), count.parse::<u32>()) else {
                     return;
@@ -189,6 +255,113 @@ impl UserDict {
             }
             _ => {}
         }
+    }
+
+    fn fold_input(&mut self, raw: &str, tick: u32, count: u32) {
+        self.tick = self.tick.max(tick);
+        let entry = self
+            .inputs
+            .entry(raw.into())
+            .or_insert(InputCount { count: 0, tick });
+        if tick >= entry.tick {
+            entry.count = input_weight(entry, tick).saturating_add(count);
+            entry.tick = tick;
+        } else {
+            entry.count = entry.count.saturating_add(count);
+        }
+    }
+
+    fn record_input(&mut self, raw: &str) {
+        if !valid_input_pattern(raw) {
+            return;
+        }
+        let tick = self.tick;
+        self.fold_input(raw, tick, 1);
+        self.append(&format!("P\t{tick}\t{raw}\t1"));
+        self.trim_inputs(true);
+    }
+
+    fn trim_inputs(&mut self, persist: bool) {
+        while self.inputs.len() > MAX_FREQUENT_INPUTS {
+            let raw = self
+                .inputs
+                .iter()
+                .min_by(|(a, x), (b, y)| {
+                    input_weight(x, self.tick)
+                        .cmp(&input_weight(y, self.tick))
+                        .then(x.tick.cmp(&y.tick))
+                        .then(a.cmp(b))
+                })
+                .unwrap()
+                .0
+                .clone();
+            self.inputs.remove(&raw);
+            if persist {
+                self.append(&format!("R\t{raw}"));
+            }
+        }
+    }
+
+    /// Up to sixteen confirmed, repeated input patterns, most useful first.
+    pub fn frequent_inputs(&self) -> Vec<String> {
+        let mut rows: Vec<_> = self
+            .inputs
+            .iter()
+            .filter_map(|(raw, entry)| {
+                let weight = input_weight(entry, self.tick);
+                (weight >= 2).then_some((raw, weight, entry.tick))
+            })
+            .collect();
+        rows.sort_by(|a, b| b.1.cmp(&a.1).then(b.2.cmp(&a.2)).then(a.0.cmp(b.0)));
+        rows.into_iter()
+            .take(PRELOAD_FAVORITES)
+            .map(|(raw, _, _)| raw.clone())
+            .collect()
+    }
+
+    fn preload_inputs(&self) -> Arc<[String]> {
+        let mut favorite = self.frequent_inputs();
+        // Older logs already contain useful frequencies, even without P rows.
+        let mut older: HashMap<String, u32> = HashMap::new();
+        for (reading, words) in &self.words {
+            let raw = reading.replace('\'', "");
+            if !valid_input_pattern(&raw) {
+                continue;
+            }
+            let count = words
+                .values()
+                .map(|e| decayed(e.count, e.tick, self.tick))
+                .fold(0u32, u32::saturating_add);
+            if count >= 2 {
+                older
+                    .entry(raw)
+                    .and_modify(|c| *c = c.saturating_add(count))
+                    .or_insert(count);
+            }
+        }
+        for (raw, words) in &self.legacy {
+            if !valid_input_pattern(raw) {
+                continue;
+            }
+            let count = words.values().copied().fold(0u32, u32::saturating_add);
+            if count >= 2 {
+                older
+                    .entry(raw.clone())
+                    .and_modify(|c| *c = c.saturating_add(count))
+                    .or_insert(count);
+            }
+        }
+        let mut older: Vec<_> = older.into_iter().collect();
+        older.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
+        for (raw, _) in older {
+            if favorite.len() == PRELOAD_FAVORITES {
+                break;
+            }
+            if !favorite.contains(&raw) {
+                favorite.push(raw);
+            }
+        }
+        favorite.into()
     }
 
     fn fold_word(&mut self, reading: &str, word: &str, tick: u32, count: u32, coined: bool) {
@@ -540,6 +713,7 @@ impl UserDict {
         self.word_count()
             + self.legacy.values().map(HashMap::len).sum::<usize>()
             + self.links.values().map(HashMap::len).sum::<usize>()
+            + self.inputs.len()
     }
 
     fn evict(&mut self, persist: bool) {
@@ -571,6 +745,11 @@ impl UserDict {
 
     fn snapshot(&self) -> String {
         let mut lines = Vec::new();
+        let mut inputs: Vec<_> = self.inputs.iter().collect();
+        inputs.sort_by(|a, b| a.0.cmp(b.0));
+        for (raw, entry) in inputs {
+            lines.push(format!("P\t{}\t{raw}\t{}", entry.tick, entry.count));
+        }
         let mut words = Vec::new();
         for (reading, map) in &self.words {
             for (word, entry) in map {
@@ -699,7 +878,11 @@ pub struct Session {
     /// Materialized pages for the current preedit or association list.
     board: Option<Board>,
     /// Node lists for recent spellings. Pages are merged from these.
-    plans: HashMap<String, Plan>,
+    plans: HashMap<String, Arc<Plan>>,
+    preloader: Option<Arc<crate::preload::Preloader>>,
+    frequent: Arc<[String]>,
+    learning_enabled: bool,
+    learn_composition: bool,
     /// Pieces already committed from the current composition.
     pending: Vec<Piece>,
     /// Last committed Han word. The next commit is learned as its follower.
@@ -710,7 +893,7 @@ pub struct Session {
     associating: bool,
     /// The next `"` is an opening quote.
     quote_open: bool,
-    reload_preferences: bool,
+    preferences_source: Option<crate::preferences::PreferencesSource>,
 }
 
 impl Session {
@@ -720,12 +903,11 @@ impl Session {
     }
 
     pub fn with_user(lexicon: Arc<Lexicon>, user: UserDict) -> Self {
-        {
-            let mut session =
-                Self::with_preferences(lexicon, user, crate::InputPreferences::load());
-            session.reload_preferences = true;
-            session
-        }
+        let source = crate::preferences::PreferencesSource::load();
+        let mut session = Self::with_preferences(lexicon, user, source.current);
+        session.preferences_source = Some(source);
+        session.preload();
+        session
     }
 
     /// Creates a session with fixed preferences; this constructor does not reload disk settings.
@@ -735,6 +917,7 @@ impl Session {
         preferences: crate::InputPreferences,
     ) -> Self {
         let lexicon = Arc::new(lexicon.with_preferences(preferences));
+        let frequent = user.preload_inputs();
         Self {
             raw: String::new(),
             caret: 0,
@@ -744,13 +927,113 @@ impl Session {
             imported: crate::imports::Catalog::load(),
             board: None,
             plans: HashMap::new(),
+            preloader: None,
+            frequent,
+            learning_enabled: true,
+            learn_composition: true,
             pending: Vec::new(),
             context: None,
             context_reading: None,
             associating: false,
             quote_open: true,
-            reload_preferences: false,
+            preferences_source: None,
         }
+    }
+
+    /// Request dictionary-only first pages on the idle worker. Returns whether
+    /// this composition is ready (or all single letters when the input is empty).
+    /// This never waits for a page and does not cache personal/imported ranking.
+    pub fn preload(&mut self) -> bool {
+        if self.raw.is_empty() {
+            self.learn_composition = self.learning_enabled;
+        }
+        if !self.can_learn() {
+            return false;
+        }
+        if self.preloader.is_none() {
+            self.preloader = crate::preload::Preloader::shared(self.lexicon.clone());
+        }
+        self.schedule_preload(None);
+        self.preloader
+            .as_ref()
+            .is_some_and(|p| p.ready(&self.raw, self.lexicon.preferences))
+    }
+
+    pub fn learning_enabled(&self) -> bool {
+        self.learning_enabled
+    }
+
+    /// Hosts should disable learning for private/password input contexts.
+    pub fn set_learning_enabled(&mut self, enabled: bool) {
+        if self.learning_enabled == enabled {
+            return;
+        }
+        self.learning_enabled = enabled;
+        if !enabled {
+            self.learn_composition = false;
+            self.pending.clear();
+            self.context = None;
+            self.context_reading = None;
+        } else if self.raw.is_empty() {
+            self.learn_composition = true;
+        }
+        self.plans.clear();
+    }
+
+    fn can_learn(&self) -> bool {
+        self.learning_enabled && self.learn_composition
+    }
+
+    fn record_input(&mut self, raw: &str) {
+        if !self.can_learn() || !valid_input_pattern(raw) {
+            return;
+        }
+        self.user.record_input(raw);
+        self.frequent = self.user.preload_inputs();
+    }
+
+    fn schedule_preload(&self, reading: Option<&str>) {
+        if !self.can_learn() {
+            return;
+        }
+        let Some(preloader) = &self.preloader else {
+            return;
+        };
+        let mut hints = [0u8; 5];
+        let mut count = 0;
+        let mut remember = |reading: &str| {
+            let mut letters = reading.bytes().filter(|b| *b != b'\'');
+            if self.caret == self.raw.len()
+                && self
+                    .raw
+                    .bytes()
+                    .filter(|b| *b != b'\'')
+                    .all(|b| letters.next() == Some(b))
+            {
+                if let Some(c) = letters.next().filter(u8::is_ascii_lowercase) {
+                    if count < hints.len() && !hints[..count].contains(&c) {
+                        hints[count] = c;
+                        count += 1;
+                    }
+                }
+            }
+        };
+        if let Some(reading) = reading {
+            remember(reading);
+        }
+        if let Some(board) = &self.board {
+            for choice in board.out.iter().take(PAGE_SIZE) {
+                remember(&choice.reading);
+            }
+        }
+        preloader.request(
+            &self.raw,
+            self.caret,
+            self.lexicon.preferences,
+            self.plans.get(&self.raw).map(Arc::downgrade),
+            hints,
+            self.frequent.clone(),
+        );
     }
 
     #[cfg(all(test, waypinyin_full_lexicon))]
@@ -766,6 +1049,7 @@ impl Session {
 
     pub fn clear(&mut self) {
         self.raw.clear();
+        self.learn_composition = self.learning_enabled;
         self.caret = 0;
         self.cursor = 0;
         self.board = None;
@@ -777,6 +1061,7 @@ impl Session {
 
     fn wipe_preedit(&mut self) {
         self.raw.clear();
+        self.learn_composition = self.learning_enabled;
         self.caret = 0;
         self.cursor = 0;
         self.invalidate();
@@ -786,11 +1071,11 @@ impl Session {
         self.board = None;
     }
 
-    fn recall(&mut self, raw: &str) -> Plan {
+    fn recall(&mut self, raw: &str) -> Arc<Plan> {
         if let Some(found) = self.plans.get(raw) {
             return found.clone();
         }
-        let planned = plan(raw, &self.lexicon);
+        let planned = Arc::new(plan(raw, &self.lexicon));
         if self.plans.len() >= LISTING_CACHE {
             self.plans.clear();
         }
@@ -815,7 +1100,10 @@ impl Session {
             return;
         }
         let raw = self.raw.clone();
-        let planned = self.recall(&raw);
+        let prepared = self
+            .preloader
+            .as_ref()
+            .and_then(|p| p.get(&raw, self.lexicon.preferences));
         let (mut users, partials) = self
             .user
             .overlay(&raw, self.context.as_deref(), &self.lexicon);
@@ -823,6 +1111,23 @@ impl Session {
             self.imported
                 .choices_with_preferences(&raw, self.lexicon.preferences),
         );
+        if let Some(ready) = &prepared {
+            if !self.plans.contains_key(&raw) {
+                if self.plans.len() >= LISTING_CACHE {
+                    self.plans.clear();
+                }
+                self.plans.insert(raw.clone(), ready.plan());
+            }
+        }
+        if users.is_empty() && partials.is_empty() {
+            if let Some(prepared) = prepared {
+                self.board = Some(Board::prepared(prepared));
+                return;
+            }
+        }
+        let planned = prepared
+            .as_ref()
+            .map_or_else(|| self.recall(&raw), |p| p.plan());
         let pool = Pool::open(planned, &self.lexicon, users, partials);
         self.board = Some(Board::paged(pool));
     }
@@ -944,10 +1249,12 @@ impl Session {
     }
 
     fn finish(&mut self, text: String) -> Effect {
-        Effect::Commit {
-            text,
-            next: self.view(),
+        if self.raw.is_empty() {
+            self.learn_composition = self.learning_enabled;
         }
+        let next = self.view();
+        self.schedule_preload(Some(&next.reading));
+        Effect::Commit { text, next }
     }
 
     fn page_by(&mut self, direction: isize) -> Effect {
@@ -971,17 +1278,18 @@ impl Session {
     }
 
     pub fn handle(&mut self, keyval: u32, state: u32) -> Effect {
-        if self.raw.is_empty() && (0x61..=0x7a).contains(&keyval) {
-            self.imported.refresh();
-            if self.reload_preferences {
-                let prefs = crate::InputPreferences::load();
-                if prefs != self.lexicon.preferences {
-                    self.lexicon = Arc::new(self.lexicon.with_preferences(prefs));
-                    self.plans.clear();
-                    self.invalidate();
-                }
-            }
+        let effect = self.handle_inner(keyval, state);
+        let view = match &effect {
+            Effect::Update(v) | Effect::Forward(v) => Some(v),
+            Effect::Commit { .. } | Effect::Ignore => None,
+        };
+        if let Some(view) = view {
+            self.schedule_preload(Some(&view.reading));
         }
+        effect
+    }
+
+    fn handle_inner(&mut self, keyval: u32, state: u32) -> Effect {
         // Shift remains a modifier; it never changes the input mode or preedit.
         if keyval == KEY_SHIFT_L || keyval == KEY_SHIFT_R {
             return Effect::Ignore;
@@ -992,6 +1300,18 @@ impl Session {
         if state & CONTROL_MASK != 0 {
             return self.forget_chord(keyval);
         }
+        if self.raw.is_empty() && (0x61..=0x7a).contains(&keyval) {
+            self.imported.refresh();
+            if let Some(prefs) = self
+                .preferences_source
+                .as_mut()
+                .and_then(|source| source.refresh())
+            {
+                self.lexicon = Arc::new(self.lexicon.with_preferences(prefs));
+                self.plans.clear();
+                self.invalidate();
+            }
+        }
         if self.raw.is_empty() {
             return self.handle_idle(keyval);
         }
@@ -999,6 +1319,9 @@ impl Session {
     }
 
     fn forget_chord(&mut self, keyval: u32) -> Effect {
+        if !self.can_learn() {
+            return Effect::Ignore;
+        }
         let Some(digit) = page_digit(keyval) else {
             return Effect::Ignore;
         };
@@ -1188,6 +1511,9 @@ impl Session {
     }
 
     fn insert_char(&mut self, ch: char) {
+        if self.raw.is_empty() {
+            self.learn_composition = self.learning_enabled;
+        }
         let at = self.caret.min(self.raw.len());
         self.raw.insert(at, ch);
         self.caret = at + ch.len_utf8();
@@ -1244,6 +1570,10 @@ impl Session {
         let word = choice.word.clone();
         let done = span >= self.raw.len();
         self.note(&choice, done);
+        if choice.score > 0 {
+            let input = self.raw[..span].trim_end_matches('\'').to_string();
+            self.record_input(&input);
+        }
         if done {
             self.wipe_preedit();
         } else {
@@ -1261,6 +1591,12 @@ impl Session {
             return Effect::Update(self.view());
         };
         let word = choice.word.clone();
+        if !self.can_learn() {
+            self.pending.clear();
+            self.associating = false;
+            self.invalidate();
+            return self.finish(word);
+        }
         let now = self.user.advance();
         if !choice.reading.is_empty() && han_word(&choice.word) {
             self.user.bump(now, &choice.reading, &choice.word, false);
@@ -1274,13 +1610,18 @@ impl Session {
 
     fn commit_pieces(&mut self, index: usize, punct: Option<char>) -> Effect {
         let pieces = self.pieces_from(index);
+        let confirmed_input =
+            (self.can_learn() && !pieces.is_empty() && pieces.iter().all(|c| c.score > 0))
+                .then(|| self.raw.clone());
         let mut text: String = pieces.iter().map(|choice| choice.word.as_str()).collect();
         if let Some(ch) = punct {
             text.push(chinese_punct(ch).unwrap_or(ch));
         }
         let learnable: Vec<Choice> = pieces
             .iter()
-            .filter(|choice| !choice.reading.is_empty() && han_word(&choice.word))
+            .filter(|choice| {
+                self.can_learn() && !choice.reading.is_empty() && han_word(&choice.word)
+            })
             .cloned()
             .collect();
         if learnable.is_empty() {
@@ -1302,12 +1643,15 @@ impl Session {
                 self.close_sentence();
             }
         }
+        if let Some(input) = confirmed_input {
+            self.record_input(&input);
+        }
         self.wipe_preedit();
         self.finish(text)
     }
 
     fn note(&mut self, choice: &Choice, done: bool) {
-        if choice.reading.is_empty() || !han_word(&choice.word) {
+        if !self.can_learn() || choice.reading.is_empty() || !han_word(&choice.word) {
             if done {
                 self.pending.clear();
                 self.context = None;
@@ -1440,7 +1784,7 @@ fn ends_sentence(ch: char) -> bool {
 
 fn window_end(cursor: usize) -> usize {
     let page = cursor / PAGE_SIZE;
-    (page + 2) * PAGE_SIZE
+    (page + 1) * PAGE_SIZE
 }
 
 fn lexicon_score(lex: &Lexicon, reading: &str, word: &str) -> i64 {
@@ -1459,7 +1803,8 @@ fn lexicon_score(lex: &Lexicon, reading: &str, word: &str) -> i64 {
 
 struct Board {
     pool: Option<Pool>,
-    out: Vec<Choice>,
+    deferred: Option<Arc<crate::lexicon::Prepared>>,
+    out: Arc<Vec<Choice>>,
     done: bool,
 }
 
@@ -1476,7 +1821,8 @@ impl Board {
     fn fixed(out: Vec<Choice>) -> Self {
         Self {
             pool: None,
-            out,
+            deferred: None,
+            out: Arc::new(out),
             done: true,
         }
     }
@@ -1484,18 +1830,34 @@ impl Board {
     fn paged(pool: Pool) -> Self {
         Self {
             pool: Some(pool),
-            out: Vec::new(),
+            deferred: None,
+            out: Arc::new(Vec::new()),
             done: false,
         }
     }
 
+    fn prepared(ready: Arc<crate::lexicon::Prepared>) -> Self {
+        Self {
+            pool: None,
+            out: ready.out.clone(),
+            done: ready.done,
+            deferred: Some(ready),
+        }
+    }
+
     fn ensure(&mut self, end: usize, lex: &Lexicon) {
+        if self.out.len() >= end || self.done {
+            return;
+        }
+        if let Some(ready) = self.deferred.take() {
+            self.pool = Some(ready.pool.clone());
+        }
         let Some(pool) = self.pool.as_mut() else {
             return;
         };
         while self.out.len() < end && !self.done {
             if let Some(choice) = pool.next(lex) {
-                self.out.push(choice);
+                Arc::make_mut(&mut self.out).push(choice);
             } else {
                 self.done = true;
             }
@@ -1521,4 +1883,267 @@ fn chinese_punct(ch: char) -> Option<char> {
         '…' => '…',
         _ => return None,
     })
+}
+
+#[cfg(test)]
+mod refresh_tests {
+    use super::*;
+
+    #[test]
+    fn prepared_page_is_shared_until_paging_and_learning_stays_live() {
+        let lex = Arc::new(Lexicon::load());
+        let mut session =
+            Session::with_preferences(lex.clone(), UserDict::default(), Default::default());
+        session.raw = "ni".into();
+        session.caret = 2;
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+        let ready = loop {
+            session.preload();
+            session.invalidate();
+            session.view();
+            if let Some(ready) = session.board.as_ref().and_then(|b| b.deferred.clone()) {
+                break ready;
+            }
+            // A ready check is a snapshot: another worker operation may make
+            // the next try_lock miss. Verify the actual hit, not two lock reads.
+            assert!(std::time::Instant::now() < deadline);
+            std::thread::sleep(std::time::Duration::from_millis(2));
+        };
+        let cold = Arc::new(plan("ni", &lex));
+        let mut expected = Board::paged(Pool::open(cold, &lex, Vec::new(), Vec::new()));
+        expected.ensure(10, &lex);
+        session.view();
+        let board = session.board.as_ref().unwrap();
+        assert!(board.pool.is_none() && board.deferred.is_some());
+        assert!(Arc::ptr_eq(&board.out, &ready.out));
+        assert!(board.out.len() <= PAGE_SIZE);
+        session.page(1);
+        let board = session.board.as_ref().unwrap();
+        if ready.done {
+            assert!(Arc::ptr_eq(&board.out, &ready.out));
+        } else {
+            assert!(board.deferred.is_none());
+            assert!(!Arc::ptr_eq(&board.out, &ready.out));
+        }
+        assert_eq!(
+            board.out.iter().map(|c| &c.word).collect::<Vec<_>>(),
+            expected.out.iter().map(|c| &c.word).collect::<Vec<_>>()
+        );
+        assert!(ready.out.len() <= PAGE_SIZE);
+        session.user = UserDict::from_log("U\t1\tni\t自选词\t8\t0\n");
+        session.clear();
+        session.handle('n' as u32, 0);
+        session.handle('i' as u32, 0);
+        assert_eq!(session.view().candidates[0], "自选词");
+        assert!(session.board.as_ref().unwrap().deferred.is_none());
+    }
+
+    #[test]
+    fn shared_plan_keeps_pagination_independent() {
+        let lex = Arc::new(Lexicon::load());
+        let mut session =
+            Session::with_preferences(lex.clone(), UserDict::default(), Default::default());
+        let first = session.recall("ni");
+        let second = session.recall("ni");
+        assert!(Arc::ptr_eq(&first, &second));
+        let mut a = Board::paged(Pool::open(first, &lex, Vec::new(), Vec::new()));
+        let mut b = Board::paged(Pool::open(second, &lex, Vec::new(), Vec::new()));
+        a.ensure(10, &lex);
+        assert!(b.out.is_empty());
+        b.ensure(1, &lex);
+        assert_eq!(a.out[0].word, b.out[0].word);
+        assert_eq!(a.out[0].reading, b.out[0].reading);
+        assert_eq!(a.out[0].span, b.out[0].span);
+        // Cache invalidation must not invalidate an already materializing pool.
+        session.plans.clear();
+        b.ensure(10, &lex);
+        let rows = |board: &Board| {
+            board
+                .out
+                .iter()
+                .map(|c| (c.word.clone(), c.reading.clone(), c.span))
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(rows(&a), rows(&b));
+    }
+
+    #[test]
+    fn settings_change_at_composition_boundary_and_clear_plans() {
+        let root =
+            std::env::temp_dir().join(format!("waypinyin-session-settings-{}", std::process::id()));
+        fs::create_dir_all(&root).unwrap();
+        let path = root.join("config.toml");
+        fs::write(&path, "enabled = true\n").unwrap();
+        let source = crate::preferences::PreferencesSource::from_path(path.clone());
+        let mut session = Session::with_preferences(
+            Arc::new(Lexicon::load()),
+            UserDict::default(),
+            source.current,
+        );
+        session.preferences_source = Some(source);
+        session.preload();
+        session.handle('n' as u32, 0);
+        fs::write(root.join("new"), "enabled = false\n").unwrap();
+        fs::rename(root.join("new"), &path).unwrap();
+        session.handle('i' as u32, 0);
+        assert!(session.lexicon.preferences.enabled);
+        assert!(session.plans.contains_key("ni"));
+        session.clear();
+        assert!(matches!(
+            session.handle('n' as u32, RELEASE_MASK),
+            Effect::Ignore
+        ));
+        assert!(matches!(
+            session.handle('n' as u32, MOD1_MASK),
+            Effect::Ignore
+        ));
+        assert!(session.lexicon.preferences.enabled);
+        session.handle('n' as u32, 0);
+        assert!(!session.lexicon.preferences.enabled);
+        assert!(!session.plans.contains_key("ni"));
+        fs::remove_dir_all(root).unwrap();
+    }
+}
+
+#[cfg(test)]
+mod input_history_tests {
+    use super::*;
+    use std::os::unix::fs::PermissionsExt;
+
+    fn type_in(s: &mut Session, raw: &str) {
+        for c in raw.chars() {
+            s.handle(c as u32, 0);
+        }
+    }
+
+    #[test]
+    fn confirmation_records_actual_spelling_but_not_drafts_or_return() {
+        let lex = Arc::new(Lexicon::load());
+        let mut s = Session::with_preferences(lex, UserDict::default(), Default::default());
+        type_in(&mut s, "nihao");
+        s.handle(KEY_ESCAPE, 0);
+        assert!(s.user.inputs.is_empty());
+        type_in(&mut s, "nihao");
+        s.handle(KEY_RETURN, 0);
+        assert!(s.user.inputs.is_empty());
+        for _ in 0..2 {
+            type_in(&mut s, "nh");
+            assert!(matches!(s.pick(0), Effect::Commit { .. }));
+        }
+        assert_eq!(s.user.frequent_inputs(), ["nh"]);
+        assert_eq!(s.frequent[0], "nh");
+        assert_eq!(s.user.inputs["nh"].count, 2);
+    }
+
+    #[test]
+    fn partial_confirmation_records_the_consumed_prefix_without_separator() {
+        let mut s = Session::with_preferences(
+            Arc::new(Lexicon::load()),
+            UserDict::default(),
+            Default::default(),
+        );
+        type_in(&mut s, "ni'hao");
+        let view = s.view();
+        let index = view
+            .spans
+            .iter()
+            .position(|span| *span > 0 && *span < view.preedit.len())
+            .unwrap();
+        s.pick(index);
+        assert!(s.user.inputs.contains_key("ni"));
+        assert!(!s.user.inputs.contains_key("ni'"));
+        s.clear();
+        assert!(!s.user.inputs.contains_key("hao"));
+    }
+
+    #[test]
+    fn disk_roundtrip_and_compaction_retain_input_statistics() {
+        let root =
+            std::env::temp_dir().join(format!("waypinyin-input-history-{}", std::process::id()));
+        fs::create_dir_all(&root).unwrap();
+        let path = root.join("user.txt");
+        let mut user = UserDict::load_from(&path);
+        user.record_input("nihao");
+        user.record_input("nihao");
+        drop(user);
+        assert_eq!(
+            fs::metadata(&path).unwrap().permissions().mode() & 0o777,
+            0o600
+        );
+        assert_eq!(UserDict::load_from(&path).frequent_inputs(), ["nihao"]);
+        let body = format!(
+            "U\t1\tni'hao\t你好\t3\t0\nzg\t中国\t4\n{}",
+            "P\t1\tnihao\t1\n".repeat(600)
+        );
+        fs::write(&path, body).unwrap();
+        let compacted = UserDict::load_from(&path);
+        assert_eq!(compacted.inputs["nihao"].count, 600);
+        assert!(fs::read_to_string(&path).unwrap().lines().count() < 10);
+        assert_eq!(
+            UserDict::from_log(&compacted.snapshot()).snapshot(),
+            compacted.snapshot()
+        );
+        assert!(compacted.preload_inputs().iter().any(|r| r == "zg"));
+        drop(compacted);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn history_is_bounded_decays_and_rejects_non_pinyin_and_clock_codes() {
+        let mut user = UserDict::default();
+        for raw in [
+            "", "sj", "rq", "jt", "mt", "zt", "xq", "NiHao", "ni\thao", "ni''hao", "'ni", "ni'",
+        ] {
+            user.record_input(raw);
+        }
+        user.record_input(&"a".repeat(129));
+        assert!(user.inputs.is_empty());
+        user.fold_input("nihao", 1, 20);
+        for a in b'a'..=b'z' {
+            for b in b'a'..=b'z' {
+                user.record_input(&format!("p{}{}", a as char, b as char));
+            }
+        }
+        assert!(user.inputs.len() <= MAX_FREQUENT_INPUTS);
+        assert_eq!(user.frequent_inputs()[0], "nihao");
+        user.tick = INPUT_HALF_LIFE * 4 + 1;
+        assert!(user.frequent_inputs().is_empty());
+        let malformed = UserDict::from_log(
+            "P\tbad\tnihao\t3\nP\t1\tUPPER\t3\nP\t1\tnihao\t0\nP\t1\tnihao\t2\nR\tnihao\n",
+        );
+        assert!(malformed.inputs.is_empty());
+    }
+
+    #[test]
+    fn private_contexts_and_mixed_context_compositions_never_learn() {
+        let mut s = Session::with_preferences(
+            Arc::new(Lexicon::load()),
+            UserDict::default(),
+            Default::default(),
+        );
+        s.set_learning_enabled(false);
+        assert!(!s.preload());
+        type_in(&mut s, "nihao");
+        s.set_learning_enabled(true);
+        s.pick(0);
+        assert!(s.user.inputs.is_empty() && s.user.words.is_empty() && s.user.links.is_empty());
+        type_in(&mut s, "nihao");
+        s.set_learning_enabled(false);
+        s.pick(0);
+        assert!(s.user.inputs.is_empty() && s.user.words.is_empty());
+        s.set_learning_enabled(true);
+        for _ in 0..2 {
+            type_in(&mut s, "nihao");
+            s.pick(0);
+        }
+        assert_eq!(s.user.frequent_inputs(), ["nihao"]);
+    }
+
+    #[test]
+    fn existing_word_and_legacy_records_seed_preload_without_new_history() {
+        let user = UserDict::from_log("U\t1\tni'hao\t你好\t5\t0\nzg\t中国\t3\n");
+        assert!(user.frequent_inputs().is_empty());
+        let seed = user.preload_inputs();
+        assert_eq!(&*seed, ["nihao", "zg"]);
+    }
 }

@@ -48,3 +48,7 @@ mod smoke_tests {
         );
     }
 }
+
+pub(crate) mod watch;
+
+pub(crate) mod preload;

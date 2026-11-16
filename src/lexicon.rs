@@ -1,24 +1,26 @@
 //! Syllable trie and candidate ranking. This module does not see key events.
 //!
 //! The text dictionaries are compiled into one image by the build script.
-//! The running process maps that file and does not read a page until a query
-//! needs it. A node's word list is that reading, best score first.
+//! The running process maps and validates that file before querying it. A node's
+//! word list is that reading, best score first.
 //! Two-syllable predictions are folded onto the spelling automaton when the
 //! image is built, so a short prefix does not search or allocate them again.
 
 use crate::image::{open, BigramRec, EdgeRec, NodeRec, RangeRec, WordRec};
+use std::borrow::Cow;
 use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashMap, HashSet};
 use std::fs::File;
-use std::os::unix::io::AsRawFd;
+use std::os::fd::AsRawFd;
 use std::path::{Path, PathBuf};
-use std::sync::OnceLock;
+use std::sync::{Arc, OnceLock};
 
 const BAKED_LEXICON: &str = env!("WAYPINYIN_LEXICON");
 /// Characters kept from each syllable when a spelling is built out of
 /// single characters. 止 is past the first dozen of `zhi`.
 const PHRASE_COLUMN: usize = 24;
+const _: () = assert!(PHRASE_COLUMN <= 32);
 const PHRASE_LIMIT: usize = 4096;
 
 #[derive(Clone, Copy)]
@@ -29,7 +31,7 @@ struct StrTable {
 
 impl StrTable {
     #[inline]
-    fn get(&self, index: u32) -> &str {
+    fn get(&self, index: u32) -> &'static str {
         let index = index as usize;
         let start = self.off[index] as usize;
         let end = self.off[index + 1] as usize;
@@ -86,7 +88,14 @@ impl Lexicon {
     }
     pub fn load() -> Self {
         static MAPPED: OnceLock<crate::image::Mapped<'static>> = OnceLock::new();
-        let mapped = MAPPED.get_or_init(|| open(image_bytes()));
+        let mapped = MAPPED.get_or_init(|| {
+            let bytes = image_bytes();
+            let mapped = open(bytes);
+            // Validation streams over every table. Only candidate lookup is
+            // random; defer disabling readahead until validation has finished.
+            advise(bytes, libc::MADV_RANDOM);
+            mapped
+        });
         Self {
             preferences: Default::default(),
             texts: StrTable {
@@ -111,8 +120,30 @@ impl Lexicon {
         }
     }
 
+    /// Likely next letters for idle speculation; all letters remain eligible.
+    pub(crate) fn preload_letters(&self, raw: &str) -> Vec<u8> {
+        let mut letters = Vec::with_capacity(26);
+        for start in 0..raw.len() {
+            if let Some(node) = self.auto_end(&raw[start..]) {
+                for (index, next) in self.auto[node as usize].iter().enumerate() {
+                    if *next != u32::MAX {
+                        letters.push(b'a' + index as u8);
+                    }
+                }
+                break;
+            }
+        }
+        for c in b"aeioundghszcbpmflrktjqxwyv" {
+            if !letters.contains(c) {
+                letters.push(*c);
+            }
+        }
+        debug_assert_eq!(letters.len(), 26);
+        letters
+    }
+
     #[inline]
-    fn text(&self, id: u32) -> &str {
+    fn text(&self, id: u32) -> &'static str {
         self.texts.get(id)
     }
 
@@ -373,39 +404,31 @@ fn map_file(path: &Path) -> &'static [u8] {
         path.display()
     );
     let ptr = unsafe {
-        mmap(
+        libc::mmap(
             std::ptr::null_mut(),
             len,
-            PROT_READ,
-            MAP_PRIVATE,
+            libc::PROT_READ,
+            libc::MAP_PRIVATE,
             file.as_raw_fd(),
             0,
         )
     };
     assert!(
-        ptr != MAP_FAILED && !ptr.is_null(),
+        ptr != libc::MAP_FAILED && !ptr.is_null(),
         "map lexicon image {}",
         path.display()
     );
-    unsafe { madvise(ptr, len, MADV_RANDOM) };
-    unsafe { std::slice::from_raw_parts(ptr as *const u8, len) }
+    // The image is fully checked before use; permit kernel readahead during
+    // that sequential pass. Advice failure affects performance, not validity.
+    let bytes = unsafe { std::slice::from_raw_parts(ptr as *const u8, len) };
+    advise(bytes, libc::MADV_SEQUENTIAL);
+    bytes
 }
 
-const PROT_READ: i32 = 1;
-const MAP_PRIVATE: i32 = 2;
-const MADV_RANDOM: i32 = 1;
-const MAP_FAILED: *mut std::ffi::c_void = !0 as *mut std::ffi::c_void;
-
-extern "C" {
-    fn mmap(
-        addr: *mut std::ffi::c_void,
-        len: usize,
-        prot: i32,
-        flags: i32,
-        fd: i32,
-        offset: i64,
-    ) -> *mut std::ffi::c_void;
-    fn madvise(addr: *mut std::ffi::c_void, len: usize, advice: i32) -> i32;
+fn advise(bytes: &[u8], advice: i32) {
+    // SAFETY: bytes spans the live, page-aligned mmap. madvise does not write
+    // mapped bytes for either of the access-pattern hints used here.
+    unsafe { libc::madvise(bytes.as_ptr().cast_mut().cast(), bytes.len(), advice) };
 }
 
 fn is_ng_extension(typed: &str, syl: &str) -> bool {
@@ -579,13 +602,8 @@ fn complement_char(syl: &str) -> Option<char> {
 /// word. A one-syllable verb keeps its four most common characters, so
 /// `pawan` offers 怕完 and 爬完. A longer verb keeps the word that already
 /// covers it, so `xuexiwan` offers 学习完.
-fn complement_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
-    let segs = covers(raw, lex);
-    let Some((syls, _)) = segs
-        .iter()
-        .filter(|(_, scale)| *scale == 1)
-        .min_by_key(|(syls, _)| syls.len())
-    else {
+fn complement_forms(syls: Option<&[u16]>, lex: &Lexicon) -> Vec<(String, i64, String)> {
+    let Some(syls) = syls else {
         return Vec::new();
     };
     if syls.len() < 2 {
@@ -690,18 +708,18 @@ fn degree_word(syls: &[u16], lex: &Lexicon) -> Option<(usize, String)> {
 /// Degree word plus a word the lexicon already has. `haojianlou` is 好简陋,
 /// `henjianlou` is 很简陋, `feichangjianlou` is 非常简陋. A stored phrase
 /// such as 好看 is left alone by the caller.
-fn degree_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
-    let Some(syls) = exact_syls(raw, lex) else {
+fn degree_forms(syls: Option<&[u16]>, lex: &Lexicon) -> Vec<(String, i64, String)> {
+    let Some(syls) = syls else {
         return Vec::new();
     };
-    let Some((taken, mark)) = degree_word(&syls, lex) else {
+    let Some((taken, mark)) = degree_word(syls, lex) else {
         return Vec::new();
     };
     if syls.len() <= taken {
         return Vec::new();
     }
     let tail = &syls[taken..];
-    let reading = joined_reading(&syls, lex);
+    let reading = joined_reading(syls, lex);
     if tail.len() == 1 {
         return single_heads(lex, tail[0])
             .into_iter()
@@ -757,11 +775,11 @@ fn directional_word(syls: &[u16], lex: &Lexicon) -> Option<(usize, &'static str)
 }
 
 /// `爬上去` / `爬来` from a verb plus a directional the lexicon never stored.
-fn directional_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
-    let Some(syls) = exact_syls(raw, lex) else {
+fn directional_forms(syls: Option<&[u16]>, lex: &Lexicon) -> Vec<(String, i64, String)> {
+    let Some(syls) = syls else {
         return Vec::new();
     };
-    let Some((taken, mark)) = directional_word(&syls, lex) else {
+    let Some((taken, mark)) = directional_word(syls, lex) else {
         return Vec::new();
     };
     if syls.len() <= taken {
@@ -777,12 +795,12 @@ fn directional_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
     if mark == "下" && verb.last().is_some_and(|id| lex.syl(*id) == "yi") {
         return Vec::new();
     }
-    glue_head(lex, verb, mark, &joined_reading(&syls, lex))
+    glue_head(lex, verb, mark, &joined_reading(syls, lex))
 }
 
 /// `爬得上` / `爬不上`. The syllable before the complement is 得 or 不.
-fn potential_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
-    let Some(syls) = exact_syls(raw, lex) else {
+fn potential_forms(syls: Option<&[u16]>, lex: &Lexicon) -> Vec<(String, i64, String)> {
+    let Some(syls) = syls else {
         return Vec::new();
     };
     if syls.len() < 3 {
@@ -814,12 +832,12 @@ fn potential_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
     };
     let mut mark = String::from(particle);
     mark.push_str(&tail_mark);
-    glue_head(lex, &syls[..mid], &mark, &joined_reading(&syls, lex))
+    glue_head(lex, &syls[..mid], &mark, &joined_reading(syls, lex))
 }
 
 /// `简陋了` / `简陋着` / `简陋过` when that spelling is not already a word.
-fn aspect_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
-    let Some(syls) = exact_syls(raw, lex) else {
+fn aspect_forms(syls: Option<&[u16]>, lex: &Lexicon) -> Vec<(String, i64, String)> {
+    let Some(syls) = syls else {
         return Vec::new();
     };
     if syls.len() < 2 {
@@ -838,12 +856,12 @@ fn aspect_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
     {
         return Vec::new();
     }
-    glue_head(lex, verb, mark, &joined_reading(&syls, lex))
+    glue_head(lex, verb, mark, &joined_reading(syls, lex))
 }
 
 /// `简陋的` / `慢慢地`. A medial 得 stays with the potential complement.
-fn particle_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
-    let Some(syls) = exact_syls(raw, lex) else {
+fn particle_forms(syls: Option<&[u16]>, lex: &Lexicon) -> Vec<(String, i64, String)> {
+    let Some(syls) = syls else {
         return Vec::new();
     };
     if syls.len() < 2 {
@@ -858,13 +876,13 @@ fn particle_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
         lex,
         &syls[..syls.len() - 1],
         mark,
-        &joined_reading(&syls, lex),
+        &joined_reading(syls, lex),
     )
 }
 
 /// `爬一下`. The two syllables are the word 一下, not a separate 一 and 下.
-fn yixia_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
-    let Some(syls) = exact_syls(raw, lex) else {
+fn yixia_forms(syls: Option<&[u16]>, lex: &Lexicon) -> Vec<(String, i64, String)> {
+    let Some(syls) = syls else {
         return Vec::new();
     };
     if syls.len() < 3 {
@@ -874,16 +892,16 @@ fn yixia_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
     if lex.syl(syls[n - 2]) != "yi" || lex.syl(syls[n - 1]) != "xia" {
         return Vec::new();
     }
-    glue_head(lex, &syls[..n - 2], "一下", &joined_reading(&syls, lex))
+    glue_head(lex, &syls[..n - 2], "一下", &joined_reading(syls, lex))
 }
 
 /// `爬爬` and `爬一爬` when that spelling is not already a lexicon word.
-fn redup_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
-    let Some(syls) = exact_syls(raw, lex) else {
+fn redup_forms(syls: Option<&[u16]>, lex: &Lexicon) -> Vec<(String, i64, String)> {
+    let Some(syls) = syls else {
         return Vec::new();
     };
-    let reading = joined_reading(&syls, lex);
     if syls.len() == 2 && syls[0] == syls[1] {
+        let reading = joined_reading(syls, lex);
         return single_heads(lex, syls[0])
             .into_iter()
             .take(2)
@@ -895,6 +913,7 @@ fn redup_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
             .collect();
     }
     if syls.len() == 3 && syls[0] == syls[2] && lex.syl(syls[1]) == "yi" {
+        let reading = joined_reading(syls, lex);
         return single_heads(lex, syls[0])
             .into_iter()
             .take(2)
@@ -906,8 +925,8 @@ fn redup_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
 
 /// `没爬` / `不` plus a word already in the lexicon. A stored word such as
 /// 不是 is left alone by the caller.
-fn negation_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
-    let Some(syls) = exact_syls(raw, lex) else {
+fn negation_forms(syls: Option<&[u16]>, lex: &Lexicon) -> Vec<(String, i64, String)> {
+    let Some(syls) = syls else {
         return Vec::new();
     };
     if syls.len() < 2 {
@@ -918,7 +937,7 @@ fn negation_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
         "mei" => "没",
         _ => return Vec::new(),
     };
-    let reading = joined_reading(&syls, lex);
+    let reading = joined_reading(syls, lex);
     let tail = &syls[1..];
     if tail.len() == 1 {
         return single_heads(lex, tail[0])
@@ -934,8 +953,8 @@ fn negation_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
 }
 
 /// `简陋吗`. The particle is only the last syllable.
-fn mood_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
-    let Some(syls) = exact_syls(raw, lex) else {
+fn mood_forms(syls: Option<&[u16]>, lex: &Lexicon) -> Vec<(String, i64, String)> {
+    let Some(syls) = syls else {
         return Vec::new();
     };
     if syls.len() < 2 {
@@ -952,7 +971,7 @@ fn mood_forms(raw: &str, lex: &Lexicon) -> Vec<(String, i64, String)> {
         lex,
         &syls[..syls.len() - 1],
         mark,
-        &joined_reading(&syls, lex),
+        &joined_reading(syls, lex),
     )
 }
 
@@ -1214,11 +1233,16 @@ fn sentence_bonus(previous: Option<char>, word: &str) -> f64 {
 struct SentencePath {
     cost: f64,
     text: String,
-    reading: Vec<String>,
+    reading: Vec<u16>,
     words: usize,
+    last: Option<char>,
 }
 
-fn compose_sentences(input: &str, lex: &Lexicon) -> Vec<(String, Vec<String>)> {
+fn compose_sentences(
+    input: &str,
+    lex: &Lexicon,
+    fully_spelled: bool,
+) -> Vec<(String, Vec<String>)> {
     if input.len() < 4
         || input.len() > 128
         || !input.bytes().all(|c| c.is_ascii_lowercase() || c == b'\'')
@@ -1226,14 +1250,17 @@ fn compose_sentences(input: &str, lex: &Lexicon) -> Vec<(String, Vec<String>)> {
         return Vec::new();
     }
     let n = input.len();
-    let fully_spelled = exact_syls(input, lex).is_some();
     let mut paths: Vec<Vec<SentencePath>> = vec![Vec::new(); n + 1];
     paths[0].push(SentencePath {
         cost: 0.0,
         text: String::new(),
         reading: Vec::new(),
         words: 0,
+        last: None,
     });
+    // Bound memoization independently of the search budget. A full cache only
+    // stops inserting: it never prunes a path or changes score arithmetic.
+    let mut bonuses: HashMap<(Option<char>, u32), f64> = HashMap::new();
     let mut budget = 60_000usize;
     for start in 0..n {
         if budget == 0 {
@@ -1244,7 +1271,7 @@ fn compose_sentences(input: &str, lex: &Lexicon) -> Vec<(String, Vec<String>)> {
         }
         paths[start].sort_by(|a, b| a.cost.total_cmp(&b.cost).then(a.text.cmp(&b.text)));
         paths[start].truncate(8);
-        let parents = paths[start].clone();
+        let parents = std::mem::take(&mut paths[start]);
         let begin = skip_sep(input, start);
         if begin == n {
             continue;
@@ -1267,18 +1294,30 @@ fn compose_sentences(input: &str, lex: &Lexicon) -> Vec<(String, Vec<String>)> {
             }
             if node != 0 {
                 let end = skip_sep(input, pos);
+                let mut node_reading = None;
                 for word in lex.node_words(node).iter().take(4) {
                     let text = lex.text(word.text);
                     let base = (lex.ln_corpus - (word.score.max(1) as f64).ln()).max(0.0) + penalty;
+                    let last = text.chars().last();
                     for parent in &parents {
-                        let cost =
-                            parent.cost + base - sentence_bonus(parent.text.chars().last(), text);
-                        // Keep multiple endings: the next word can change which
-                        // homophone is best. This is a bounded beam, not greedy.
-                        let mut next = parent.clone();
-                        next.cost = cost;
-                        next.text.push_str(text);
-                        if let Some(index) = paths[end].iter().position(|p| p.text == next.text) {
+                        let key = (parent.last, word.text);
+                        let bonus = if let Some(bonus) = bonuses.get(&key) {
+                            *bonus
+                        } else {
+                            let bonus = sentence_bonus(parent.last, text);
+                            if bonuses.len() < 4096 {
+                                bonuses.insert(key, bonus);
+                            }
+                            bonus
+                        };
+                        let cost = parent.cost + base - bonus;
+                        // Compare concatenations before allocating the new path.
+                        let same_text = |p: &SentencePath| {
+                            p.text.len() == parent.text.len() + text.len()
+                                && p.text.starts_with(&parent.text)
+                                && &p.text[parent.text.len()..] == text
+                        };
+                        if let Some(index) = paths[end].iter().position(same_text) {
                             if paths[end][index].cost <= cost {
                                 continue;
                             }
@@ -1296,14 +1335,20 @@ fn compose_sentences(input: &str, lex: &Lexicon) -> Vec<(String, Vec<String>)> {
                             }
                             paths[end].swap_remove(worst);
                         }
-                        next.reading.extend(path_syls(lex, node));
-                        next.words += 1;
-                        if !paths[end]
-                            .iter()
-                            .any(|p| p.text == next.text && p.cost <= cost)
-                        {
-                            paths[end].push(next);
+                        if paths[end].iter().any(|p| same_text(p) && p.cost <= cost) {
+                            continue;
                         }
+                        // Keep the original replacement and tie-breaking order,
+                        // but copy text/readings only for paths that survive it.
+                        let mut next = parent.clone();
+                        next.cost = cost;
+                        next.text.push_str(text);
+                        next.last = last.or(parent.last);
+                        next.reading.extend_from_slice(
+                            node_reading.get_or_insert_with(|| path_ids(lex, node)),
+                        );
+                        next.words += 1;
+                        paths[end].push(next);
                     }
                 }
             }
@@ -1313,19 +1358,23 @@ fn compose_sentences(input: &str, lex: &Lexicon) -> Vec<(String, Vec<String>)> {
             let rest = &input[pos..];
             for edge in lex.edges_for(node, input.as_bytes()[pos]) {
                 let syl = lex.syl(edge.syl);
-                let mut lengths = Vec::new();
+                let mut lengths = [(0usize, 0.0); 3];
+                let mut count = 0;
                 if rest.starts_with(syl) {
-                    lengths.push((syl.len(), 0.0));
+                    lengths[count] = (syl.len(), 0.0);
+                    count += 1;
                 }
                 if !fully_spelled && !matches!(syl.as_bytes()[0], b'a' | b'e' | b'o') {
-                    lengths.push((1, 0.25 * (syl.len().saturating_sub(1)) as f64));
+                    lengths[count] = (1, 0.25 * (syl.len().saturating_sub(1)) as f64);
+                    count += 1;
                     if (syl.starts_with("zh") || syl.starts_with("ch") || syl.starts_with("sh"))
                         && rest.starts_with(&syl[..2])
                     {
-                        lengths.push((2, 0.25 * (syl.len().saturating_sub(2)) as f64));
+                        lengths[count] = (2, 0.25 * (syl.len().saturating_sub(2)) as f64);
+                        count += 1;
                     }
                 }
-                for (len, extra) in lengths {
+                for &(len, extra) in &lengths[..count] {
                     if pos + len <= n {
                         stack.push((edge.node, skip_sep(input, pos + len), penalty + extra));
                     }
@@ -1339,11 +1388,11 @@ fn compose_sentences(input: &str, lex: &Lexicon) -> Vec<(String, Vec<String>)> {
         .iter()
         .filter(|p| p.words >= 2 && seen.insert(p.text.clone()))
         .take(3)
-        .map(|p| (p.text.clone(), p.reading.clone()))
+        .map(|p| (p.text.clone(), syl_text(lex, &p.reading)))
         .collect()
 }
 
-fn path_syls(lex: &Lexicon, node: u32) -> Vec<String> {
+fn path_ids(lex: &Lexicon, node: u32) -> Vec<u16> {
     let mut ids = Vec::new();
     let mut current = node;
     while current != 0 {
@@ -1351,7 +1400,11 @@ fn path_syls(lex: &Lexicon, node: u32) -> Vec<String> {
         current = lex.nodes[current as usize].parent;
     }
     ids.reverse();
-    ids.into_iter().map(|id| lex.syl(id).to_owned()).collect()
+    ids
+}
+
+fn path_syls(lex: &Lexicon, node: u32) -> Vec<String> {
+    syl_text(lex, &path_ids(lex, node))
 }
 
 fn reading_path(lex: &Lexicon, node: u32) -> String {
@@ -1441,7 +1494,6 @@ pub(crate) fn choices(raw: &str, lex: &Lexicon) -> Vec<Choice> {
 }
 
 /// Sources for one spelling. Words are merged from the nodes on demand.
-#[derive(Clone)]
 pub(crate) struct Plan {
     raw: String,
     nodes: Vec<NodeSrc>,
@@ -1515,53 +1567,61 @@ pub(crate) fn plan(raw: &str, lex: &Lexicon) -> Plan {
         return empty;
     }
     let found = gather(raw, lex);
-    let lexicon_full = found
-        .nodes
-        .iter()
-        .any(|(&node, &(tier, divisor))| tier == 0 && node_has_word(lex, node, divisor))
-        || found.bigrams.iter().any(|hit| hit.tier == 0);
-    let lexicon_bare = found
-        .nodes
-        .iter()
-        .all(|(&node, &(_, divisor))| !node_has_word(lex, node, divisor))
-        && found.bigrams.is_empty();
-    let strong_direct = found.nodes.iter().any(|(&node, &(tier, _))| {
-        tier <= 2
+    // All morphology and sentence checks use the same spelling segmentation.
+    let syllables = exact_syls(raw, lex);
+    let mut lexicon_full = found.bigrams.iter().any(|hit| hit.tier == 0);
+    let mut lexicon_bare = found.bigrams.is_empty();
+    let mut strong_direct = false;
+    let mut has_direct = found.bigrams.iter().any(|hit| hit.tier <= 1);
+    let mut nodes = Vec::new();
+    // Classify each source once. In particular, tier-two sources used to build
+    // and match the same reading in both direct-match predicates.
+    for (&node, &(tier, divisor)) in &found.nodes {
+        let has_word = node_has_word(lex, node, divisor);
+        lexicon_full |= tier == 0 && has_word;
+        lexicon_bare &= !has_word;
+        has_direct |= tier <= 1 && has_word;
+        if tier <= 2
+            && (!strong_direct || (tier == 2 && !has_direct))
             && lex.node_words(node).first().is_some_and(|w| w.score >= 100)
-            && match_imported_reading(lex.preferences, raw, &reading_path(lex, node))
-                .is_some_and(|h| h.span == raw.len() && h.tier <= 2)
-    });
-    let has_direct = found.nodes.iter().any(|(&node, &(tier, divisor))| {
-        (tier <= 1 && node_has_word(lex, node, divisor))
-            || (tier == 2
-                && lex.node_words(node).first().is_some_and(|w| w.score >= 100)
-                && match_imported_reading(lex.preferences, raw, &reading_path(lex, node))
-                    .is_some_and(|h| h.span == raw.len() && h.tier <= 2))
-    }) || found.bigrams.iter().any(|hit| hit.tier <= 1);
+        {
+            let matched = match_imported_reading(lex.preferences, raw, &reading_path(lex, node))
+                .is_some_and(|h| h.span == raw.len() && h.tier <= 2);
+            strong_direct |= matched;
+            has_direct |= tier == 2 && matched;
+        }
+        if has_word {
+            nodes.push(NodeSrc {
+                node,
+                tier,
+                divisor,
+            });
+        }
+    }
 
     let mut forms = if lexicon_full {
         Vec::new()
     } else {
-        complement_forms(raw, lex)
+        complement_forms(syllables.as_deref(), lex)
     };
     if !lexicon_full {
-        forms.extend(degree_forms(raw, lex));
-        forms.extend(directional_forms(raw, lex));
-        forms.extend(potential_forms(raw, lex));
-        forms.extend(aspect_forms(raw, lex));
+        forms.extend(degree_forms(syllables.as_deref(), lex));
+        forms.extend(directional_forms(syllables.as_deref(), lex));
+        forms.extend(potential_forms(syllables.as_deref(), lex));
+        forms.extend(aspect_forms(syllables.as_deref(), lex));
     }
-    forms.extend(particle_forms(raw, lex));
-    forms.extend(yixia_forms(raw, lex));
-    forms.extend(redup_forms(raw, lex));
-    forms.extend(negation_forms(raw, lex));
-    forms.extend(mood_forms(raw, lex));
+    forms.extend(particle_forms(syllables.as_deref(), lex));
+    forms.extend(yixia_forms(syllables.as_deref(), lex));
+    forms.extend(redup_forms(syllables.as_deref(), lex));
+    forms.extend(negation_forms(syllables.as_deref(), lex));
+    forms.extend(mood_forms(syllables.as_deref(), lex));
 
     let mut extras = Vec::new();
     let mut sentence = None;
     if (!has_direct && forms.is_empty())
-        || (raw.len() >= 4 && !lexicon_full && !strong_direct && exact_syls(raw, lex).is_none())
+        || (raw.len() >= 4 && !lexicon_full && !strong_direct && syllables.is_none())
     {
-        let composed = compose_sentences(raw, lex);
+        let composed = compose_sentences(raw, lex, syllables.is_some());
         if !composed.is_empty() {
             for (index, (text, syls)) in composed.into_iter().enumerate() {
                 extras.push(extra_word(
@@ -1573,17 +1633,10 @@ pub(crate) fn plan(raw: &str, lex: &Lexicon) -> Plan {
                     sentence = Some((text, syls));
                 }
             }
-        } else {
-            let segs = covers(raw, lex);
-            if let Some((syls, _)) = segs
-                .iter()
-                .filter(|(_, scale)| *scale == 1)
-                .min_by_key(|(s, _)| s.len())
-            {
-                if let Some(text) = compose(syls, lex) {
-                    extras.push(extra_word(text.clone(), String::new(), i64::MAX / 8));
-                    sentence = Some((text, syl_text(lex, syls)));
-                }
+        } else if let Some(syls) = syllables.as_deref() {
+            if let Some(text) = compose(syls, lex) {
+                extras.push(extra_word(text.clone(), String::new(), i64::MAX / 8));
+                sentence = Some((text, syl_text(lex, syls)));
             }
         }
     }
@@ -1639,16 +1692,6 @@ pub(crate) fn plan(raw: &str, lex: &Lexicon) -> Plan {
         };
     }
 
-    let nodes: Vec<NodeSrc> = found
-        .nodes
-        .into_iter()
-        .filter(|(node, (_, divisor))| node_has_word(lex, *node, *divisor))
-        .map(|(node, (tier, divisor))| NodeSrc {
-            node,
-            tier,
-            divisor,
-        })
-        .collect();
     let has_char = nodes.iter().filter(|src| src.tier == 0).any(|src| {
         lex.node_words(src.node)
             .iter()
@@ -1670,9 +1713,7 @@ pub(crate) fn plan(raw: &str, lex: &Lexicon) -> Plan {
         forms,
         sentence,
         plain: None,
-        phrase: exact_syls(raw, lex)
-            .filter(|syls| syls.len() >= 2)
-            .unwrap_or_default(),
+        phrase: syllables.filter(|syls| syls.len() >= 2).unwrap_or_default(),
     };
     planned.partials = partial_nodes(&planned, lex);
     planned
@@ -1696,26 +1737,27 @@ fn extra_word(word: String, reading: String, score: i64) -> Extra {
     }
 }
 
-struct PhraseState {
+#[derive(Clone)]
+struct PhraseState<I> {
     score: u32,
-    idx: Vec<u8>,
+    idx: I,
 }
 
-impl PartialEq for PhraseState {
+impl<I: Ord> PartialEq for PhraseState<I> {
     fn eq(&self, other: &Self) -> bool {
         self.cmp(other) == Ordering::Equal
     }
 }
 
-impl Eq for PhraseState {}
+impl<I: Ord> Eq for PhraseState<I> {}
 
-impl PartialOrd for PhraseState {
+impl<I: Ord> PartialOrd for PhraseState<I> {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
 
-impl Ord for PhraseState {
+impl<I: Ord> Ord for PhraseState<I> {
     fn cmp(&self, other: &Self) -> Ordering {
         self.score
             .cmp(&other.score)
@@ -1726,14 +1768,36 @@ impl Ord for PhraseState {
 /// Single characters for each exact syllable, best combinations first.
 /// `budanzhi` has no stored 不单止; the characters still combine here.
 fn assemble_phrases(syls: &[u16], lex: &Lexicon, limit: usize) -> Vec<(String, i64, String)> {
+    phrase_cursor(syls, lex, limit).collect()
+}
+
+#[derive(Clone)]
+enum PhraseCursor {
+    Empty,
+    Packed(PhraseCombinations<u128>),
+    Wide(PhraseCombinations<Vec<u8>>),
+}
+
+impl Iterator for PhraseCursor {
+    type Item = (String, i64, String);
+    fn next(&mut self) -> Option<Self::Item> {
+        match self {
+            Self::Empty => None,
+            Self::Packed(cursor) => cursor.next(),
+            Self::Wide(cursor) => cursor.next(),
+        }
+    }
+}
+
+fn phrase_cursor(syls: &[u16], lex: &Lexicon, limit: usize) -> PhraseCursor {
     if syls.len() < 2 || limit == 0 {
-        return Vec::new();
+        return PhraseCursor::Empty;
     }
     let reading = joined_reading(syls, lex);
     let mut cols = Vec::new();
     for syl in syls {
         let Some(node) = lex.walk_id(0, *syl) else {
-            return Vec::new();
+            return PhraseCursor::Empty;
         };
         let mut col = Vec::new();
         for word in lex.node_words(node) {
@@ -1741,60 +1805,137 @@ fn assemble_phrases(syls: &[u16], lex: &Lexicon, limit: usize) -> Vec<(String, i
             if word.score <= 0 || text.chars().count() != 1 {
                 continue;
             }
-            col.push((text.to_string(), word.score, word.score.max(1).ilog2()));
+            col.push((text, word.score, word.score.max(1).ilog2()));
             if col.len() == PHRASE_COLUMN {
                 break;
             }
         }
         if col.is_empty() {
-            return Vec::new();
+            return PhraseCursor::Empty;
         }
         cols.push(col);
     }
-    let width = cols.len();
-    let start = vec![0u8; width];
-    let mut seen = HashSet::new();
-    seen.insert(start.clone());
-    let mut heap = BinaryHeap::new();
-    heap.push(PhraseState {
-        score: cols.iter().map(|col| col[0].2).sum(),
-        idx: start,
-    });
-    let mut out = Vec::new();
-    while let Some(state) = heap.pop() {
-        if out.len() == limit {
-            break;
+    if cols.len() <= 25 {
+        PhraseCursor::Packed(PhraseCombinations::new(cols, reading, limit))
+    } else {
+        PhraseCursor::Wide(PhraseCombinations::new(cols, reading, limit))
+    }
+}
+
+// Five bits address each of the 24 characters. Fixed-width numeric order is
+// exactly the original lexicographic index order; longer phrases keep Vecs.
+trait PhraseIndex: Clone + Eq + Ord + std::hash::Hash {
+    fn allocated_bytes(&self) -> usize;
+    fn zero(width: usize) -> Self;
+    fn at(&self, dim: usize, width: usize) -> usize;
+    fn increment(&self, dim: usize, width: usize) -> Self;
+}
+
+impl PhraseIndex for u128 {
+    fn allocated_bytes(&self) -> usize {
+        0
+    }
+    fn zero(_: usize) -> Self {
+        0
+    }
+    fn at(&self, dim: usize, width: usize) -> usize {
+        ((self >> ((width - 1 - dim) * 5)) & 31) as usize
+    }
+    fn increment(&self, dim: usize, width: usize) -> Self {
+        self + (1u128 << ((width - 1 - dim) * 5))
+    }
+}
+
+impl PhraseIndex for Vec<u8> {
+    fn allocated_bytes(&self) -> usize {
+        self.capacity()
+    }
+    fn zero(width: usize) -> Self {
+        vec![0; width]
+    }
+    fn at(&self, dim: usize, _: usize) -> usize {
+        self[dim] as usize
+    }
+    fn increment(&self, dim: usize, _: usize) -> Self {
+        let mut next = self.clone();
+        next[dim] += 1;
+        next
+    }
+}
+
+type PhraseColumn = Vec<(&'static str, i64, u32)>;
+
+#[derive(Clone)]
+struct PhraseCombinations<I> {
+    cols: Vec<PhraseColumn>,
+    reading: String,
+    seen: HashSet<I>,
+    heap: BinaryHeap<PhraseState<I>>,
+    remaining: usize,
+}
+
+impl<I: PhraseIndex> PhraseCombinations<I> {
+    fn new(cols: Vec<PhraseColumn>, reading: String, limit: usize) -> Self {
+        let start = I::zero(cols.len());
+        let mut seen = HashSet::new();
+        seen.insert(start.clone());
+        let mut heap = BinaryHeap::new();
+        heap.push(PhraseState {
+            score: cols.iter().map(|col| col[0].2).sum(),
+            idx: start,
+        });
+        Self {
+            cols,
+            reading,
+            seen,
+            heap,
+            remaining: limit,
         }
-        let mut word = String::new();
+    }
+}
+
+impl<I: PhraseIndex> Iterator for PhraseCombinations<I> {
+    type Item = (String, i64, String);
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.remaining == 0 {
+            return None;
+        }
+        let state = self.heap.pop()?;
+        self.remaining -= 1;
+        let width = self.cols.len();
+        let mut word = String::with_capacity(width * 4);
         let mut score = i64::MAX;
-        for (col, &index) in cols.iter().zip(&state.idx) {
-            let (text, char_score, _) = &col[index as usize];
+        for (dim, col) in self.cols.iter().enumerate() {
+            let (text, char_score, _) = &col[state.idx.at(dim, width)];
             word.push_str(text);
             score = score.min(*char_score);
         }
-        out.push((word, score, reading.clone()));
         for dim in 0..width {
-            let next = state.idx[dim] as usize + 1;
-            if next >= cols[dim].len() {
+            let next = state.idx.at(dim, width) + 1;
+            if next >= self.cols[dim].len() {
                 continue;
             }
-            let mut idx = state.idx.clone();
-            idx[dim] = next as u8;
-            if !seen.insert(idx.clone()) {
+            let idx = state.idx.increment(dim, width);
+            if !self.seen.insert(idx.clone()) {
                 continue;
             }
-            let total = cols
+            let total = self
+                .cols
                 .iter()
-                .zip(&idx)
-                .map(|(col, &index)| col[index as usize].2)
+                .enumerate()
+                .map(|(dim, col)| col[idx.at(dim, width)].2)
                 .sum();
-            heap.push(PhraseState { score: total, idx });
+            self.heap.push(PhraseState { score: total, idx });
         }
+        Some((word, score, self.reading.clone()))
     }
-    out
 }
 
 fn partial_nodes(plan: &Plan, lex: &Lexicon) -> Vec<PartialNode> {
+    // No positive-length prefix can be shorter than a one-byte input.
+    if plan.raw.len() < 2 {
+        return Vec::new();
+    }
     let mut batches = Vec::new();
     if let Some(first) = peek_ranked(plan, lex) {
         if let Some(syls) = first.node.map(|node| path_syls(lex, node)).or_else(|| {
@@ -1933,15 +2074,16 @@ struct RawMerge<'a> {
     plan: &'a Plan,
     at: Vec<u32>,
     heap: BinaryHeap<MergeItem>,
-    seen: HashSet<String>,
+    seen: HashSet<Cow<'static, str>>,
 }
 
+#[derive(Clone)]
 struct MergeItem {
     tier: u8,
     score: i64,
     seq: u32,
     chars: u32,
-    word: String,
+    word: Cow<'static, str>,
     node: Option<u32>,
     read_at: Option<u32>,
     src: usize,
@@ -1991,7 +2133,7 @@ impl<'a> RawMerge<'a> {
                 score: extra.score,
                 seq: extra.seq,
                 chars: extra.word.chars().count() as u32,
-                word: extra.word.clone(),
+                word: Cow::Owned(extra.word.clone()),
                 node: extra.node,
                 read_at: extra.read_at,
                 src: index,
@@ -2011,13 +2153,13 @@ impl<'a> RawMerge<'a> {
             if score <= 0 {
                 continue;
             }
-            let text = lex.text(word.text).to_string();
+            let text = lex.text(word.text);
             self.heap.push(MergeItem {
                 tier: src.tier,
                 score,
                 seq: word.seq,
                 chars: text.chars().count() as u32,
-                word: text,
+                word: Cow::Borrowed(text),
                 node: Some(src.node),
                 read_at: Some(src.node),
                 src: index,
@@ -2036,7 +2178,7 @@ impl<'a> RawMerge<'a> {
                 continue;
             }
             return Some(Ranked {
-                word: item.word,
+                word: item.word.into_owned(),
                 tier: item.tier,
                 score: item.score,
                 node: item.node,
@@ -2060,7 +2202,7 @@ impl<'a> RawMerge<'a> {
                 continue;
             }
             return Some(Ranked {
-                word: item.word,
+                word: item.word.into_owned(),
                 tier: item.tier,
                 score: item.score,
                 node: item.node,
@@ -2071,8 +2213,9 @@ impl<'a> RawMerge<'a> {
 }
 
 /// Session-order cursor. Learned scores are bounded; prefixes follow exact matches.
+#[derive(Clone)]
 pub(crate) struct Pool {
-    plan: Plan,
+    plan: Arc<Plan>,
     merge: Option<MergeState>,
     head: Vec<Choice>,
     head_at: usize,
@@ -2087,16 +2230,128 @@ pub(crate) struct Pool {
     partials: Vec<Choice>,
     partial_at: usize,
     partials_ready: bool,
-    phrases: Vec<Choice>,
-    phrase_at: usize,
-    phrases_ready: bool,
+    phrases: Option<PhraseCursor>,
     phase: u8,
 }
 
+/// Dictionary-only first page and its independent continuation cursor.
+/// Personal/imported overlays are always applied on the foreground path.
+pub(crate) struct Prepared {
+    pub(crate) pool: Pool,
+    pub(crate) out: Arc<Vec<Choice>>,
+    pub(crate) done: bool,
+}
+
+impl Prepared {
+    pub(crate) fn new(plan: Arc<Plan>, lex: &Lexicon, page_size: usize) -> Self {
+        let mut pool = Pool::open(plan, lex, Vec::new(), Vec::new());
+        let mut out = Vec::with_capacity(page_size);
+        let mut done = false;
+        while out.len() < page_size {
+            if let Some(choice) = pool.next(lex) {
+                out.push(choice);
+            } else {
+                done = true;
+                break;
+            }
+        }
+        Self {
+            pool,
+            out: Arc::new(out),
+            done,
+        }
+    }
+
+    pub(crate) fn plan(&self) -> Arc<Plan> {
+        self.pool.plan.clone()
+    }
+
+    /// Conservative accounting of owned payloads, not mapped dictionary pages
+    /// or allocator/RSS accounting. Shared plans are counted for each entry.
+    pub(crate) fn bytes(&self) -> usize {
+        use std::mem::{size_of, size_of_val};
+        let choice_strings = |c: &Choice| c.word.capacity() + c.reading.capacity();
+        let choices = |v: &Vec<Choice>| {
+            v.capacity() * size_of::<Choice>() + v.iter().map(choice_strings).sum::<usize>()
+        };
+        let p = &self.pool;
+        let plan = &p.plan;
+        let mut bytes = size_of_val(self)
+            + size_of::<Plan>()
+            + choices(&self.out)
+            + plan.raw.capacity()
+            + plan.nodes.capacity() * size_of::<NodeSrc>()
+            + plan.extras.capacity() * size_of::<Extra>()
+            + plan.partials.capacity() * size_of::<PartialNode>()
+            + plan.phrase.capacity() * size_of::<u16>()
+            + plan.forms.capacity() * size_of::<(String, i64, String)>();
+        bytes += plan
+            .extras
+            .iter()
+            .map(|e| e.word.capacity() + e.reading.capacity())
+            .sum::<usize>();
+        bytes += plan
+            .forms
+            .iter()
+            .map(|(w, _, r)| w.capacity() + r.capacity())
+            .sum::<usize>();
+        bytes += plan.ambiguous.as_ref().map_or(0, String::capacity)
+            + plan.fixed.as_ref().map_or(0, String::capacity)
+            + plan.plain.as_ref().map_or(0, choice_strings);
+        if let Some((text, reading)) = &plan.sentence {
+            bytes += text.capacity()
+                + reading.capacity() * size_of::<String>()
+                + reading.iter().map(String::capacity).sum::<usize>();
+        }
+        for v in [&p.head, &p.users, &p.soon, &p.user_partials, &p.partials] {
+            bytes += choices(v);
+        }
+        bytes += p.prefix.as_ref().map_or(0, choice_strings)
+            + p.shown.capacity() * (size_of::<String>() + 16)
+            + p.shown.iter().map(String::capacity).sum::<usize>();
+        let cow_bytes = |s: &Cow<'static, str>| match s {
+            Cow::Owned(s) => s.capacity(),
+            _ => 0,
+        };
+        if let Some(merge) = &p.merge {
+            bytes += merge.at.capacity() * size_of::<u32>()
+                + merge.heap.capacity() * size_of::<MergeItem>()
+                + merge.heap.iter().map(|i| cow_bytes(&i.word)).sum::<usize>()
+                + merge.seen.capacity() * (size_of::<Cow<'static, str>>() + 16)
+                + merge.seen.iter().map(cow_bytes).sum::<usize>();
+        }
+        fn cursor_bytes<I: PhraseIndex>(c: &PhraseCombinations<I>) -> usize {
+            c.cols.capacity() * std::mem::size_of::<PhraseColumn>()
+                + c.cols
+                    .iter()
+                    .map(|v| v.capacity() * std::mem::size_of::<(&str, i64, u32)>())
+                    .sum::<usize>()
+                + c.reading.capacity()
+                + c.seen.capacity() * (std::mem::size_of::<I>() + 16)
+                + c.seen
+                    .iter()
+                    .map(PhraseIndex::allocated_bytes)
+                    .sum::<usize>()
+                + c.heap.capacity() * std::mem::size_of::<PhraseState<I>>()
+                + c.heap
+                    .iter()
+                    .map(|s| s.idx.allocated_bytes())
+                    .sum::<usize>()
+        }
+        bytes += match p.phrases.as_ref() {
+            Some(PhraseCursor::Packed(c)) => cursor_bytes(c),
+            Some(PhraseCursor::Wide(c)) => cursor_bytes(c),
+            _ => 0,
+        };
+        bytes
+    }
+}
+
+#[derive(Clone)]
 struct MergeState {
     at: Vec<u32>,
     heap: BinaryHeap<MergeItem>,
-    seen: HashSet<String>,
+    seen: HashSet<Cow<'static, str>>,
 }
 
 fn stored_tier(plan: &Plan, lex: &Lexicon, word: &str) -> Option<u8> {
@@ -2123,7 +2378,7 @@ fn stored_tier(plan: &Plan, lex: &Lexicon, word: &str) -> Option<u8> {
 
 impl Pool {
     pub(crate) fn open(
-        plan: Plan,
+        plan: Arc<Plan>,
         lex: &Lexicon,
         mut users: Vec<Choice>,
         partials: Vec<Choice>,
@@ -2148,10 +2403,13 @@ impl Pool {
                 }
             }
         }
-        let floor = peek_ranked(&plan, lex).map_or(100, |r| r.score / 2);
+        // The corpus floor only affects learned entries without a corpus score.
+        // Avoid constructing a complete merge heap for ordinary empty overlays.
+        let mut floor = None;
         for choice in users.iter_mut() {
             if choice.user_weight > 0 && choice.score == 0 {
-                choice.score = floor;
+                choice.score = *floor
+                    .get_or_insert_with(|| peek_ranked(&plan, lex).map_or(100, |r| r.score / 2));
             }
             if let Some(tier) = stored_tier(&plan, lex, &choice.word) {
                 choice.tier = tier;
@@ -2191,9 +2449,7 @@ impl Pool {
             partials: Vec::new(),
             partial_at: 0,
             partials_ready: false,
-            phrases: Vec::new(),
-            phrase_at: 0,
-            phrases_ready: false,
+            phrases: None,
             phase: 0,
         };
         if pool.plan.plain.is_some() && pool.users.is_empty() {
@@ -2244,18 +2500,22 @@ impl Pool {
             self.remember(&choice.word);
             return Some(choice);
         }
-        if !self.phrases_ready {
-            self.phrases = phrase_choices(&self.plan, lex);
-            self.phrases_ready = true;
+        if self.phrases.is_none() {
+            self.phrases = Some(phrase_cursor(&self.plan.phrase, lex, PHRASE_LIMIT));
         }
-        while self.phrase_at < self.phrases.len() {
-            let choice = self.phrases[self.phrase_at].clone();
-            self.phrase_at += 1;
-            if self.remembered(&choice.word) {
+        while let Some((word, score, reading)) = self.phrases.as_mut().unwrap().next() {
+            if self.remembered(&word) {
                 continue;
             }
-            self.remember(&choice.word);
-            return Some(choice);
+            self.remember(&word);
+            return Some(Choice {
+                word,
+                score,
+                reading,
+                span: self.plan.raw.len(),
+                tier: 0,
+                user_weight: 0,
+            });
         }
         None
     }
@@ -2283,7 +2543,7 @@ impl Pool {
     fn remember(&mut self, word: &str) {
         self.shown.insert(word.to_string());
         if let Some(merge) = self.merge.as_mut() {
-            merge.seen.insert(word.to_string());
+            merge.seen.insert(Cow::Owned(word.to_string()));
         }
     }
 
@@ -2308,7 +2568,7 @@ impl Pool {
             if let Some(word) = &self.plan.ambiguous {
                 if self.plan.has_char && !first.iter().any(|item| &item.word == word) {
                     held = Some(synthetic(word, 0));
-                    merge.seen.insert(word.clone());
+                    merge.seen.insert(Cow::Owned(word.clone()));
                 }
             }
         }
@@ -2364,7 +2624,7 @@ impl Pool {
                     .as_mut()
                     .unwrap()
                     .seen
-                    .insert(choice.word.clone());
+                    .insert(Cow::Owned(choice.word.clone()));
                 return Some(choice);
             }
             return self.pull_tier(lex);
@@ -2394,13 +2654,13 @@ impl Pool {
                     if score <= 0 {
                         continue;
                     }
-                    let text = lex.text(word.text).to_string();
+                    let text = lex.text(word.text);
                     merge.heap.push(MergeItem {
                         tier: src.tier,
                         score,
                         seq: word.seq,
                         chars: text.chars().count() as u32,
-                        word: text,
+                        word: Cow::Borrowed(text),
                         node: Some(src.node),
                         read_at: Some(src.node),
                         src: item.src,
@@ -2413,7 +2673,7 @@ impl Pool {
                 continue;
             }
             let ranked = Ranked {
-                word: item.word,
+                word: item.word.into_owned(),
                 tier: item.tier,
                 score: item.score,
                 node: item.node,
@@ -2432,20 +2692,6 @@ fn synthetic(word: &str, score: i64) -> Ranked {
         node: None,
         read_at: None,
     }
-}
-
-fn phrase_choices(plan: &Plan, lex: &Lexicon) -> Vec<Choice> {
-    assemble_phrases(&plan.phrase, lex, PHRASE_LIMIT)
-        .into_iter()
-        .map(|(word, score, reading)| Choice {
-            word,
-            span: plan.raw.len(),
-            reading,
-            tier: 0,
-            score,
-            user_weight: 0,
-        })
-        .collect()
 }
 
 fn best_prefix(plan: &Plan, lex: &Lexicon, users: &[Choice]) -> Option<Choice> {
@@ -2494,15 +2740,15 @@ fn expand_partials_tail(plan: &Plan, lex: &Lexicon, mut users: Vec<Choice>) -> V
             found.push((
                 lex.text(word.text).to_string(),
                 word.score,
-                src.syls,
+                partial_cost(word.score, src.syls as usize, lex.ln_corpus),
                 src.span,
                 src.node,
             ));
         }
     }
     found.sort_by(|left, right| {
-        partial_cost(left.1, left.2 as usize, lex.ln_corpus)
-            .partial_cmp(&partial_cost(right.1, right.2 as usize, lex.ln_corpus))
+        left.2
+            .partial_cmp(&right.2)
             .unwrap_or(Ordering::Equal)
             .then(right.1.cmp(&left.1))
             .then(left.0.cmp(&right.0))
@@ -3193,13 +3439,8 @@ fn match_lexicon(
                     note_node(nodes, step.node, step.tier, 1);
                     maybe_ambiguous(lex, step.node, step.tier, 1, raw, true, ambiguous);
                     if step.tier >= 2 && lex.nodes[step.node as usize].depth >= 2 {
-                        let children: Vec<u32> = lex
-                            .edges_all(step.node)
-                            .iter()
-                            .map(|edge| edge.node)
-                            .collect();
-                        for child in children {
-                            note_node(nodes, child, step.tier, 4);
+                        for edge in lex.edges_all(step.node) {
+                            note_node(nodes, edge.node, step.tier, 4);
                         }
                     }
                 }
@@ -3305,12 +3546,16 @@ fn piece_match(prefs: crate::InputPreferences, piece: &str, syl: &str) -> Option
     }
     // ü is stored as v (lüe → lve) and, after j/q/x/y, as u (jue). The other
     // spelling is the same syllable: lue, nue, jve, qvan, xve, yvan.
-    let alt = umlaut_alias(syl)?;
-    let piece_b = piece.as_bytes();
-    let alt_b = alt.as_bytes();
-    if piece_b.len() < 2 || piece_b.get(1) != alt_b.get(1) {
+    // Most failed matches cannot be umlaut aliases. Reject before allocating.
+    let second = match syl.as_bytes().get(1)? {
+        b'u' => b'v',
+        b'v' => b'u',
+        _ => return None,
+    };
+    if piece.as_bytes().get(1) != Some(&second) {
         return None;
     }
+    let alt = umlaut_alias(syl)?;
     piece_match_plain(prefs, piece, &alt)
 }
 
@@ -3763,3 +4008,7 @@ mod ou_uo_tests {
         assert!(suggest("shuo", &lex).iter().any(|w| w == "手"));
     }
 }
+
+#[cfg(all(test, waypinyin_full_lexicon))]
+#[path = "lexicon_reference.rs"]
+mod reference;

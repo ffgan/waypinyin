@@ -740,7 +740,7 @@ fn shift_preserves_pinyin_and_punctuation_widens() {
 }
 
 #[test]
-fn dense_syllable_keeps_a_wide_pool_and_loads_two_pages() {
+fn dense_syllable_keeps_a_wide_pool_and_loads_one_page() {
     assert_eq!(PAGE_SIZE, 5);
     let lex = Arc::new(Lexicon::load());
     let full = suggest("yi", &lex);
@@ -762,15 +762,12 @@ fn dense_syllable_keeps_a_wide_pool_and_loads_two_pages() {
     }
     let mut session = Session::new(lex);
     type_in(&mut session, "yi");
-    assert_eq!(session.loaded(), PAGE_SIZE * 2);
+    assert_eq!(session.loaded(), PAGE_SIZE);
     let shown = session.view().candidates.clone();
     assert_eq!(shown, full[..shown.len()]);
     session.handle(0xff56, 0);
     let loaded = session.loaded();
-    assert!(
-        loaded > PAGE_SIZE * 2 && loaded <= PAGE_SIZE * 3,
-        "{loaded}"
-    );
+    assert!(loaded > PAGE_SIZE && loaded <= PAGE_SIZE * 2, "{loaded}");
     let shown = session.view().candidates.clone();
     assert_eq!(shown, full[..shown.len()]);
 }
@@ -853,6 +850,9 @@ fn unlisted_phrase_is_built_from_its_characters() {
     assert!(rows.iter().any(|row| row.word == "不单" && row.span == 5));
     let mut session = Session::new(lex);
     type_in(&mut session, "budanzhi");
+    // The shorter prefix is on the next page; don't materialize it before the
+    // first page is presented merely to satisfy an internal lookahead test.
+    session.page(1);
     assert!(
         session.view().candidates.iter().any(|word| word == "不单"),
         "{:?}",

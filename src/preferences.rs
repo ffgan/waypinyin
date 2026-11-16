@@ -31,7 +31,10 @@ impl InputPreferences {
             .join("config.toml")
     }
     pub fn load() -> Self {
-        match std::fs::read_to_string(Self::path()) {
+        Self::load_from(&Self::path())
+    }
+    fn load_from(path: &std::path::Path) -> Self {
+        match std::fs::read_to_string(path) {
             Ok(text) => Self::parse(&text).unwrap_or_else(|e| {
                 eprintln!("waypinyin: {e}");
                 Self::default()
@@ -117,6 +120,49 @@ impl InputPreferences {
     }
 }
 
+/// A session's settings source. Watch the parent so atomic saves are visible.
+#[derive(Debug)]
+pub(crate) struct PreferencesSource {
+    path: PathBuf,
+    watch: Option<crate::watch::DirectoryWatch>,
+    pub(crate) current: InputPreferences,
+}
+
+impl PreferencesSource {
+    pub(crate) fn load() -> Self {
+        Self::from_path(InputPreferences::path())
+    }
+
+    pub(crate) fn from_path(path: PathBuf) -> Self {
+        // Install before reading so concurrent saves remain queued.
+        let watch = crate::watch::DirectoryWatch::new(path.parent().unwrap());
+        let current = InputPreferences::load_from(&path);
+        Self {
+            path,
+            watch,
+            current,
+        }
+    }
+
+    pub(crate) fn refresh(&mut self) -> Option<InputPreferences> {
+        if self
+            .watch
+            .as_mut()
+            .is_some_and(|watch| watch.poll() == crate::watch::Change::Unchanged)
+        {
+            return None;
+        }
+        self.watch = crate::watch::DirectoryWatch::new(self.path.parent().unwrap());
+        let current = InputPreferences::load_from(&self.path);
+        if current == self.current {
+            None
+        } else {
+            self.current = current;
+            Some(current)
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -141,6 +187,30 @@ mod tests {
         assert_eq!(std::fs::read_dir(&root).unwrap().count(), 1);
         std::fs::remove_dir_all(root).unwrap();
     }
+    #[test]
+    fn notifications_reload_atomic_saves_and_deletions() {
+        let root =
+            std::env::temp_dir().join(format!("waypinyin-prefs-watch-{}", std::process::id()));
+        std::fs::create_dir_all(&root).unwrap();
+        let path = root.join("missing/config.toml");
+        let mut source = PreferencesSource::from_path(path.clone());
+        assert_eq!(source.refresh(), None);
+        let changed = InputPreferences {
+            enabled: false,
+            ..Default::default()
+        };
+        changed.save_to(&path).unwrap();
+        assert_eq!(source.refresh(), Some(changed));
+        assert_eq!(source.refresh(), None);
+        source.watch.as_mut().unwrap().reconcile_next();
+        assert_eq!(source.refresh(), None);
+        std::fs::remove_file(&path).unwrap();
+        assert_eq!(source.refresh(), Some(InputPreferences::default()));
+        changed.save_to(&path).unwrap();
+        assert_eq!(source.refresh(), Some(changed));
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+
     #[test]
     fn configuration_parsing() {
         assert_eq!(

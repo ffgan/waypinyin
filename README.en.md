@@ -74,3 +74,37 @@ architecture. Cross compilation and big-endian targets are not supported yet.
 Validation: [docs/VALIDATION.md](docs/VALIDATION.md).
 Contributing: [CONTRIBUTING.md](CONTRIBUTING.md). Packaging:
 [docs/PACKAGING.md](docs/PACKAGING.md). Security: [SECURITY.md](SECURITY.md).
+
+
+## Linux performance
+
+The read-only lexicon mapping uses sequential readahead during validation and
+random-access advice during lookup. Inotify watches cache imported dictionaries
+and live preferences, with periodic reconciliation and polling fallbacks.
+Candidate generation reuses segmentation and immutable plans, and reduces beam
+search and phrase-enumeration allocations while retaining search and ordering
+rules. See [performance notes](docs/PERFORMANCE.md) for reproducible probes and local
+measurements.
+
+
+Only the current five-candidate page is materialized before presentation. A
+single idle worker preloads initial-letter pages and likely next-key pages into
+a bounded cache. Hits share the first page and defer continuation copying until
+paging; personal and imported candidates are still merged live. Foreground
+requests never wait for the worker. See the first-page probe in the performance
+notes for the cache policy and measurements.
+
+
+## Frequent-input learning
+
+Confirmed candidate commits now count the actual Pinyin or abbreviation used
+(e.g. `nihao` and `nh` separately). Canceled drafts and unconverted Return commits
+are excluded. Up to 128 active patterns share the local `user.txt` learning log;
+the top 16 repeated patterns and their prefixes receive preload priority. Existing
+word-learning records seed warming too. Hotness halves every 512 learning-clock
+steps; candidate ordering still uses live learning/import overlays.
+
+Nothing is uploaded. Password/PIN purposes and private/hidden IBus hints disable
+learning and new preload requests; mixed-context compositions remain unlearned.
+New logs and compaction files use owner-only permissions. The append log may have
+more historical rows than the active-pattern limit until startup compaction.

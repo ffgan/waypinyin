@@ -1,0 +1,992 @@
+{
+  "runs": 7,
+  "idle_ms": 2,
+  "median": {
+    "0": {
+      "before": {
+        "first_key": {
+          "count": 200,
+          "p50_ns": 48671,
+          "p95_ns": 79609,
+          "max_ns": 121025
+        },
+        "first_page_key": {
+          "count": 1202,
+          "p50_ns": 59862,
+          "p95_ns": 277669,
+          "max_ns": 1106375
+        },
+        "replay_page_key": {
+          "count": 1202,
+          "p50_ns": 12544,
+          "p95_ns": 32811,
+          "max_ns": 125534
+        },
+        "quality": {
+          "cases": 200,
+          "top1": 200,
+          "idle_ms": 0
+        }
+      },
+      "after": {
+        "first_key": {
+          "count": 200,
+          "p50_ns": 7545,
+          "p95_ns": 73678,
+          "max_ns": 119012
+        },
+        "first_page_key": {
+          "count": 1202,
+          "p50_ns": 53049,
+          "p95_ns": 253964,
+          "max_ns": 1103780
+        },
+        "replay_page_key": {
+          "count": 1202,
+          "p50_ns": 6432,
+          "p95_ns": 19236,
+          "max_ns": 99626
+        },
+        "quality": {
+          "cases": 200,
+          "top1": 200,
+          "idle_ms": 0
+        }
+      }
+    },
+    "2": {
+      "before": {
+        "first_key": {
+          "count": 200,
+          "p50_ns": 87163,
+          "p95_ns": 147656,
+          "max_ns": 183994
+        },
+        "first_page_key": {
+          "count": 1202,
+          "p50_ns": 96160,
+          "p95_ns": 399275,
+          "max_ns": 1768691
+        },
+        "replay_page_key": {
+          "count": 1202,
+          "p50_ns": 25037,
+          "p95_ns": 67055,
+          "max_ns": 394376
+        },
+        "quality": {
+          "cases": 200,
+          "top1": 200,
+          "idle_ms": 2
+        }
+      },
+      "after": {
+        "first_key": {
+          "count": 200,
+          "p50_ns": 12573,
+          "p95_ns": 18414,
+          "max_ns": 34955
+        },
+        "first_page_key": {
+          "count": 1202,
+          "p50_ns": 5891,
+          "p95_ns": 69450,
+          "max_ns": 4697919
+        },
+        "replay_page_key": {
+          "count": 1202,
+          "p50_ns": 5350,
+          "p95_ns": 13896,
+          "max_ns": 73127
+        },
+        "quality": {
+          "cases": 200,
+          "top1": 200,
+          "idle_ms": 2
+        }
+      }
+    }
+  },
+  "samples": {
+    "0": {
+      "before": [
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 48671,
+              "p95_ns": 86912,
+              "max_ns": 121025
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 60022,
+              "p95_ns": 273691,
+              "max_ns": 1069486
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 12533,
+              "p95_ns": 31799,
+              "max_ns": 130453
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=48671 p95_ns=86912 max_ns=121025\nfirst_page_key count=1202 p50_ns=60022 p95_ns=273691 max_ns=1069486\nreplay_page_key count=1202 p50_ns=12533 p95_ns=31799 max_ns=130453\nquality cases=200 top1=200 idle_ms=0\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 47549,
+              "p95_ns": 75711,
+              "max_ns": 114504
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 58629,
+              "p95_ns": 277669,
+              "max_ns": 1135991
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 12483,
+              "p95_ns": 33022,
+              "max_ns": 125534
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=47549 p95_ns=75711 max_ns=114504\nfirst_page_key count=1202 p50_ns=58629 p95_ns=277669 max_ns=1135991\nreplay_page_key count=1202 p50_ns=12483 p95_ns=33022 max_ns=125534\nquality cases=200 top1=200 idle_ms=0\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 49753,
+              "p95_ns": 95499,
+              "max_ns": 122840
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 63218,
+              "p95_ns": 290221,
+              "max_ns": 1089543
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 12924,
+              "p95_ns": 33492,
+              "max_ns": 137186
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=49753 p95_ns=95499 max_ns=122840\nfirst_page_key count=1202 p50_ns=63218 p95_ns=290221 max_ns=1089543\nreplay_page_key count=1202 p50_ns=12924 p95_ns=33492 max_ns=137186\nquality cases=200 top1=200 idle_ms=0\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 48912,
+              "p95_ns": 79609,
+              "max_ns": 118942
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 59371,
+              "p95_ns": 281105,
+              "max_ns": 1109541
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 12614,
+              "p95_ns": 33282,
+              "max_ns": 129672
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=48912 p95_ns=79609 max_ns=118942\nfirst_page_key count=1202 p50_ns=59371 p95_ns=281105 max_ns=1109541\nreplay_page_key count=1202 p50_ns=12614 p95_ns=33282 max_ns=129672\nquality cases=200 top1=200 idle_ms=0\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 49072,
+              "p95_ns": 83135,
+              "max_ns": 137126
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 60983,
+              "p95_ns": 288017,
+              "max_ns": 1131783
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 12634,
+              "p95_ns": 32811,
+              "max_ns": 108583
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=49072 p95_ns=83135 max_ns=137126\nfirst_page_key count=1202 p50_ns=60983 p95_ns=288017 max_ns=1131783\nreplay_page_key count=1202 p50_ns=12634 p95_ns=32811 max_ns=108583\nquality cases=200 top1=200 idle_ms=0\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 47188,
+              "p95_ns": 78016,
+              "max_ns": 119713
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 58198,
+              "p95_ns": 269383,
+              "max_ns": 1106375
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 12533,
+              "p95_ns": 32390,
+              "max_ns": 109344
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=47188 p95_ns=78016 max_ns=119713\nfirst_page_key count=1202 p50_ns=58198 p95_ns=269383 max_ns=1106375\nreplay_page_key count=1202 p50_ns=12533 p95_ns=32390 max_ns=109344\nquality cases=200 top1=200 idle_ms=0\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 47719,
+              "p95_ns": 78276,
+              "max_ns": 137026
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 59862,
+              "p95_ns": 267489,
+              "max_ns": 1075267
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 12544,
+              "p95_ns": 31990,
+              "max_ns": 99666
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=47719 p95_ns=78276 max_ns=137026\nfirst_page_key count=1202 p50_ns=59862 p95_ns=267489 max_ns=1075267\nreplay_page_key count=1202 p50_ns=12544 p95_ns=31990 max_ns=99666\nquality cases=200 top1=200 idle_ms=0\n"
+        }
+      ],
+      "after": [
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 8205,
+              "p95_ns": 64781,
+              "max_ns": 110205
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 50845,
+              "p95_ns": 249986,
+              "max_ns": 1103780
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 6562,
+              "p95_ns": 19456,
+              "max_ns": 201506
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=8205 p95_ns=64781 max_ns=110205\nfirst_page_key count=1202 p50_ns=50845 p95_ns=249986 max_ns=1103780\nreplay_page_key count=1202 p50_ns=6562 p95_ns=19456 max_ns=201506\nquality cases=200 top1=200 idle_ms=0\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 8476,
+              "p95_ns": 73678,
+              "max_ns": 121186
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 53049,
+              "p95_ns": 248895,
+              "max_ns": 1055591
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 6843,
+              "p95_ns": 19646,
+              "max_ns": 112620
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=8476 p95_ns=73678 max_ns=121186\nfirst_page_key count=1202 p50_ns=53049 p95_ns=248895 max_ns=1055591\nreplay_page_key count=1202 p50_ns=6843 p95_ns=19646 max_ns=112620\nquality cases=200 top1=200 idle_ms=0\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 7294,
+              "p95_ns": 76072,
+              "max_ns": 116828
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 54402,
+              "p95_ns": 259584,
+              "max_ns": 1202485
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 6332,
+              "p95_ns": 18474,
+              "max_ns": 90178
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=7294 p95_ns=76072 max_ns=116828\nfirst_page_key count=1202 p50_ns=54402 p95_ns=259584 max_ns=1202485\nreplay_page_key count=1202 p50_ns=6332 p95_ns=18474 max_ns=90178\nquality cases=200 top1=200 idle_ms=0\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 6232,
+              "p95_ns": 65191,
+              "max_ns": 134090
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 51816,
+              "p95_ns": 256879,
+              "max_ns": 1081458
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 6051,
+              "p95_ns": 18515,
+              "max_ns": 124802
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=6232 p95_ns=65191 max_ns=134090\nfirst_page_key count=1202 p50_ns=51816 p95_ns=256879 max_ns=1081458\nreplay_page_key count=1202 p50_ns=6051 p95_ns=18515 max_ns=124802\nquality cases=200 top1=200 idle_ms=0\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 8255,
+              "p95_ns": 75391,
+              "max_ns": 114473
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 55153,
+              "p95_ns": 251079,
+              "max_ns": 1112496
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 6743,
+              "p95_ns": 19236,
+              "max_ns": 87914
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=8255 p95_ns=75391 max_ns=114473\nfirst_page_key count=1202 p50_ns=55153 p95_ns=251079 max_ns=1112496\nreplay_page_key count=1202 p50_ns=6743 p95_ns=19236 max_ns=87914\nquality cases=200 top1=200 idle_ms=0\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 7545,
+              "p95_ns": 75511,
+              "max_ns": 119012
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 53670,
+              "p95_ns": 261308,
+              "max_ns": 1097439
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 6352,
+              "p95_ns": 17132,
+              "max_ns": 91351
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=7545 p95_ns=75511 max_ns=119012\nfirst_page_key count=1202 p50_ns=53670 p95_ns=261308 max_ns=1097439\nreplay_page_key count=1202 p50_ns=6352 p95_ns=17132 max_ns=91351\nquality cases=200 top1=200 idle_ms=0\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 6633,
+              "p95_ns": 65061,
+              "max_ns": 165599
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 51947,
+              "p95_ns": 253964,
+              "max_ns": 1103880
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 6432,
+              "p95_ns": 19316,
+              "max_ns": 99626
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 0
+            }
+          },
+          "output": "first_key count=200 p50_ns=6633 p95_ns=65061 max_ns=165599\nfirst_page_key count=1202 p50_ns=51947 p95_ns=253964 max_ns=1103880\nreplay_page_key count=1202 p50_ns=6432 p95_ns=19316 max_ns=99626\nquality cases=200 top1=200 idle_ms=0\n"
+        }
+      ]
+    },
+    "2": {
+      "before": [
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 73458,
+              "p95_ns": 114524,
+              "max_ns": 140974
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 82013,
+              "p95_ns": 336979,
+              "max_ns": 1218414
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 21370,
+              "p95_ns": 48150,
+              "max_ns": 246501
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=73458 p95_ns=114524 max_ns=140974\nfirst_page_key count=1202 p50_ns=82013 p95_ns=336979 max_ns=1218414\nreplay_page_key count=1202 p50_ns=21370 p95_ns=48150 max_ns=246501\nquality cases=200 top1=200 idle_ms=2\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 76173,
+              "p95_ns": 117279,
+              "max_ns": 178323
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 82454,
+              "p95_ns": 325637,
+              "max_ns": 1257237
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 21440,
+              "p95_ns": 54872,
+              "max_ns": 195966
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=76173 p95_ns=117279 max_ns=178323\nfirst_page_key count=1202 p50_ns=82454 p95_ns=325637 max_ns=1257237\nreplay_page_key count=1202 p50_ns=21440 p95_ns=54872 max_ns=195966\nquality cases=200 top1=200 idle_ms=2\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 76934,
+              "p95_ns": 115956,
+              "max_ns": 142476
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 80912,
+              "p95_ns": 345756,
+              "max_ns": 1768691
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 21631,
+              "p95_ns": 54142,
+              "max_ns": 232073
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=76934 p95_ns=115956 max_ns=142476\nfirst_page_key count=1202 p50_ns=80912 p95_ns=345756 max_ns=1768691\nreplay_page_key count=1202 p50_ns=21631 p95_ns=54142 max_ns=232073\nquality cases=200 top1=200 idle_ms=2\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 106679,
+              "p95_ns": 12451752,
+              "max_ns": 34630930
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 370051,
+              "p95_ns": 15899517,
+              "max_ns": 142971763
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 25037,
+              "p95_ns": 73938,
+              "max_ns": 47761008
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=106679 p95_ns=12451752 max_ns=34630930\nfirst_page_key count=1202 p50_ns=370051 p95_ns=15899517 max_ns=142971763\nreplay_page_key count=1202 p50_ns=25037 p95_ns=73938 max_ns=47761008\nquality cases=200 top1=200 idle_ms=2\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 223898,
+              "p95_ns": 17371825,
+              "max_ns": 30703119
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 451042,
+              "p95_ns": 22136038,
+              "max_ns": 393384007
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 37310,
+              "p95_ns": 195395,
+              "max_ns": 52584581
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=223898 p95_ns=17371825 max_ns=30703119\nfirst_page_key count=1202 p50_ns=451042 p95_ns=22136038 max_ns=393384007\nreplay_page_key count=1202 p50_ns=37310 p95_ns=195395 max_ns=52584581\nquality cases=200 top1=200 idle_ms=2\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 87163,
+              "p95_ns": 6896433,
+              "max_ns": 21103711
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 120895,
+              "p95_ns": 6675160,
+              "max_ns": 97703758
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 25558,
+              "p95_ns": 85450,
+              "max_ns": 7577384
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=87163 p95_ns=6896433 max_ns=21103711\nfirst_page_key count=1202 p50_ns=120895 p95_ns=6675160 max_ns=97703758\nreplay_page_key count=1202 p50_ns=25558 p95_ns=85450 max_ns=7577384\nquality cases=200 top1=200 idle_ms=2\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 88956,
+              "p95_ns": 147656,
+              "max_ns": 183994
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 96160,
+              "p95_ns": 399275,
+              "max_ns": 1557638
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 26129,
+              "p95_ns": 67055,
+              "max_ns": 394376
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=88956 p95_ns=147656 max_ns=183994\nfirst_page_key count=1202 p50_ns=96160 p95_ns=399275 max_ns=1557638\nreplay_page_key count=1202 p50_ns=26129 p95_ns=67055 max_ns=394376\nquality cases=200 top1=200 idle_ms=2\n"
+        }
+      ],
+      "after": [
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 11612,
+              "p95_ns": 17402,
+              "max_ns": 25718
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 5380,
+              "p95_ns": 21741,
+              "max_ns": 439851
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 4579,
+              "p95_ns": 11972,
+              "max_ns": 30917
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=11612 p95_ns=17402 max_ns=25718\nfirst_page_key count=1202 p50_ns=5380 p95_ns=21741 max_ns=439851\nreplay_page_key count=1202 p50_ns=4579 p95_ns=11972 max_ns=30917\nquality cases=200 top1=200 idle_ms=2\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 12133,
+              "p95_ns": 18113,
+              "max_ns": 31418
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 5591,
+              "p95_ns": 31418,
+              "max_ns": 475258
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 5260,
+              "p95_ns": 13896,
+              "max_ns": 38902
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=12133 p95_ns=18113 max_ns=31418\nfirst_page_key count=1202 p50_ns=5591 p95_ns=31418 max_ns=475258\nreplay_page_key count=1202 p50_ns=5260 p95_ns=13896 max_ns=38902\nquality cases=200 top1=200 idle_ms=2\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 12373,
+              "p95_ns": 17853,
+              "max_ns": 34955
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 5530,
+              "p95_ns": 64510,
+              "max_ns": 682424
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 4889,
+              "p95_ns": 13215,
+              "max_ns": 41998
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=12373 p95_ns=17853 max_ns=34955\nfirst_page_key count=1202 p50_ns=5530 p95_ns=64510 max_ns=682424\nreplay_page_key count=1202 p50_ns=4889 p95_ns=13215 max_ns=41998\nquality cases=200 top1=200 idle_ms=2\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 12583,
+              "p95_ns": 19496,
+              "max_ns": 30477
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 11471,
+              "p95_ns": 8420347,
+              "max_ns": 97859338
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 6142,
+              "p95_ns": 27712,
+              "max_ns": 11127179
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=12583 p95_ns=19496 max_ns=30477\nfirst_page_key count=1202 p50_ns=11471 p95_ns=8420347 max_ns=97859338\nreplay_page_key count=1202 p50_ns=6142 p95_ns=27712 max_ns=11127179\nquality cases=200 top1=200 idle_ms=2\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 14727,
+              "p95_ns": 7009784,
+              "max_ns": 33777337
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 12443,
+              "p95_ns": 10776495,
+              "max_ns": 405354301
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 6683,
+              "p95_ns": 40335,
+              "max_ns": 15785204
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=14727 p95_ns=7009784 max_ns=33777337\nfirst_page_key count=1202 p50_ns=12443 p95_ns=10776495 max_ns=405354301\nreplay_page_key count=1202 p50_ns=6683 p95_ns=40335 max_ns=15785204\nquality cases=200 top1=200 idle_ms=2\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 14698,
+              "p95_ns": 22842,
+              "max_ns": 1052314
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 7925,
+              "p95_ns": 1097668,
+              "max_ns": 58533495
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 6322,
+              "p95_ns": 24025,
+              "max_ns": 8095411
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=14698 p95_ns=22842 max_ns=1052314\nfirst_page_key count=1202 p50_ns=7925 p95_ns=1097668 max_ns=58533495\nreplay_page_key count=1202 p50_ns=6322 p95_ns=24025 max_ns=8095411\nquality cases=200 top1=200 idle_ms=2\n"
+        },
+        {
+          "metrics": {
+            "first_key": {
+              "count": 200,
+              "p50_ns": 12573,
+              "p95_ns": 18414,
+              "max_ns": 91982
+            },
+            "first_page_key": {
+              "count": 1202,
+              "p50_ns": 5891,
+              "p95_ns": 69450,
+              "max_ns": 4697919
+            },
+            "replay_page_key": {
+              "count": 1202,
+              "p50_ns": 5350,
+              "p95_ns": 12333,
+              "max_ns": 73127
+            },
+            "quality": {
+              "cases": 200,
+              "top1": 200,
+              "idle_ms": 2
+            }
+          },
+          "output": "first_key count=200 p50_ns=12573 p95_ns=18414 max_ns=91982\nfirst_page_key count=1202 p50_ns=5891 p95_ns=69450 max_ns=4697919\nreplay_page_key count=1202 p50_ns=5350 p95_ns=12333 max_ns=73127\nquality cases=200 top1=200 idle_ms=2\n"
+        }
+      ]
+    }
+  },
+  "image_sha256": "12f8997fdddf0320b52d00e1e409e20658076c336ec0e006762c22847e2e0dc7",
+  "probe_sha256": {
+    "before": "26774317d49ad839bbad43ebe69594fbe43cf77b8c842ff658ffaff691db394f",
+    "after": "0797b5f0690199708d3d97f45ccc87a174a30b5e07e9b94edf7cae1586bf2ec6"
+  },
+  "trace": {
+    "lines": 7565,
+    "stable_lines": 7564,
+    "baseline_variants": [
+      {
+        "line": 4435,
+        "case": [
+          "xianqchifan",
+          "suggest"
+        ],
+        "before": [
+          "xianqchifan\tsuggest\t[\"先去吃饭\", \"先去\", \"像吃饭\", \"掀起吃饭\", \"先驱吃饭\", \"先吃饭\", \"想吃饭\", \"先驱\", \"县区\", \"先取\", \"先\", \"仙去\", \"闲趣\", \"险区\", \"线\", \"嫌\", \"险\", \"县\", \"现\", \"弦\", \"咸\", \"仙\", \"陷\", \"闲\", \"限\", \"掀\", \"见\", \"馅\", \"显\", \"献\", \"鲜\", \"贤\", \"洗\", \"冼\", \"娴\", \"宪\", \"岘\", \"暹\", \"氙\", \"涎\", \"燹\", \"猃\", \"痫\", \"祆\", \"筅\", \"籼\", \"纤\", \"羡\", \"腺\", \"舷\", \"苋\", \"莶\", \"藓\", \"蚬\", \"衔\", \"跣\", \"跹\", \"酰\", \"锨\", \"霰\", \"鹇\"]",
+          "xianqchifan\tsuggest\t[\"先去吃饭\", \"先去\", \"先吃饭\", \"掀起吃饭\", \"先驱吃饭\", \"像吃饭\", \"想吃饭\", \"先驱\", \"县区\", \"先取\", \"先\", \"仙去\", \"闲趣\", \"险区\", \"线\", \"嫌\", \"险\", \"县\", \"现\", \"弦\", \"咸\", \"仙\", \"陷\", \"闲\", \"限\", \"掀\", \"见\", \"馅\", \"显\", \"献\", \"鲜\", \"贤\", \"洗\", \"冼\", \"娴\", \"宪\", \"岘\", \"暹\", \"氙\", \"涎\", \"燹\", \"猃\", \"痫\", \"祆\", \"筅\", \"籼\", \"纤\", \"羡\", \"腺\", \"舷\", \"苋\", \"莶\", \"藓\", \"蚬\", \"衔\", \"跣\", \"跹\", \"酰\", \"锨\", \"霰\", \"鹇\"]"
+        ],
+        "after": "xianqchifan\tsuggest\t[\"先去吃饭\", \"先去\", \"像吃饭\", \"掀起吃饭\", \"先驱吃饭\", \"先吃饭\", \"想吃饭\", \"先驱\", \"县区\", \"先取\", \"先\", \"仙去\", \"闲趣\", \"险区\", \"线\", \"嫌\", \"险\", \"县\", \"现\", \"弦\", \"咸\", \"仙\", \"陷\", \"闲\", \"限\", \"掀\", \"见\", \"馅\", \"显\", \"献\", \"鲜\", \"贤\", \"洗\", \"冼\", \"娴\", \"宪\", \"岘\", \"暹\", \"氙\", \"涎\", \"燹\", \"猃\", \"痫\", \"祆\", \"筅\", \"籼\", \"纤\", \"羡\", \"腺\", \"舷\", \"苋\", \"莶\", \"藓\", \"蚬\", \"衔\", \"跣\", \"跹\", \"酰\", \"锨\", \"霰\", \"鹇\"]"
+      }
+    ]
+  },
+  "environment": {
+    "date": "2026-11-16",
+    "os": "Fedora 45 x86_64",
+    "kernel": "7.3.3-300.fc45.x86_64",
+    "rust": "1.99.1",
+    "profile": "release",
+    "notes": "other host workloads present; compare within each idle-gap condition"
+  },
+  "source_sha256": {
+    "before": {
+      "lexicon.rs": "6c9d77129aa9acf23ba86148c137c8fdac77d240f963c133c7d3985f50f06abc",
+      "session.rs": "6815f3d934cdce18aa32ba0d765c0327ab8a0672040b7f914634cf51838c4a3c",
+      "ibus.rs": "acdd8ca30d920a6a97508c2bbfdb4d84124036ef9668b548c15c99bdfc98fa72",
+      "lib.rs": "db61109d65be832d8c973d2255bea9e85b99d58e32380e7959fd65b94ca6d199",
+      "preload.rs": null
+    },
+    "after": {
+      "lexicon.rs": "f7f045bea8d68980d07888a428d6dc33668e8e0981dcb6209debe945824c0d6b",
+      "session.rs": "8461d379534f04be3a455e110abff170c01e408c6c4bef4ef522aaad29f573e2",
+      "ibus.rs": "e0d6031276713c7badcb73edaf267f90b7b2e915a64b99097b78d9fef8a81fb3",
+      "lib.rs": "4144e3810aa0a7ec63a5dd87bcaa3c18ac82a7bd2852a68ba969d865d5790091",
+      "preload.rs": "c5e050a2324c802ce371c40f13f7e0079fa3ab52c457b580d683d6ca09a48e8b"
+    }
+  },
+  "p95_reduction_percent": {
+    "0": {
+      "first_key": 7.450162670049865,
+      "first_page_key": 8.537143145255676,
+      "replay_page_key": 41.3733199231965
+    },
+    "2": {
+      "first_key": 87.52912174242834,
+      "first_page_key": 82.60597332665456,
+      "replay_page_key": 79.27671314592499
+    }
+  },
+  "supplemental_cpu_diagnostics": [
+    {
+      "output": "first_key count=200 p50_ns=21590 p95_ns=76773 max_ns=16031433\nfirst_page_key count=1202 p50_ns=15579 p95_ns=5063892 max_ns=115382015\nreplay_page_key count=1202 p50_ns=8556 p95_ns=60302 max_ns=24742613\nquality cases=200 top1=200 idle_ms=2\n",
+      "diagnostics": "slowest ns=115382015 input=shiqing prefix=2 cpu_ns=17038912\n"
+    },
+    {
+      "output": "first_key count=200 p50_ns=16321 p95_ns=62888 max_ns=27340102\nfirst_page_key count=1202 p50_ns=9949 p95_ns=3183082 max_ns=286979809\nreplay_page_key count=1202 p50_ns=6903 p95_ns=46036 max_ns=21235707\nquality cases=200 top1=200 idle_ms=2\n",
+      "diagnostics": "slowest ns=286979809 input=shijian prefix=2 cpu_ns=28898507\n"
+    },
+    {
+      "output": "first_key count=200 p50_ns=16901 p95_ns=68889 max_ns=26821203\nfirst_page_key count=1202 p50_ns=15289 p95_ns=7044680 max_ns=145580111\nreplay_page_key count=1202 p50_ns=8215 p95_ns=44302 max_ns=27154786\nquality cases=200 top1=200 idle_ms=2\n",
+      "diagnostics": "slowest ns=145580111 input=xiangxin prefix=4 cpu_ns=13103257\n"
+    }
+  ],
+  "supplemental_resource_diagnostics": {
+    "before": {
+      "metrics": "first_key count=200 p50_ns=80170 p95_ns=121807 max_ns=153988\nfirst_page_key count=1202 p50_ns=83606 p95_ns=350334 max_ns=1274399\nreplay_page_key count=1202 p50_ns=22732 p95_ns=56846 max_ns=197889\nquality cases=200 top1=200 idle_ms=2\n",
+      "usage": "rss_kb=142504 maj=36 min=4144 user_s=0.23 sys_s=0.14 vcsw=3215 ivcsw=106\n"
+    },
+    "after": {
+      "metrics": "first_key count=200 p50_ns=14126 p95_ns=44523 max_ns=70081\nfirst_page_key count=1202 p50_ns=5791 p95_ns=103213 max_ns=580754\nreplay_page_key count=1202 p50_ns=5450 p95_ns=27041 max_ns=190124\nquality cases=200 top1=200 idle_ms=2\n",
+      "usage": "slowest ns=580754 input=zhezhong prefix=4 cpu_ns=583027\nrss_kb=144848 maj=1 min=6213 user_s=4.73 sys_s=0.08 vcsw=3640 ivcsw=1353\n"
+    }
+  },
+  "diagnostic_notes": "Supplemental CPU/resource probes used the small imported-dictionary trace fixture; their clock instrumentation is separate from the timing cohort."
+}

@@ -178,6 +178,7 @@ struct Factory {
 struct Engine {
     session: Session,
     focused: bool,
+    content_type: (u32, u32),
     shown: Option<Shown>,
     /// Absolute index of the first candidate in the published page.
     page_at: usize,
@@ -199,6 +200,7 @@ impl Factory {
         let engine = Engine {
             session: Session::with_user(Arc::clone(&self.lexicon), UserDict::load()),
             focused: false,
+            content_type: (0, 0),
             shown: None,
             page_at: 0,
         };
@@ -255,10 +257,12 @@ impl Engine {
 
     async fn focus_in(&mut self) {
         self.focused = true;
+        self.session.preload();
     }
 
     async fn focus_in_id(&mut self, _object_path: &str, _client: &str) {
         self.focused = true;
+        self.session.preload();
     }
 
     async fn focus_out(
@@ -352,11 +356,18 @@ impl Engine {
 
     #[zbus(property)]
     fn content_type(&self) -> (u32, u32) {
-        (0, 0)
+        self.content_type
     }
 
     #[zbus(property)]
-    fn set_content_type(&mut self, _content_type: (u32, u32)) {}
+    fn set_content_type(&mut self, content_type: (u32, u32)) {
+        self.content_type = content_type;
+        // IBusInputPurpose PASSWORD=8/PIN=9, hints PRIVATE=1<<11 and
+        // HIDDEN_TEXT=1<<12 (ibustypes.h). These fields never update learning.
+        let private =
+            matches!(content_type.0, 8 | 9) || content_type.1 & ((1 << 11) | (1 << 12)) != 0;
+        self.session.set_learning_enabled(!private);
+    }
 
     #[zbus(signal)]
     async fn commit_text(emitter: &SignalEmitter<'_>, text: Variant<'_>) -> zbus::Result<()>;
@@ -441,8 +452,19 @@ pub(crate) async fn serve() -> zbus::Result<()> {
         eprintln!("waypinyin: IBUS_ADDRESS is not set; this program is started by ibus-daemon");
         std::process::exit(1);
     };
+    let lexicon = Arc::new(Lexicon::load());
+    if let Some(preloader) = crate::preload::Preloader::shared(lexicon.clone()) {
+        preloader.request(
+            "",
+            0,
+            crate::InputPreferences::load(),
+            None,
+            [0; 5],
+            Arc::from([]),
+        );
+    }
     let factory = Factory {
-        lexicon: Arc::new(Lexicon::load()),
+        lexicon,
         next_id: AtomicU64::new(1),
     };
     let _conn = Builder::address(address.as_str())
@@ -541,6 +563,28 @@ fn display_parts() -> (String, String) {
 #[cfg(test)]
 mod sig_tests {
     use super::*;
+
+    #[test]
+    fn password_pin_private_and_hidden_content_types_disable_learning() {
+        let mut engine = Engine {
+            session: Session::with_preferences(
+                Arc::new(Lexicon::load()),
+                UserDict::default(),
+                Default::default(),
+            ),
+            focused: false,
+            content_type: (0, 0),
+            shown: None,
+            page_at: 0,
+        };
+        for content in [(8, 0), (9, 0), (0, 1 << 11), (0, 1 << 12)] {
+            engine.set_content_type(content);
+            assert_eq!(engine.content_type(), content);
+            assert!(!engine.session.learning_enabled());
+            engine.set_content_type((0, 0));
+            assert!(engine.session.learning_enabled());
+        }
+    }
 
     #[test]
     fn text_and_lookup_signatures() {

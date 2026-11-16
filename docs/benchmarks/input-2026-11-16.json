@@ -1,0 +1,808 @@
+{
+  "runs": 7,
+  "trace": {
+    "lines": 7565,
+    "stable_lines": 7564,
+    "baseline_variants": [
+      {
+        "line": 4435,
+        "case": [
+          "xianqchifan",
+          "suggest"
+        ],
+        "before": [
+          "xianqchifan\tsuggest\t[\"先去吃饭\", \"先去\", \"像吃饭\", \"掀起吃饭\", \"先驱吃饭\", \"先吃饭\", \"想吃饭\", \"先驱\", \"县区\", \"先取\", \"先\", \"仙去\", \"闲趣\", \"险区\", \"线\", \"嫌\", \"险\", \"县\", \"现\", \"弦\", \"咸\", \"仙\", \"陷\", \"闲\", \"限\", \"掀\", \"见\", \"馅\", \"显\", \"献\", \"鲜\", \"贤\", \"洗\", \"冼\", \"娴\", \"宪\", \"岘\", \"暹\", \"氙\", \"涎\", \"燹\", \"猃\", \"痫\", \"祆\", \"筅\", \"籼\", \"纤\", \"羡\", \"腺\", \"舷\", \"苋\", \"莶\", \"藓\", \"蚬\", \"衔\", \"跣\", \"跹\", \"酰\", \"锨\", \"霰\", \"鹇\"]",
+          "xianqchifan\tsuggest\t[\"先去吃饭\", \"先去\", \"先吃饭\", \"掀起吃饭\", \"先驱吃饭\", \"像吃饭\", \"想吃饭\", \"先驱\", \"县区\", \"先取\", \"先\", \"仙去\", \"闲趣\", \"险区\", \"线\", \"嫌\", \"险\", \"县\", \"现\", \"弦\", \"咸\", \"仙\", \"陷\", \"闲\", \"限\", \"掀\", \"见\", \"馅\", \"显\", \"献\", \"鲜\", \"贤\", \"洗\", \"冼\", \"娴\", \"宪\", \"岘\", \"暹\", \"氙\", \"涎\", \"燹\", \"猃\", \"痫\", \"祆\", \"筅\", \"籼\", \"纤\", \"羡\", \"腺\", \"舷\", \"苋\", \"莶\", \"藓\", \"蚬\", \"衔\", \"跣\", \"跹\", \"酰\", \"锨\", \"霰\", \"鹇\"]"
+        ],
+        "after": "xianqchifan\tsuggest\t[\"先去吃饭\", \"先去\", \"先吃饭\", \"掀起吃饭\", \"先驱吃饭\", \"像吃饭\", \"想吃饭\", \"先驱\", \"县区\", \"先取\", \"先\", \"仙去\", \"闲趣\", \"险区\", \"线\", \"嫌\", \"险\", \"县\", \"现\", \"弦\", \"咸\", \"仙\", \"陷\", \"闲\", \"限\", \"掀\", \"见\", \"馅\", \"显\", \"献\", \"鲜\", \"贤\", \"洗\", \"冼\", \"娴\", \"宪\", \"岘\", \"暹\", \"氙\", \"涎\", \"燹\", \"猃\", \"痫\", \"祆\", \"筅\", \"籼\", \"纤\", \"羡\", \"腺\", \"舷\", \"苋\", \"莶\", \"藓\", \"蚬\", \"衔\", \"跣\", \"跹\", \"酰\", \"锨\", \"霰\", \"鹇\"]"
+      }
+    ]
+  },
+  "median": {
+    "before": {
+      "cached_key": {
+        "count": 2731,
+        "p50_ns": 19246,
+        "p95_ns": 13848641,
+        "max_ns": 38678161
+      },
+      "edit": {
+        "count": 1375,
+        "p50_ns": 622,
+        "p95_ns": 5605186,
+        "max_ns": 50927360
+      },
+      "page": {
+        "count": 275,
+        "p50_ns": 4088,
+        "p95_ns": 13325,
+        "max_ns": 2484800
+      },
+      "sentence_key": {
+        "count": 1529,
+        "p50_ns": 573080,
+        "p95_ns": 26452767,
+        "max_ns": 52618705
+      },
+      "short_key": {
+        "count": 1202,
+        "p50_ns": 95650,
+        "p95_ns": 347023,
+        "max_ns": 1218244
+      },
+      "suggest": {
+        "count": 200,
+        "p50_ns": 345120,
+        "p95_ns": 697424,
+        "max_ns": 3549655
+      },
+      "view": {
+        "count": 275,
+        "p50_ns": 491,
+        "p95_ns": 631,
+        "max_ns": 891
+      }
+    },
+    "after": {
+      "cached_key": {
+        "count": 2731,
+        "p50_ns": 12975,
+        "p95_ns": 7872947,
+        "max_ns": 15840983
+      },
+      "edit": {
+        "count": 1375,
+        "p50_ns": 591,
+        "p95_ns": 4384147,
+        "max_ns": 21100788
+      },
+      "page": {
+        "count": 275,
+        "p50_ns": 4017,
+        "p95_ns": 13385,
+        "max_ns": 1761928
+      },
+      "sentence_key": {
+        "count": 1529,
+        "p50_ns": 362001,
+        "p95_ns": 12888904,
+        "max_ns": 22119778
+      },
+      "short_key": {
+        "count": 1202,
+        "p50_ns": 58901,
+        "p95_ns": 273165,
+        "max_ns": 1030320
+      },
+      "suggest": {
+        "count": 200,
+        "p50_ns": 260360,
+        "p95_ns": 571186,
+        "max_ns": 2415329
+      },
+      "view": {
+        "count": 275,
+        "p50_ns": 461,
+        "p95_ns": 592,
+        "max_ns": 811
+      }
+    }
+  },
+  "samples": {
+    "before": [
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 19537,
+            "p95_ns": 13848641,
+            "max_ns": 38678161
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 611,
+            "p95_ns": 5612811,
+            "max_ns": 51601790
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 3928,
+            "p95_ns": 12864,
+            "max_ns": 2564079
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 578069,
+            "p95_ns": 26452767,
+            "max_ns": 52205787
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 95249,
+            "p95_ns": 343447,
+            "max_ns": 1218244
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 348266,
+            "p95_ns": 649473,
+            "max_ns": 3872783
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 491,
+            "p95_ns": 611,
+            "max_ns": 891
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=19537 p95_ns=13848641 max_ns=38678161\nedit count=1375 p50_ns=611 p95_ns=5612811 max_ns=51601790\npage count=275 p50_ns=3928 p95_ns=12864 max_ns=2564079\nsentence_key count=1529 p50_ns=578069 p95_ns=26452767 max_ns=52205787\nshort_key count=1202 p50_ns=95249 p95_ns=343447 max_ns=1218244\nsuggest count=200 p50_ns=348266 p95_ns=649473 max_ns=3872783\nview count=275 p50_ns=491 p95_ns=611 max_ns=891\nslowest ns=52205787 input=mtxwsdwmzgsmkjmtlyxgzjh prefix_bytes=23\n"
+      },
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 19176,
+            "p95_ns": 13707024,
+            "max_ns": 38092999
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 611,
+            "p95_ns": 5580320,
+            "max_ns": 50927360
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4088,
+            "p95_ns": 12443,
+            "max_ns": 2413205
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 563351,
+            "p95_ns": 26268040,
+            "max_ns": 52618705
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 92956,
+            "p95_ns": 347023,
+            "max_ns": 1125349
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 340462,
+            "p95_ns": 656426,
+            "max_ns": 3367602
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 481,
+            "p95_ns": 631,
+            "max_ns": 9027
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=19176 p95_ns=13707024 max_ns=38092999\nedit count=1375 p50_ns=611 p95_ns=5580320 max_ns=50927360\npage count=275 p50_ns=4088 p95_ns=12443 max_ns=2413205\nsentence_key count=1529 p50_ns=563351 p95_ns=26268040 max_ns=52618705\nshort_key count=1202 p50_ns=92956 p95_ns=347023 max_ns=1125349\nsuggest count=200 p50_ns=340462 p95_ns=656426 max_ns=3367602\nview count=275 p50_ns=481 p95_ns=631 max_ns=9027\nslowest ns=52618705 input=mtxwsdwmzgsmkjmtlyxgzjh prefix_bytes=23\n"
+      },
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 19246,
+            "p95_ns": 15068648,
+            "max_ns": 644212486
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 631,
+            "p95_ns": 5365935,
+            "max_ns": 234598522
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4097,
+            "p95_ns": 13496,
+            "max_ns": 2484800
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 677436,
+            "p95_ns": 30141655,
+            "max_ns": 435315868
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 96842,
+            "p95_ns": 346372,
+            "max_ns": 1257067
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 338107,
+            "p95_ns": 664431,
+            "max_ns": 3396466
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 501,
+            "p95_ns": 652,
+            "max_ns": 872
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=19246 p95_ns=15068648 max_ns=644212486\nedit count=1375 p50_ns=631 p95_ns=5365935 max_ns=234598522\npage count=275 p50_ns=4097 p95_ns=13496 max_ns=2484800\nsentence_key count=1529 p50_ns=677436 p95_ns=30141655 max_ns=435315868\nshort_key count=1202 p50_ns=96842 p95_ns=346372 max_ns=1257067\nsuggest count=200 p50_ns=338107 p95_ns=664431 max_ns=3396466\nview count=275 p50_ns=501 p95_ns=652 max_ns=872\nslowest ns=435315868 input=wxzzlsknhwyddnmxkskh prefix_bytes=6\n"
+      },
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 19206,
+            "p95_ns": 14101267,
+            "max_ns": 520631790
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 622,
+            "p95_ns": 5605186,
+            "max_ns": 115099594
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 3787,
+            "p95_ns": 13185,
+            "max_ns": 2369963
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 585412,
+            "p95_ns": 28309524,
+            "max_ns": 93753844
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 97543,
+            "p95_ns": 360359,
+            "max_ns": 1201072
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 351993,
+            "p95_ns": 744322,
+            "max_ns": 3549655
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 491,
+            "p95_ns": 622,
+            "max_ns": 812
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=19206 p95_ns=14101267 max_ns=520631790\nedit count=1375 p50_ns=622 p95_ns=5605186 max_ns=115099594\npage count=275 p50_ns=3787 p95_ns=13185 max_ns=2369963\nsentence_key count=1529 p50_ns=585412 p95_ns=28309524 max_ns=93753844\nshort_key count=1202 p50_ns=97543 p95_ns=360359 max_ns=1201072\nsuggest count=200 p50_ns=351993 p95_ns=744322 max_ns=3549655\nview count=275 p50_ns=491 p95_ns=622 max_ns=812\nslowest ns=93753844 input=wxzzlsknhwyddnmxkskh prefix_bytes=5\n"
+      },
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 19326,
+            "p95_ns": 13933110,
+            "max_ns": 38252831
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 621,
+            "p95_ns": 5682662,
+            "max_ns": 50458287
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4128,
+            "p95_ns": 13325,
+            "max_ns": 2579959
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 572278,
+            "p95_ns": 26226110,
+            "max_ns": 53421196
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 94918,
+            "p95_ns": 348396,
+            "max_ns": 1307493
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 345120,
+            "p95_ns": 697424,
+            "max_ns": 3430741
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 481,
+            "p95_ns": 641,
+            "max_ns": 922
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=19326 p95_ns=13933110 max_ns=38252831\nedit count=1375 p50_ns=621 p95_ns=5682662 max_ns=50458287\npage count=275 p50_ns=4128 p95_ns=13325 max_ns=2579959\nsentence_key count=1529 p50_ns=572278 p95_ns=26226110 max_ns=53421196\nshort_key count=1202 p50_ns=94918 p95_ns=348396 max_ns=1307493\nsuggest count=200 p50_ns=345120 p95_ns=697424 max_ns=3430741\nview count=275 p50_ns=481 p95_ns=641 max_ns=922\nslowest ns=53421196 input=mtxwsdwmzgsmkjmtlyxgzjh prefix_bytes=23\n"
+      },
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 19206,
+            "p95_ns": 13494714,
+            "max_ns": 37928340
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 631,
+            "p95_ns": 5612109,
+            "max_ns": 47998434
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4168,
+            "p95_ns": 16020,
+            "max_ns": 2476244
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 565685,
+            "p95_ns": 26031274,
+            "max_ns": 50564697
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 95650,
+            "p95_ns": 345290,
+            "max_ns": 1199519
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 343066,
+            "p95_ns": 722892,
+            "max_ns": 3806058
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 501,
+            "p95_ns": 621,
+            "max_ns": 791
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=19206 p95_ns=13494714 max_ns=37928340\nedit count=1375 p50_ns=631 p95_ns=5612109 max_ns=47998434\npage count=275 p50_ns=4168 p95_ns=16020 max_ns=2476244\nsentence_key count=1529 p50_ns=565685 p95_ns=26031274 max_ns=50564697\nshort_key count=1202 p50_ns=95650 p95_ns=345290 max_ns=1199519\nsuggest count=200 p50_ns=343066 p95_ns=722892 max_ns=3806058\nview count=275 p50_ns=501 p95_ns=621 max_ns=791\nslowest ns=50564697 input=mtxwsdwmzgsmkjmtlyxgzjh prefix_bytes=23\n"
+      },
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 19787,
+            "p95_ns": 13807573,
+            "max_ns": 38772269
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 632,
+            "p95_ns": 5451718,
+            "max_ns": 49625568
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 3967,
+            "p95_ns": 15991,
+            "max_ns": 2507903
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 573080,
+            "p95_ns": 26469960,
+            "max_ns": 51773634
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 95801,
+            "p95_ns": 353356,
+            "max_ns": 1398494
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 349018,
+            "p95_ns": 701211,
+            "max_ns": 3750794
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 500,
+            "p95_ns": 631,
+            "max_ns": 902
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=19787 p95_ns=13807573 max_ns=38772269\nedit count=1375 p50_ns=632 p95_ns=5451718 max_ns=49625568\npage count=275 p50_ns=3967 p95_ns=15991 max_ns=2507903\nsentence_key count=1529 p50_ns=573080 p95_ns=26469960 max_ns=51773634\nshort_key count=1202 p50_ns=95801 p95_ns=353356 max_ns=1398494\nsuggest count=200 p50_ns=349018 p95_ns=701211 max_ns=3750794\nview count=275 p50_ns=500 p95_ns=631 max_ns=902\nslowest ns=51773634 input=mtxwsdwmzgsmkjmtlyxgzjh prefix_bytes=23\n"
+      }
+    ],
+    "after": [
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 12854,
+            "p95_ns": 7864311,
+            "max_ns": 16247298
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 591,
+            "p95_ns": 4436596,
+            "max_ns": 21100788
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 3937,
+            "p95_ns": 13706,
+            "max_ns": 1797625
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 354428,
+            "p95_ns": 12888904,
+            "max_ns": 22308002
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 58901,
+            "p95_ns": 272603,
+            "max_ns": 988852
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 260360,
+            "p95_ns": 571186,
+            "max_ns": 2431840
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 461,
+            "p95_ns": 601,
+            "max_ns": 731
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=12854 p95_ns=7864311 max_ns=16247298\nedit count=1375 p50_ns=591 p95_ns=4436596 max_ns=21100788\npage count=275 p50_ns=3937 p95_ns=13706 max_ns=1797625\nsentence_key count=1529 p50_ns=354428 p95_ns=12888904 max_ns=22308002\nshort_key count=1202 p50_ns=58901 p95_ns=272603 max_ns=988852\nsuggest count=200 p50_ns=260360 p95_ns=571186 max_ns=2431840\nview count=275 p50_ns=461 p95_ns=601 max_ns=731\nslowest ns=22308002 input=mtxwsdwmzgsmkjmtlyxgzjh prefix_bytes=23\n"
+      },
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 12975,
+            "p95_ns": 7872947,
+            "max_ns": 15740063
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 591,
+            "p95_ns": 4384147,
+            "max_ns": 28619448
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4027,
+            "p95_ns": 15670,
+            "max_ns": 1756989
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 388973,
+            "p95_ns": 14189683,
+            "max_ns": 79568760
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 58450,
+            "p95_ns": 264488,
+            "max_ns": 1091445
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 258887,
+            "p95_ns": 554094,
+            "max_ns": 2415329
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 460,
+            "p95_ns": 581,
+            "max_ns": 711
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=12975 p95_ns=7872947 max_ns=15740063\nedit count=1375 p50_ns=591 p95_ns=4384147 max_ns=28619448\npage count=275 p50_ns=4027 p95_ns=15670 max_ns=1756989\nsentence_key count=1529 p50_ns=388973 p95_ns=14189683 max_ns=79568760\nshort_key count=1202 p50_ns=58450 p95_ns=264488 max_ns=1091445\nsuggest count=200 p50_ns=258887 p95_ns=554094 max_ns=2415329\nview count=275 p50_ns=460 p95_ns=581 max_ns=711\nslowest ns=79568760 input=womingtianshangwushidiandaogongsikaihuixiawuzaihenilianxi prefix_bytes=30\n"
+      },
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 13134,
+            "p95_ns": 8659328,
+            "max_ns": 306175311
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 591,
+            "p95_ns": 4357196,
+            "max_ns": 315572017
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4057,
+            "p95_ns": 16170,
+            "max_ns": 1845896
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 442473,
+            "p95_ns": 18223079,
+            "max_ns": 551282454
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 63320,
+            "p95_ns": 311216,
+            "max_ns": 1668393
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 280468,
+            "p95_ns": 697213,
+            "max_ns": 2416992
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 471,
+            "p95_ns": 592,
+            "max_ns": 932
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=13134 p95_ns=8659328 max_ns=306175311\nedit count=1375 p50_ns=591 p95_ns=4357196 max_ns=315572017\npage count=275 p50_ns=4057 p95_ns=16170 max_ns=1845896\nsentence_key count=1529 p50_ns=442473 p95_ns=18223079 max_ns=551282454\nshort_key count=1202 p50_ns=63320 p95_ns=311216 max_ns=1668393\nsuggest count=200 p50_ns=280468 p95_ns=697213 max_ns=2416992\nview count=275 p50_ns=471 p95_ns=592 max_ns=932\nslowest ns=551282454 input=wmjtwsyqqcsmddxrhhjcf prefix_bytes=20\n"
+      },
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 12554,
+            "p95_ns": 7885902,
+            "max_ns": 15957963
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 571,
+            "p95_ns": 4431195,
+            "max_ns": 21416843
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 3807,
+            "p95_ns": 13385,
+            "max_ns": 1755966
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 362001,
+            "p95_ns": 12873334,
+            "max_ns": 22112314
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 54934,
+            "p95_ns": 269848,
+            "max_ns": 960058
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 252255,
+            "p95_ns": 524648,
+            "max_ns": 2520326
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 451,
+            "p95_ns": 581,
+            "max_ns": 14938
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=12554 p95_ns=7885902 max_ns=15957963\nedit count=1375 p50_ns=571 p95_ns=4431195 max_ns=21416843\npage count=275 p50_ns=3807 p95_ns=13385 max_ns=1755966\nsentence_key count=1529 p50_ns=362001 p95_ns=12873334 max_ns=22112314\nshort_key count=1202 p50_ns=54934 p95_ns=269848 max_ns=960058\nsuggest count=200 p50_ns=252255 p95_ns=524648 max_ns=2520326\nview count=275 p50_ns=451 p95_ns=581 max_ns=14938\nslowest ns=22112314 input=mtxwsdwmzgsmkjmtlyxgzjh prefix_bytes=23\n"
+      },
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 13154,
+            "p95_ns": 7832791,
+            "max_ns": 15840983
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 591,
+            "p95_ns": 4370501,
+            "max_ns": 20556834
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4017,
+            "p95_ns": 13355,
+            "max_ns": 1755887
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 359117,
+            "p95_ns": 12657006,
+            "max_ns": 21520158
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 58931,
+            "p95_ns": 281200,
+            "max_ns": 1030320
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 265991,
+            "p95_ns": 586725,
+            "max_ns": 2275034
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 471,
+            "p95_ns": 611,
+            "max_ns": 972
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=13154 p95_ns=7832791 max_ns=15840983\nedit count=1375 p50_ns=591 p95_ns=4370501 max_ns=20556834\npage count=275 p50_ns=4017 p95_ns=13355 max_ns=1755887\nsentence_key count=1529 p50_ns=359117 p95_ns=12657006 max_ns=21520158\nshort_key count=1202 p50_ns=58931 p95_ns=281200 max_ns=1030320\nsuggest count=200 p50_ns=265991 p95_ns=586725 max_ns=2275034\nview count=275 p50_ns=471 p95_ns=611 max_ns=972\nslowest ns=21520158 input=mtxwsdwmzgsmkjmtlyxgzjh prefix_bytes=23\n"
+      },
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 13476,
+            "p95_ns": 7955883,
+            "max_ns": 15764759
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 591,
+            "p95_ns": 4506888,
+            "max_ns": 20973819
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4097,
+            "p95_ns": 12633,
+            "max_ns": 1761928
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 370748,
+            "p95_ns": 12938607,
+            "max_ns": 22119778
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 59843,
+            "p95_ns": 275358,
+            "max_ns": 1086195
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 270059,
+            "p95_ns": 575314,
+            "max_ns": 2334998
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 471,
+            "p95_ns": 601,
+            "max_ns": 811
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=13476 p95_ns=7955883 max_ns=15764759\nedit count=1375 p50_ns=591 p95_ns=4506888 max_ns=20973819\npage count=275 p50_ns=4097 p95_ns=12633 max_ns=1761928\nsentence_key count=1529 p50_ns=370748 p95_ns=12938607 max_ns=22119778\nshort_key count=1202 p50_ns=59843 p95_ns=275358 max_ns=1086195\nsuggest count=200 p50_ns=270059 p95_ns=575314 max_ns=2334998\nview count=275 p50_ns=471 p95_ns=601 max_ns=811\nslowest ns=22119778 input=mtxwsdwmzgsmkjmtlyxgzjh prefix_bytes=23\n"
+      },
+      {
+        "metrics": {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 12974,
+            "p95_ns": 7737131,
+            "max_ns": 15318579
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 581,
+            "p95_ns": 4346897,
+            "max_ns": 20409527
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 3878,
+            "p95_ns": 13135,
+            "max_ns": 1777648
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 361050,
+            "p95_ns": 12649032,
+            "max_ns": 21575523
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 55565,
+            "p95_ns": 273165,
+            "max_ns": 976890
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 252095,
+            "p95_ns": 548272,
+            "max_ns": 2223047
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 450,
+            "p95_ns": 571,
+            "max_ns": 682
+          }
+        },
+        "output": "cached_key count=2731 p50_ns=12974 p95_ns=7737131 max_ns=15318579\nedit count=1375 p50_ns=581 p95_ns=4346897 max_ns=20409527\npage count=275 p50_ns=3878 p95_ns=13135 max_ns=1777648\nsentence_key count=1529 p50_ns=361050 p95_ns=12649032 max_ns=21575523\nshort_key count=1202 p50_ns=55565 p95_ns=273165 max_ns=976890\nsuggest count=200 p50_ns=252095 p95_ns=548272 max_ns=2223047\nview count=275 p50_ns=450 p95_ns=571 max_ns=682\nslowest ns=21575523 input=mtxwsdwmzgsmkjmtlyxgzjh prefix_bytes=23\n"
+      }
+    ]
+  },
+  "image_sha256": "12f8997fdddf0320b52d00e1e409e20658076c336ec0e006762c22847e2e0dc7",
+  "probe_sha256": {
+    "before": "8ee9755a5bd9b59763fcfc057416a9d9f56c8ab45aec9d16134daff32e4559e8",
+    "after": "0fd4c9e608bfc3e71eb8a9739968ff1222dd760cb6d01256e599635ad5c117dc"
+  },
+  "baseline_traces": 3,
+  "environment": {
+    "date": "2026-11-16",
+    "os": "Fedora 45 x86_64",
+    "kernel": "7.3.3-300.fc45.x86_64",
+    "rust": "1.99.1",
+    "profile": "release",
+    "comparison": "alternating warm-cache library/session probes; other host workloads present"
+  },
+  "source_sha256": {
+    "before": {
+      "lexicon.rs": "af2fd28cbdf27665694dac73a28cacd9537e3a10345c63eabada8518bc4bc7f0",
+      "session.rs": "691f86c7cb583223735736e2e66f9340ddcca8ef33d89354c5097d55d87a09a8"
+    },
+    "after": {
+      "lexicon.rs": "6c9d77129aa9acf23ba86148c137c8fdac77d240f963c133c7d3985f50f06abc",
+      "session.rs": "6815f3d934cdce18aa32ba0d765c0327ab8a0672040b7f914634cf51838c4a3c"
+    }
+  },
+  "p95_reduction_percent": {
+    "cached_key": 43.150039054373636,
+    "edit": 21.78409422987926,
+    "page": -0.4502814258911858,
+    "sentence_key": 51.27578147117842,
+    "short_key": 21.283315515109948,
+    "suggest": 18.100610245704196,
+    "view": 6.180665610142633
+  }
+}
