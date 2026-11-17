@@ -5,3 +5,6 @@ LICENSES/dependencies/** -text -whitespace
 # Dictionary and demo input hashes must survive checkout unchanged.
 data/*.txt -text
 tests/fixtures/demo/*.txt -text
+
+# Raw profiler records include tool-generated whitespace and verified hashes.
+docs/benchmarks/**/*.callgrind -text -whitespace
