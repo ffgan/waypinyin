@@ -9,6 +9,14 @@
 Offline Chinese Pinyin input through IBus, primarily for GNOME Wayland.
 See [中文说明](README.md) for input features, fuzzy Pinyin and import formats.
 
+Preedit and candidate updates are sent independently when their contents change.
+Long-input search rejects paths against a cached worst score before string
+deduplication, precomputes character-pair weights and uses specialized hashing
+for bounded integer-only search tables. Search budgets and tie order are retained.
+Sentence queries reuse traversal storage without changing search or
+ranking. Private D-Bus comparison probes and optional content-free handler timing
+are described in [performance notes](docs/PERFORMANCE.md).
+
 This is pre-release software. Original code is MIT licensed. Third-party
 historical full-lexicon provenance is still being audited. The public source
 excludes that data and its old history, and builds an original MIT demo instead.

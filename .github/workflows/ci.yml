@@ -30,7 +30,10 @@ jobs:
           python3 scripts/verify_install.py "$PWD/build/stage" --prefix /usr
           WAYPINYIN_LEXICON="$PWD/build/stage/usr/share/waypinyin/lexicon.bin" build/stage/usr/bin/waypinyin --check-data
       - name: Private IBus protocol acceptance
-        run: /usr/bin/python3 scripts/check_ibus.py build/stage/usr/bin/waypinyin build/stage/usr/share/waypinyin/lexicon.bin
+        run: |
+          /usr/bin/python3 scripts/check_ibus.py build/stage/usr/bin/waypinyin build/stage/usr/share/waypinyin/lexicon.bin
+          cargo build --locked --offline --release --example ibus_latency
+          python3 scripts/check_ibus_lifecycle.py build/stage/usr/bin/waypinyin build/stage/usr/share/waypinyin/lexicon.bin target/release/examples/ibus_latency
       - name: Custom installation directories
         run: |
           make install PREFIX=/usr BINDIR='/usr/libexec/waypinyin tools' MANDIR=/usr/man DESTDIR="$PWD/build/custom-stage" CARGO=false

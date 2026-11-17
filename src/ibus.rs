@@ -99,24 +99,28 @@ fn ibus_lookup(view: &View) -> Variant<'static> {
     )
 }
 
-struct Shown {
-    preedit: String,
+#[derive(Debug, PartialEq, Eq)]
+struct Preedit {
+    text: String,
     caret: u32,
-    candidates: Vec<String>,
-    cursor: u32,
-    show_lookup: bool,
-    start: usize,
 }
 
-fn same_shown(shown: &Shown, view: &View) -> bool {
-    let (start, cursor, page) = page_window(view);
-    let (preedit, caret) = displayed_preedit(view);
-    shown.show_lookup == view.show_lookup
-        && shown.cursor == cursor
-        && shown.start == start
-        && shown.caret == caret
-        && shown.preedit == preedit
-        && shown.candidates.iter().eq(page)
+#[derive(Debug, PartialEq, Eq)]
+struct Lookup {
+    candidates: Vec<String>,
+    cursor: u32,
+    visible: bool,
+    page_size: usize,
+}
+
+impl Lookup {
+    fn matches(&self, view: &View) -> bool {
+        let (_, cursor, page) = page_window(view);
+        self.visible == view.show_lookup
+            && self.cursor == cursor
+            && self.page_size == view.page_size
+            && self.candidates.iter().eq(page)
+    }
 }
 
 /// Draw `ni'hao` when the highlighted reading spells the consumed letters.
@@ -176,9 +180,32 @@ struct Engine {
     session: Session,
     focused: bool,
     content_type: (u32, u32),
-    shown: Option<Shown>,
+    shown_preedit: Option<Preedit>,
+    shown_lookup: Option<Lookup>,
+    latency: Option<crate::latency::Latency>,
     /// Absolute index of the first candidate in the published page.
     page_at: usize,
+}
+
+/// IBus destroys an engine through its base Service interface, not Engine.
+/// Removing both interfaces releases the session's watches and learning file.
+struct EngineService {
+    path: OwnedObjectPath,
+}
+
+#[interface(name = "org.freedesktop.IBus.Service")]
+impl EngineService {
+    async fn destroy(&self, #[zbus(connection)] conn: &Connection) -> fdo::Result<()> {
+        conn.object_server()
+            .remove::<Engine, _>(self.path.clone())
+            .await
+            .map_err(|err| fdo::Error::Failed(err.to_string()))?;
+        conn.object_server()
+            .remove::<Self, _>(self.path.clone())
+            .await
+            .map_err(|err| fdo::Error::Failed(err.to_string()))?;
+        Ok(())
+    }
 }
 
 #[interface(name = "org.freedesktop.IBus.Factory")]
@@ -198,13 +225,23 @@ impl Factory {
             session: Session::with_user(Arc::clone(&self.lexicon), UserDict::load()),
             focused: false,
             content_type: (0, 0),
-            shown: None,
+            shown_preedit: None,
+            shown_lookup: None,
+            latency: crate::latency::Latency::from_env(),
             page_at: 0,
         };
         conn.object_server()
             .at(path.clone(), engine)
             .await
             .map_err(|err| fdo::Error::Failed(err.to_string()))?;
+        if let Err(err) = conn
+            .object_server()
+            .at(path.clone(), EngineService { path: path.clone() })
+            .await
+        {
+            let _ = conn.object_server().remove::<Engine, _>(path).await;
+            return Err(fdo::Error::Failed(err.to_string()));
+        }
         eprintln!("waypinyin: engine {path}");
         Ok(path)
     }
@@ -219,8 +256,15 @@ impl Engine {
         _keycode: u32,
         state: u32,
     ) -> fdo::Result<bool> {
+        let started = self.latency.as_ref().map(|_| std::time::Instant::now());
         let effect = self.session.handle(keyval, state);
-        self.present(&emitter, effect).await
+        let handled = started.map(|t| t.elapsed());
+        let result = self.present(&emitter, effect).await;
+        if let (Some(latency), Some(started), Some(handled)) = (&mut self.latency, started, handled)
+        {
+            latency.record(handled, started.elapsed());
+        }
+        result
     }
 
     async fn set_cursor_location(&mut self, _x: i32, _y: i32, _w: i32, _h: i32) {}
@@ -388,31 +432,35 @@ impl Engine {
 
 impl Engine {
     async fn publish(&mut self, emitter: &SignalEmitter<'_>, view: &View) -> fdo::Result<()> {
-        if self
-            .shown
-            .as_ref()
-            .is_some_and(|shown| same_shown(shown, view))
-        {
-            return Ok(());
-        }
         let (start, cursor, page) = page_window(view);
-        let (preedit, caret) = displayed_preedit(view);
-        let preedit_visible = !preedit.is_empty();
-        Self::update_preedit_text(emitter, ibus_text(&preedit), caret, preedit_visible, 0)
+        let (text, caret) = displayed_preedit(view);
+        let preedit = Preedit { text, caret };
+        if self.shown_preedit.as_ref() != Some(&preedit) {
+            Self::update_preedit_text(
+                emitter,
+                ibus_text(&preedit.text),
+                preedit.caret,
+                !preedit.text.is_empty(),
+                0,
+            )
             .await
             .map_err(|err| fdo::Error::Failed(err.to_string()))?;
-        Self::update_lookup_table(emitter, ibus_lookup(view), view.show_lookup)
-            .await
-            .map_err(|err| fdo::Error::Failed(err.to_string()))?;
+            self.shown_preedit = Some(preedit);
+        }
+        if !self.shown_lookup.as_ref().is_some_and(|s| s.matches(view)) {
+            Self::update_lookup_table(emitter, ibus_lookup(view), view.show_lookup)
+                .await
+                .map_err(|err| fdo::Error::Failed(err.to_string()))?;
+            self.shown_lookup = Some(Lookup {
+                candidates: page.to_vec(),
+                cursor,
+                visible: view.show_lookup,
+                page_size: view.page_size,
+            });
+        }
+        // The absolute page offset is local click state, not part of the wire
+        // lookup table. Update it even when two pages have identical contents.
         self.page_at = start;
-        self.shown = Some(Shown {
-            preedit,
-            caret,
-            candidates: page.to_vec(),
-            cursor,
-            show_lookup: view.show_lookup,
-            start,
-        });
         Ok(())
     }
 
@@ -571,7 +619,9 @@ mod sig_tests {
             ),
             focused: false,
             content_type: (0, 0),
-            shown: None,
+            shown_preedit: None,
+            shown_lookup: None,
+            latency: crate::latency::Latency::from_env(),
             page_at: 0,
         };
         for content in [(8, 0), (9, 0), (0, 1 << 11), (0, 1 << 12)] {
@@ -624,18 +674,19 @@ mod sig_tests {
             page.iter().map(String::as_str).collect::<Vec<_>>(),
             vec!["c5", "c6", "c7", "c8", "c9"]
         );
-        let shown = Shown {
-            preedit: view.preedit.clone(),
-            caret: 5,
+        let shown = Lookup {
             candidates: page.to_vec(),
             cursor,
-            show_lookup: true,
-            start,
+            visible: true,
+            page_size: view.page_size,
         };
-        assert!(same_shown(&shown, &view));
+        assert!(shown.matches(&view));
         let mut moved = view.clone();
         moved.cursor = 8;
-        assert!(!same_shown(&shown, &moved));
+        assert!(!shown.matches(&moved));
+        moved = view.clone();
+        moved.page_size = 7;
+        assert!(!shown.matches(&moved));
     }
 
     #[test]

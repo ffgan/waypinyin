@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Release destroyed IBus engine objects, notification watches and journal files;
+  verify repeated engine lifecycles on a private bus in CI.
+
+- Optimize long-input beam rejection and numeric scoring tables, precompute
+  character-pair weights with identical floating-point results, and retain
+  differential coverage against the original search and scoring implementation.
+
+- Send preedit and candidate-table IBus updates independently, reuse sentence
+  traversal storage within each query, and add isolated bus-level
+  latency/equivalence probes plus opt-in content-free handler timing.
+
 - Replace installed files atomically so a running engine can keep its executable
   and mapped dictionary while an update is staged.
 

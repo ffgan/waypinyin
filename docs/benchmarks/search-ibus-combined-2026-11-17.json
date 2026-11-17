@@ -1,0 +1,186 @@
+{
+  "runs_per_variant": 14,
+  "cohort_files": [
+    "search-ibus-2026-11-17.json",
+    "search-ibus-repeat-2026-11-17.json"
+  ],
+  "aggregation": "median of the 14 per-run metrics; all samples from both cohorts retained",
+  "median": {
+    "before": {
+      "commit": {
+        "count": 275.0,
+        "p50_ns": 544010.0,
+        "p95_ns": 729481.0,
+        "p99_ns": 1067434.5,
+        "max_ns": 1573315.0
+      },
+      "edit": {
+        "count": 1375.0,
+        "p50_ns": 361968.0,
+        "p95_ns": 710079.5,
+        "p99_ns": 934123.0,
+        "max_ns": 2233601.0
+      },
+      "ignored": {
+        "count": 550.0,
+        "p50_ns": 217998.5,
+        "p95_ns": 340491.5,
+        "p99_ns": 622439.0,
+        "max_ns": 1257975.0
+      },
+      "page": {
+        "count": 550.0,
+        "p50_ns": 580366.5,
+        "p95_ns": 761986.5,
+        "p99_ns": 1068343.5,
+        "max_ns": 1853235.0
+      },
+      "select": {
+        "count": 550.0,
+        "p50_ns": 562037.0,
+        "p95_ns": 736819.5,
+        "p99_ns": 970747.0,
+        "max_ns": 1675988.0
+      },
+      "sentence": {
+        "count": 1529.0,
+        "p50_ns": 1080462.5,
+        "p95_ns": 13499671.5,
+        "p99_ns": 16653265.5,
+        "max_ns": 22276728.0
+      },
+      "short": {
+        "count": 1202.0,
+        "p50_ns": 644792.0,
+        "p95_ns": 980109.5,
+        "p99_ns": 1558733.5,
+        "max_ns": 2504744.0
+      },
+      "wire_commit": {
+        "signals": 825.0,
+        "bytes": 349712.0
+      },
+      "wire_edit": {
+        "signals": 1638.0,
+        "bytes": 961640.0
+      },
+      "wire_ignored": {
+        "signals": 0.0,
+        "bytes": 0.0
+      },
+      "wire_page": {
+        "signals": 926.0,
+        "bytes": 755000.0
+      },
+      "wire_select": {
+        "signals": 646.0,
+        "bytes": 676336.0
+      },
+      "wire_sentence": {
+        "signals": 2979.0,
+        "bytes": 2224236.0
+      },
+      "wire_short": {
+        "signals": 2387.0,
+        "bytes": 1716972.0
+      },
+      "wire": {
+        "signals": 9401.0,
+        "bytes": 6683896.0
+      }
+    },
+    "after": {
+      "commit": {
+        "count": 275.0,
+        "p50_ns": 539142.5,
+        "p95_ns": 707018.0,
+        "p99_ns": 927751.5,
+        "max_ns": 1290516.5
+      },
+      "edit": {
+        "count": 1375.0,
+        "p50_ns": 359447.5,
+        "p95_ns": 703102.5,
+        "p99_ns": 1013252.0,
+        "max_ns": 2135728.0
+      },
+      "ignored": {
+        "count": 550.0,
+        "p50_ns": 217327.0,
+        "p95_ns": 333810.0,
+        "p99_ns": 510132.0,
+        "max_ns": 1031058.5
+      },
+      "page": {
+        "count": 550.0,
+        "p50_ns": 581061.0,
+        "p95_ns": 778061.5,
+        "p99_ns": 1189041.0,
+        "max_ns": 2138181.0
+      },
+      "select": {
+        "count": 550.0,
+        "p50_ns": 563950.5,
+        "p95_ns": 734996.5,
+        "p99_ns": 1070950.0,
+        "max_ns": 1968578.5
+      },
+      "sentence": {
+        "count": 1529.0,
+        "p50_ns": 926464.5,
+        "p95_ns": 3952880.0,
+        "p99_ns": 4680902.5,
+        "max_ns": 5637674.0
+      },
+      "short": {
+        "count": 1202.0,
+        "p50_ns": 649341.0,
+        "p95_ns": 1018852.0,
+        "p99_ns": 1533635.5,
+        "max_ns": 2383647.0
+      },
+      "wire_commit": {
+        "signals": 825.0,
+        "bytes": 349712.0
+      },
+      "wire_edit": {
+        "signals": 1638.0,
+        "bytes": 961640.0
+      },
+      "wire_ignored": {
+        "signals": 0.0,
+        "bytes": 0.0
+      },
+      "wire_page": {
+        "signals": 926.0,
+        "bytes": 755000.0
+      },
+      "wire_select": {
+        "signals": 646.0,
+        "bytes": 676336.0
+      },
+      "wire_sentence": {
+        "signals": 2979.0,
+        "bytes": 2224236.0
+      },
+      "wire_short": {
+        "signals": 2387.0,
+        "bytes": 1716972.0
+      },
+      "wire": {
+        "signals": 9401.0,
+        "bytes": 6683896.0
+      }
+    }
+  },
+  "binary_sha256": {
+    "before": "58632c3741fb835a92d84f4b8571793ee9df8795f28c895ad759cf02e2ae5c01",
+    "after": "a6bdfb04329996296927c58caf332e0ce53bfb369e185e231305aa212f2e9191",
+    "probe": "b5bd1ebe4b2aa903ac2fa1cffd0fd2cb42c5495120bd056e5d67f72c8ba0768b"
+  },
+  "image_sha256": "58d36908ff619f807bcaae1ce1316d819904c808ce0ce081fb15b97d9bd75b24",
+  "trace_lines_per_cohort": [
+    6031,
+    6031
+  ]
+}

@@ -3110,9 +3110,11 @@ dependencies = [
  "eframe",
  "encoding_rs",
  "flate2",
+ "futures-util",
  "libc",
  "plist",
  "rfd",
+ "rustc-hash 2.1.3",
  "tokio",
  "zbus",
 ]

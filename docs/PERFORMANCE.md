@@ -1,5 +1,260 @@
 # Linux performance
 
+## Long-input search, 2026-11-17
+
+The next optimization targets the synchronous long-input search rather than
+the IBus adapter. Its baseline is the completed adapter/traversal-storage
+optimization documented below, not the earlier unoptimized engine.
+
+Each destination beam now remembers its worst-cost path, including the original
+`max_by` winner when costs tie. A full beam rejects a proposed path with an
+equal or higher cost before comparing text. This is equivalent to the original
+deduplication-first rule: any duplicate already in that beam also costs no more
+than the beam's worst path. Accepted replacements retain the same `swap_remove`
+order; the worst index is recomputed only after an accepted insertion. A second
+duplicate scan is unnecessary because insertion preserves text uniqueness.
+
+Scoring keeps the original floating-point addition order. Character-pair weights
+are computed once from their counts, not recalculated with `ln_1p` on cache
+misses. Packed `u64` keys replace the integer tuples in visited-state and context
+score tables, and entry-based visited-state updates hash once instead of twice.
+Only these bounded numeric search tables and the static, locally authored
+character-pair prior use [rustc-hash](https://github.com/rust-lang/rustc-hash)
+2.1.3. Text-keyed/user/import maps retain their existing hashers. The dependency
+already existed in the lockfile and is now a direct runtime dependency; its
+verbatim Apache/MIT notices are collected by the existing inventory helper.
+
+The eight parent paths, sixteen destination paths, four words per node,
+60,000 traversal budget, 20,000 visits per boundary, 4,096-entry context cache,
+traversal order and tie-breaking rules are retained. Neither candidate coverage
+nor accuracy is traded for speed. The frozen search now also uses a frozen
+copy of the original character-pair scorer. A separate test compares score bits
+for 2,000 sampled dictionary texts and six previous-character states.
+
+`search_hotspot` profiles one uncached final key of an ambiguous long input.
+It uses fixed preferences and no preloader, leaving dictionary initialization
+and earlier prefixes outside the collected region:
+
+```sh
+cargo build --locked --offline --release --example search_hotspot
+WAYPINYIN_LEXICON=/absolute/path/to/lexicon.bin \
+  valgrind --tool=callgrind --collect-atstart=no \
+  --toggle-collect=waypinyin_profile_key \
+  --callgrind-out-file=/tmp/waypinyin-search.callgrind \
+  target/release/examples/search_hotspot
+callgrind_annotate --inclusive=no /tmp/waypinyin-search.callgrind
+```
+
+The default input is `mtxwsdwmzgsmkjmtlyxgzjh`. Profiling instruction counts
+explain work removed from that key, not wall-clock latency, power consumption
+or physical-key-to-frame latency. Corpus and private IBus comparisons use the
+existing `input_perf.py` and `ibus_perf.py` drivers with retained baseline
+binaries and the same full dictionary image.
+
+### Measurements
+
+Fedora 45 x86_64, Linux 7.3.3, Rust 1.99.1 and the same 141,873,016-byte full
+image were used. The [instruction profiles](benchmarks/search-2026-11-17/profile.json)
+retain probe/image/source hashes and raw Callgrind records. The collected final
+key required 168,234,306 instructions before and 30,635,545 after (81.8% fewer).
+Both produced `明天下午三点我们在公司门口见面讨论一下工作计划` as the first candidate.
+These are instruction counts for one isolated key, not CPU cycles or a general
+latency reduction claim.
+
+Seven alternating [candidate-engine pairs](benchmarks/search-input-2026-11-17.json)
+used the existing 200-word and 75-sentence corpus. Values are medians of per-run
+P95 values:
+
+- Sentence keys: 12.543 to 3.180 ms (74.6% lower).
+- Editing operations: 4.342 to 1.561 ms (64.0% lower).
+- Short-word keys: 259.297 to 258.435 microseconds (effectively unchanged).
+- Forward page: 11.552 to 11.211 microseconds (effectively unchanged).
+- Full short-word enumeration: 575.921 to 581.853 microseconds (1.0% higher).
+
+The trace retained 7,564 exact stable records and one result matching an observed
+baseline `xianqchifan` variant. The frozen reference search also matched all
+sentence-corpus prefixes and boundary cases, with independent original-scorer
+and floating-point-bit checks. `make check`, the full release suite (94 library
+tests and three CLI tests), and demo system-font release suite (42 library tests
+and three CLI tests) passed. The optional external fixture test was skipped in
+each suite. Dependency notice collection passed with no missing notice files.
+
+Two consecutive seven-pair [private IBus cohorts](benchmarks/search-ibus-2026-11-17.json)
+([repeat](benchmarks/search-ibus-repeat-2026-11-17.json)) used identical binaries
+and the full image. Both retained 6,031 exact display/commit/reply matches and
+identical signal counts/bytes. A repeat was collected because some first-cohort
+short-word and selection measurements had long wall-clock pauses. No samples
+were removed. The [combined results](benchmarks/search-ibus-combined-2026-11-17.json)
+take medians over all fourteen per-run values:
+
+- Sentence-key P95: 13.500 to 3.953 ms (70.7% lower).
+- Sentence-key P99: 16.653 to 4.681 ms (71.9% lower).
+- Short-word key P95: 0.980 to 1.019 ms (4.0% higher, about 39 microseconds).
+- Selection P95: 0.737 to 0.735 ms (effectively unchanged).
+- Editing P95: 0.710 to 0.703 ms (effectively unchanged).
+- Forward-page P95: 0.762 to 0.778 ms (2.1% higher).
+- Commit P95: 0.729 to 0.707 ms (3.1% lower).
+
+The first and repeat sentence-key P95 reductions were 70.1% and 70.5%,
+respectively; their short-key changes were 6.7% and 3.5% higher. Selection P95
+was 8.2% higher in the first cohort and 0.2% higher in the repeat. This supports
+a substantial long-input gain while preserving the small short-input overhead
+and scheduling variability in the record. These are private IBus request/reply
+measurements, including signal decoding, not physical-key-to-GNOME-frame times.
+Other host workloads were present. The original adapter-only measurements below
+are historical and do not include this search optimization.
+
+## IBus transport and handler diagnostics
+
+Engine paths also implement `org.freedesktop.IBus.Service.Destroy`, following
+the [upstream service interface](https://github.com/ibus/ibus/blob/master/src/ibusservice.c).
+The handler unregisters both Engine and Service interfaces, releasing the
+session's journal and notification descriptors. A missing Destroy interface
+previously retained every session in the object server, eventually exhausting
+per-user inotify instances during repeated input-context creation. Registration
+failure rolls back the partially registered engine as well.
+
+`scripts/check_ibus_lifecycle.py BINARY IMAGE PROBE` creates and destroys 100
+engines on an isolated bus, verifies that every destroyed path returns
+UnknownObject, and checks the live process's descriptor count. The full-data
+check finished with ten open descriptors; the original adapter fails the missing
+Service call. CI runs the same check against the demo build. This cleanup was
+added after the latency cohorts above and is validated separately from their
+performance claims.
+
+`examples/ibus_latency.rs` and `scripts/ibus_perf.py` exercise the actual engine
+executable through a disposable `dbus-daemon`. With `--routed`, a real private
+`ibus-daemon` loads a temporary component registration and routes InputContext
+calls to the engine. Without that flag the probe calls the engine directly.
+Each run has fresh XDG settings, cache/runtime directories and an empty learning
+file that prevents legacy-journal migration. The disposable session bus has no
+service activation directories. These runs never connect to the desktop IBus
+bus or change its input sources. The probe requires `WAYPINYIN_PROBE_BUS`
+explicitly, with no session-bus fallback. The driver terminates and reaps its
+children, including the private IBus engine process group, on completion or
+probe failure.
+
+Build and retain the baseline engine before applying changes, then build the
+changed engine and probe with the same release profile and dictionary image:
+
+```sh
+cargo build --locked --offline --release --bin waypinyin
+cp target/release/waypinyin /tmp/waypinyin-ibus-before
+# Apply changes, then build the probe and changed engine.
+cargo build --locked --offline --release --bin waypinyin --example ibus_latency
+python3 scripts/ibus_perf.py \
+  --before /tmp/waypinyin-ibus-before \
+  --after target/release/waypinyin \
+  --probe target/release/examples/ibus_latency \
+  --image /absolute/path/to/lexicon.bin \
+  --routed --runs 7 --output /tmp/waypinyin-ibus-results.json
+```
+
+The driver first directly checks independent engine UI signals: moving only the caret sends
+only the preedit update; moving past the end, release events, shortcuts and an
+unchanged reset send no UI updates. Focus loss must commit and clear both UI
+components. A separate trace compares reconstructed preedit/lookup states,
+commit signals and key-consumed replies after every call in both versions.
+The corpus contains 200 words and 75 sentence variants, with candidate selection,
+paging, backspace/reinsertion, deletion, caret movement, release events,
+shortcuts and space commits. Signal omission is allowed only when the retained
+display state is exactly equivalent. Absolute page offsets remain local click
+state and are refreshed even when the wire lookup content is unchanged.
+
+Bench mode reports per-group P50/P95/P99/max call times plus signal counts and
+D-Bus message bytes (including message headers, excluding authentication and
+socket framing). A single message stream observes signals and the corresponding
+method reply in socket order. Timing runs from sending the request until
+receiving its reply and includes decoding preceding UI signals. This covers
+client dispatch, private D-Bus transport, engine computation, signal publication
+and client decoding. Routed mode also includes ibus-daemon's InputContext routing.
+It does **not** cover physical keyboard delivery, toolkit text insertion, GNOME
+rendering or frame presentation.
+It is not a physical-key-to-screen benchmark. Engine startup and dictionary load
+are outside per-call timing. Runs alternate before/after order; diagnostic
+logging is disabled during comparisons.
+
+Starting an engine with `WAYPINYIN_TRACE_LATENCY=1` enables a separate diagnostic.
+Each engine holds at most 256 timing samples, reports nearest-rank P50/P95/P99
+and maximum in nanoseconds to stderr, then clears the window. Stages are
+`handle` (session computation, including learning writes), `present` (adapter
+work and signal sending), and `total` (the handler through signal publication).
+They exclude incoming bus scheduling and the outgoing method reply. All key
+events, including ignored events, enter these windows. No keys, spellings,
+candidate text or learning contents are logged. Disabled diagnostics take no
+timestamps. Reporting allocates and writes to stderr, so enabled diagnostics
+are for attribution, not latency comparisons. A clean object drop reports a
+partial window; abrupt process termination can lose it. The driver collects
+full-window diagnostic output in an extra directly launched changed-engine run
+after measurements, since ibus-daemon can redirect its spawned engine's stderr.
+
+The adapter tracks preedit and lookup states independently and only serializes
+and sends changed components. Each component's state advances after its own
+successful send, so a failed later signal remains eligible for retry. No signal
+order, commit order, key handling or candidate-ranking rule is changed.
+
+Sentence search reuses its traversal stack and visited-state map across word
+boundaries within one query. Each boundary clears their contents but retains
+allocated capacity. Search budgets, traversal, score arithmetic and tie-breaking
+stay unchanged and remain checked against the frozen reference search.
+
+### IBus measurements, 2026-11-17
+
+Seven alternating pairs used Fedora 45 x86_64, Linux 7.3.3, Rust 1.99.1,
+IBus 1.5.35, the same release profile and the 141,873,016-byte full image used
+in the earlier cohorts. The baseline engine was built from `a4e233f` before this change.
+Each run used a fresh empty learning journal. The [raw routed samples](benchmarks/ibus-2026-11-17.json)
+retain image/binary/source hashes, all per-run metrics and the direct-signal
+verification result. All 6,031 reconstructed display/commit/reply trace records
+matched exactly through a real private IBus daemon.
+
+Values below are medians of the seven per-run measurements:
+
+- Total received signals: 10,689 to 9,401 (12.1% fewer).
+- Total received message bytes: 7,651,616 to 6,683,896 (12.6% fewer).
+- Editing-operation signals: 2,200 to 1,638; message bytes: 1,624,168 to 961,640.
+- Editing-operation P50: 565.162 to 368.593 microseconds (34.8% lower).
+- Editing-operation P95: 749.890 to 700.907 microseconds (6.5% lower).
+- Short-word key P95: 972.598 to 984.781 microseconds (1.3% higher).
+- Sentence-key P95: 13.350 to 13.435 milliseconds (0.6% higher).
+- Commit P95: 686.000 to 714.984 microseconds (4.2% higher).
+
+The deterministic reduction in messages is established for this corpus; the
+largest latency improvement is in editing operations. Short-word and sentence
+key P95 were effectively flat, and commits did not improve. These results do
+not establish a general typing-speed gain or justify replacing IBus. Other host
+workloads were present, and timing includes neither desktop rendering nor
+physical keyboard delivery. A candidate-engine-only comparison is recorded
+separately below.
+
+Seven alternating [candidate-engine-only pairs](benchmarks/input-2026-11-17.json)
+retained 7,564 exact stable trace records; the remaining `xianqchifan` record
+matched an actually observed baseline variant, following the existing trace
+policy. Sentence-key P95 changed from 12.533 to 12.202 milliseconds (2.6% lower),
+short-key P95 from 255.460 to 254.729 microseconds (0.3% lower), and edit P95 from
+4.367 to 4.270 milliseconds (2.2% lower). These small differences do not establish
+a general candidate-computation speedup from traversal-storage reuse.
+
+A separate [direct-handler diagnostic](benchmarks/ibus-handler-2026-11-17.json)
+contains 23 complete 256-event windows with logging enabled. The final three
+sentence-heavy windows had `handle` P95 values of 12.400, 14.677 and 14.605 ms,
+versus `present` P95 values of 0.134, 0.136 and 0.130 ms. This is attribution,
+not a before/after benchmark: the long-query computation remains the larger
+cost in these windows. It does not measure the desktop's rendering cost. The
+routed archive's diagnostic list is empty because IBus redirected engine stderr;
+the supplemental direct run retains the same measured engine and probe hashes.
+
+Validation passed `make check`, the full release suite (93 library tests and
+three CLI tests), and the original demo system-font release suite (42 library
+tests and three CLI tests). Each suite skipped the optional external dictionary
+fixture test because its files were not supplied. Strict Clippy covered the
+probe, and Python syntax and whitespace checks passed. Quality probes retained
+200/200 common-word first candidates and 74/75 sentence first candidates; exact
+trace/reference checks establish unchanged candidate behavior. GNOME frame
+presentation and interactive manual acceptance were not measured here.
+
+## Dictionary loading and composition boundaries
+
 The runtime keeps the lexicon in a read-only file-backed `mmap`, sharing the
 kernel page cache across input contexts. `OnceLock` validates and publishes the
 image once per process. Validation checks all sections, UTF-8 and indexes before

@@ -7,6 +7,7 @@
 //! image is built, so a short prefix does not search or allocate them again.
 
 use crate::image::{open, BigramRec, EdgeRec, NodeRec, RangeRec, WordRec};
+use rustc_hash::FxHashMap;
 use std::borrow::Cow;
 use std::cell::RefCell;
 use std::cmp::Ordering;
@@ -1200,26 +1201,29 @@ fn compose(syls: &[u16], lex: &Lexicon) -> Option<String> {
 /// A small conversational character-pair prior, applied only during sentence
 /// composition; stored exact words retain their corpus ranking.
 fn sentence_bonus(previous: Option<char>, word: &str) -> f64 {
-    static PAIRS: OnceLock<HashMap<(char, char), u32>> = OnceLock::new();
+    static PAIRS: OnceLock<FxHashMap<u64, f64>> = OnceLock::new();
     let pairs = PAIRS.get_or_init(|| {
-        let mut pairs = HashMap::new();
+        let mut pairs = FxHashMap::default();
         for line in include_str!("../data/sentences.txt")
             .lines()
             .filter(|l| !l.starts_with('#'))
         {
             let chars: Vec<_> = line.chars().collect();
             for pair in chars.windows(2) {
-                *pairs.entry((pair[0], pair[1])).or_insert(0) += 1;
+                *pairs.entry(pair_key(pair[0], pair[1])).or_insert(0u32) += 1;
             }
         }
         pairs
+            .into_iter()
+            .map(|(key, count)| (key, 2.0 * f64::from(count).ln_1p().min(3.0)))
+            .collect()
     });
     let mut prev = previous;
     let mut bonus = 0.0;
     for ch in word.chars() {
         if let Some(p) = prev {
-            if let Some(count) = pairs.get(&(p, ch)) {
-                bonus += 2.0 * (f64::from(*count)).ln_1p().min(3.0);
+            if let Some(weight) = pairs.get(&pair_key(p, ch)) {
+                bonus += weight;
             } else {
                 bonus -= 1.5;
             }
@@ -1227,6 +1231,10 @@ fn sentence_bonus(previous: Option<char>, word: &str) -> f64 {
         prev = Some(ch);
     }
     bonus
+}
+
+fn pair_key(previous: char, next: char) -> u64 {
+    (u64::from(previous) << 32) | u64::from(next)
 }
 
 #[derive(Clone)]
@@ -1251,6 +1259,9 @@ fn compose_sentences(
     }
     let n = input.len();
     let mut paths: Vec<Vec<SentencePath>> = vec![Vec::new(); n + 1];
+    // For a full destination beam, keep the original max_by tie winner. Most
+    // proposed paths can then be rejected before comparing any strings.
+    let mut worst = vec![0usize; n + 1];
     paths[0].push(SentencePath {
         cost: 0.0,
         text: String::new(),
@@ -1260,7 +1271,13 @@ fn compose_sentences(
     });
     // Bound memoization independently of the search budget. A full cache only
     // stops inserting: it never prunes a path or changes score arithmetic.
-    let mut bonuses: HashMap<(Option<char>, u32), f64> = HashMap::new();
+    // Only packed dictionary IDs/characters enter these numeric maps. The
+    // fixed traversal/cache caps remain in force; user-text maps keep SipHash.
+    let mut bonuses: FxHashMap<u64, f64> = FxHashMap::default();
+    // Reuse traversal storage across word boundaries. Clearing retains capacity
+    // without changing the stack order or any visited-state decisions.
+    let mut stack = Vec::new();
+    let mut seen: FxHashMap<u64, f64> = FxHashMap::default();
     let mut budget = 60_000usize;
     for start in 0..n {
         if budget == 0 {
@@ -1276,14 +1293,23 @@ fn compose_sentences(
         if begin == n {
             continue;
         }
-        let mut stack = vec![(0u32, begin, 0.0)];
-        let mut seen: HashMap<(u32, usize), f64> = HashMap::new();
+        stack.clear();
+        stack.push((0u32, begin, 0.0));
+        seen.clear();
         let mut visited = 0;
         while let Some((node, pos, penalty)) = stack.pop() {
-            if seen.get(&(node, pos)).is_some_and(|old| *old <= penalty) {
-                continue;
+            let state_key = (u64::from(node) << 32) | pos as u64;
+            match seen.entry(state_key) {
+                std::collections::hash_map::Entry::Occupied(mut entry) => {
+                    if *entry.get() <= penalty {
+                        continue;
+                    }
+                    *entry.get_mut() = penalty;
+                }
+                std::collections::hash_map::Entry::Vacant(entry) => {
+                    entry.insert(penalty);
+                }
             }
-            seen.insert((node, pos), penalty);
             visited += 1;
             if budget == 0 {
                 break;
@@ -1300,7 +1326,8 @@ fn compose_sentences(
                     let base = (lex.ln_corpus - (word.score.max(1) as f64).ln()).max(0.0) + penalty;
                     let last = text.chars().last();
                     for parent in &parents {
-                        let key = (parent.last, word.text);
+                        let key = (u64::from(parent.last.map_or(u32::MAX, u32::from)) << 32)
+                            | u64::from(word.text);
                         let bonus = if let Some(bonus) = bonuses.get(&key) {
                             *bonus
                         } else {
@@ -1311,32 +1338,26 @@ fn compose_sentences(
                             bonus
                         };
                         let cost = parent.cost + base - bonus;
+                        let target = &mut paths[end];
+                        // A duplicate in a full beam cannot cost more than its
+                        // worst path. This rejection is also safe before dedup.
+                        if target.len() == 16 && cost >= target[worst[end]].cost {
+                            continue;
+                        }
                         // Compare concatenations before allocating the new path.
                         let same_text = |p: &SentencePath| {
                             p.text.len() == parent.text.len() + text.len()
                                 && p.text.starts_with(&parent.text)
                                 && &p.text[parent.text.len()..] == text
                         };
-                        if let Some(index) = paths[end].iter().position(same_text) {
-                            if paths[end][index].cost <= cost {
+                        if let Some(index) = target.iter().position(same_text) {
+                            if target[index].cost <= cost {
                                 continue;
                             }
-                            paths[end].swap_remove(index);
+                            target.swap_remove(index);
                         }
-                        if paths[end].len() >= 16 {
-                            let worst = paths[end]
-                                .iter()
-                                .enumerate()
-                                .max_by(|(_, a), (_, b)| a.cost.total_cmp(&b.cost))
-                                .unwrap()
-                                .0;
-                            if cost >= paths[end][worst].cost {
-                                continue;
-                            }
-                            paths[end].swap_remove(worst);
-                        }
-                        if paths[end].iter().any(|p| same_text(p) && p.cost <= cost) {
-                            continue;
+                        if target.len() == 16 {
+                            target.swap_remove(worst[end]);
                         }
                         // Keep the original replacement and tie-breaking order,
                         // but copy text/readings only for paths that survive it.
@@ -1348,7 +1369,15 @@ fn compose_sentences(
                             node_reading.get_or_insert_with(|| path_ids(lex, node)),
                         );
                         next.words += 1;
-                        paths[end].push(next);
+                        target.push(next);
+                        if target.len() == 16 {
+                            worst[end] = target
+                                .iter()
+                                .enumerate()
+                                .max_by(|(_, a), (_, b)| a.cost.total_cmp(&b.cost))
+                                .unwrap()
+                                .0;
+                        }
                     }
                 }
             }

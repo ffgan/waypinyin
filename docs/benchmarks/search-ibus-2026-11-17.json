@@ -1,0 +1,1471 @@
+{
+  "runs": 7,
+  "routed": true,
+  "verification": "independent signals, ignored keys, focus-loss commit and reset passed",
+  "trace_lines": 6031,
+  "median": {
+    "before": {
+      "commit": {
+        "count": 275,
+        "p50_ns": 546586,
+        "p95_ns": 736543,
+        "p99_ns": 1114122,
+        "max_ns": 1590006
+      },
+      "edit": {
+        "count": 1375,
+        "p50_ns": 366418,
+        "p95_ns": 723098,
+        "p99_ns": 1121336,
+        "max_ns": 2128277
+      },
+      "ignored": {
+        "count": 550,
+        "p50_ns": 218901,
+        "p95_ns": 371147,
+        "p99_ns": 763564,
+        "max_ns": 1334837
+      },
+      "page": {
+        "count": 550,
+        "p50_ns": 587553,
+        "p95_ns": 820621,
+        "p99_ns": 1385081,
+        "max_ns": 2013641
+      },
+      "select": {
+        "count": 550,
+        "p50_ns": 564921,
+        "p95_ns": 743487,
+        "p99_ns": 1014685,
+        "max_ns": 1901492
+      },
+      "sentence": {
+        "count": 1529,
+        "p50_ns": 1104314,
+        "p95_ns": 13542644,
+        "p99_ns": 16698962,
+        "max_ns": 22562634
+      },
+      "short": {
+        "count": 1202,
+        "p50_ns": 644721,
+        "p95_ns": 1033010,
+        "p99_ns": 1647274,
+        "max_ns": 2606575
+      },
+      "wire_commit": {
+        "signals": 825,
+        "bytes": 349712
+      },
+      "wire_edit": {
+        "signals": 1638,
+        "bytes": 961640
+      },
+      "wire_ignored": {
+        "signals": 0,
+        "bytes": 0
+      },
+      "wire_page": {
+        "signals": 926,
+        "bytes": 755000
+      },
+      "wire_select": {
+        "signals": 646,
+        "bytes": 676336
+      },
+      "wire_sentence": {
+        "signals": 2979,
+        "bytes": 2224236
+      },
+      "wire_short": {
+        "signals": 2387,
+        "bytes": 1716972
+      },
+      "wire": {
+        "signals": 9401,
+        "bytes": 6683896
+      }
+    },
+    "after": {
+      "commit": {
+        "count": 275,
+        "p50_ns": 540455,
+        "p95_ns": 720653,
+        "p99_ns": 1066583,
+        "max_ns": 1995268
+      },
+      "edit": {
+        "count": 1375,
+        "p50_ns": 363282,
+        "p95_ns": 736553,
+        "p99_ns": 1118821,
+        "max_ns": 2250106
+      },
+      "ignored": {
+        "count": 550,
+        "p50_ns": 217669,
+        "p95_ns": 350729,
+        "p99_ns": 559741,
+        "max_ns": 1339035
+      },
+      "page": {
+        "count": 550,
+        "p50_ns": 587012,
+        "p95_ns": 793691,
+        "p99_ns": 1214701,
+        "max_ns": 2726070
+      },
+      "select": {
+        "count": 550,
+        "p50_ns": 569590,
+        "p95_ns": 804771,
+        "p99_ns": 1051465,
+        "max_ns": 1620684
+      },
+      "sentence": {
+        "count": 1529,
+        "p50_ns": 958460,
+        "p95_ns": 4047702,
+        "p99_ns": 4825252,
+        "max_ns": 7238294
+      },
+      "short": {
+        "count": 1202,
+        "p50_ns": 663506,
+        "p95_ns": 1102541,
+        "p99_ns": 1623399,
+        "max_ns": 3034469
+      },
+      "wire_commit": {
+        "signals": 825,
+        "bytes": 349712
+      },
+      "wire_edit": {
+        "signals": 1638,
+        "bytes": 961640
+      },
+      "wire_ignored": {
+        "signals": 0,
+        "bytes": 0
+      },
+      "wire_page": {
+        "signals": 926,
+        "bytes": 755000
+      },
+      "wire_select": {
+        "signals": 646,
+        "bytes": 676336
+      },
+      "wire_sentence": {
+        "signals": 2979,
+        "bytes": 2224236
+      },
+      "wire_short": {
+        "signals": 2387,
+        "bytes": 1716972
+      },
+      "wire": {
+        "signals": 9401,
+        "bytes": 6683896
+      }
+    }
+  },
+  "samples": {
+    "before": [
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 547028,
+            "p95_ns": 700235,
+            "p99_ns": 1065761,
+            "max_ns": 2137425
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 366418,
+            "p95_ns": 718209,
+            "p99_ns": 999928,
+            "max_ns": 3148012
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 218901,
+            "p95_ns": 325811,
+            "p99_ns": 763564,
+            "max_ns": 1216775
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 587553,
+            "p95_ns": 791917,
+            "p99_ns": 1239247,
+            "max_ns": 2013641
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 564921,
+            "p95_ns": 743487,
+            "p99_ns": 974009,
+            "max_ns": 1747332
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 1104314,
+            "p95_ns": 13542644,
+            "p99_ns": 16361117,
+            "max_ns": 22238706
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 644721,
+            "p95_ns": 1005959,
+            "p99_ns": 1570299,
+            "max_ns": 2234016
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=547028 p95_ns=700235 p99_ns=1065761 max_ns=2137425\nedit count=1375 p50_ns=366418 p95_ns=718209 p99_ns=999928 max_ns=3148012\nignored count=550 p50_ns=218901 p95_ns=325811 p99_ns=763564 max_ns=1216775\npage count=550 p50_ns=587553 p95_ns=791917 p99_ns=1239247 max_ns=2013641\nselect count=550 p50_ns=564921 p95_ns=743487 p99_ns=974009 max_ns=1747332\nsentence count=1529 p50_ns=1104314 p95_ns=13542644 p99_ns=16361117 max_ns=22238706\nshort count=1202 p50_ns=644721 p95_ns=1005959 p99_ns=1570299 max_ns=2234016\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      },
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 546586,
+            "p95_ns": 763204,
+            "p99_ns": 1304620,
+            "max_ns": 1556624
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 380184,
+            "p95_ns": 754747,
+            "p99_ns": 1142385,
+            "max_ns": 2128277
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 223710,
+            "p95_ns": 379813,
+            "p99_ns": 1042598,
+            "max_ns": 1299681
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 595117,
+            "p95_ns": 862681,
+            "p99_ns": 1499566,
+            "max_ns": 2247521
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 571433,
+            "p95_ns": 878851,
+            "p99_ns": 1563898,
+            "max_ns": 2067703
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 1134691,
+            "p95_ns": 15954694,
+            "p99_ns": 33909924,
+            "max_ns": 197290421
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 674768,
+            "p95_ns": 1320520,
+            "p99_ns": 1971553,
+            "max_ns": 3133484
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=546586 p95_ns=763204 p99_ns=1304620 max_ns=1556624\nedit count=1375 p50_ns=380184 p95_ns=754747 p99_ns=1142385 max_ns=2128277\nignored count=550 p50_ns=223710 p95_ns=379813 p99_ns=1042598 max_ns=1299681\npage count=550 p50_ns=595117 p95_ns=862681 p99_ns=1499566 max_ns=2247521\nselect count=550 p50_ns=571433 p95_ns=878851 p99_ns=1563898 max_ns=2067703\nsentence count=1529 p50_ns=1134691 p95_ns=15954694 p99_ns=33909924 max_ns=197290421\nshort count=1202 p50_ns=674768 p95_ns=1320520 p99_ns=1971553 max_ns=3133484\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      },
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 536708,
+            "p95_ns": 736543,
+            "p99_ns": 1069108,
+            "max_ns": 1497542
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 363542,
+            "p95_ns": 723098,
+            "p99_ns": 1076241,
+            "max_ns": 1790232
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 213932,
+            "p95_ns": 371187,
+            "p99_ns": 660561,
+            "max_ns": 1128239
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 573437,
+            "p95_ns": 820621,
+            "p99_ns": 1385081,
+            "max_ns": 1942408
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 559190,
+            "p95_ns": 735942,
+            "p99_ns": 1014685,
+            "max_ns": 1901492
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 1125694,
+            "p95_ns": 14641327,
+            "p99_ns": 26354255,
+            "max_ns": 96832056
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 637167,
+            "p95_ns": 1033010,
+            "p99_ns": 1491341,
+            "max_ns": 2304437
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=536708 p95_ns=736543 p99_ns=1069108 max_ns=1497542\nedit count=1375 p50_ns=363542 p95_ns=723098 p99_ns=1076241 max_ns=1790232\nignored count=550 p50_ns=213932 p95_ns=371187 p99_ns=660561 max_ns=1128239\npage count=550 p50_ns=573437 p95_ns=820621 p99_ns=1385081 max_ns=1942408\nselect count=550 p50_ns=559190 p95_ns=735942 p99_ns=1014685 max_ns=1901492\nsentence count=1529 p50_ns=1125694 p95_ns=14641327 p99_ns=26354255 max_ns=96832056\nshort count=1202 p50_ns=637167 p95_ns=1033010 p99_ns=1491341 max_ns=2304437\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      },
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 612731,
+            "p95_ns": 1971663,
+            "p99_ns": 6189274,
+            "max_ns": 15108805
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 529164,
+            "p95_ns": 1541445,
+            "p99_ns": 4046088,
+            "max_ns": 7522828
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 251122,
+            "p95_ns": 992264,
+            "p99_ns": 3301410,
+            "max_ns": 7864249
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 644169,
+            "p95_ns": 2114681,
+            "p99_ns": 4181062,
+            "max_ns": 6964540
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 636225,
+            "p95_ns": 1582382,
+            "p99_ns": 3375169,
+            "max_ns": 6921519
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 1126035,
+            "p95_ns": 13725878,
+            "p99_ns": 16698962,
+            "max_ns": 22475610
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 824208,
+            "p95_ns": 2426437,
+            "p99_ns": 5652877,
+            "max_ns": 26499988
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=612731 p95_ns=1971663 p99_ns=6189274 max_ns=15108805\nedit count=1375 p50_ns=529164 p95_ns=1541445 p99_ns=4046088 max_ns=7522828\nignored count=550 p50_ns=251122 p95_ns=992264 p99_ns=3301410 max_ns=7864249\npage count=550 p50_ns=644169 p95_ns=2114681 p99_ns=4181062 max_ns=6964540\nselect count=550 p50_ns=636225 p95_ns=1582382 p99_ns=3375169 max_ns=6921519\nsentence count=1529 p50_ns=1126035 p95_ns=13725878 p99_ns=16698962 max_ns=22475610\nshort count=1202 p50_ns=824208 p95_ns=2426437 p99_ns=5652877 max_ns=26499988\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      },
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 554922,
+            "p95_ns": 763795,
+            "p99_ns": 1323325,
+            "max_ns": 1795041
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 379382,
+            "p95_ns": 807717,
+            "p99_ns": 1427561,
+            "max_ns": 2690903
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 220785,
+            "p95_ns": 371147,
+            "p99_ns": 958470,
+            "max_ns": 1877917
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 589667,
+            "p95_ns": 897515,
+            "p99_ns": 1570660,
+            "max_ns": 4264419
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 572926,
+            "p95_ns": 910750,
+            "p99_ns": 1668103,
+            "max_ns": 2224287
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 1076302,
+            "p95_ns": 13384757,
+            "p99_ns": 16235151,
+            "max_ns": 22562634
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 671842,
+            "p95_ns": 1310030,
+            "p99_ns": 2176267,
+            "max_ns": 4550716
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=554922 p95_ns=763795 p99_ns=1323325 max_ns=1795041\nedit count=1375 p50_ns=379382 p95_ns=807717 p99_ns=1427561 max_ns=2690903\nignored count=550 p50_ns=220785 p95_ns=371147 p99_ns=958470 max_ns=1877917\npage count=550 p50_ns=589667 p95_ns=897515 p99_ns=1570660 max_ns=4264419\nselect count=550 p50_ns=572926 p95_ns=910750 p99_ns=1668103 max_ns=2224287\nsentence count=1529 p50_ns=1076302 p95_ns=13384757 p99_ns=16235151 max_ns=22562634\nshort count=1202 p50_ns=671842 p95_ns=1310030 p99_ns=2176267 max_ns=4550716\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      },
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 531338,
+            "p95_ns": 695777,
+            "p99_ns": 1114122,
+            "max_ns": 1590006
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 342634,
+            "p95_ns": 678535,
+            "p99_ns": 1121336,
+            "max_ns": 1707146
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 209674,
+            "p95_ns": 298351,
+            "p99_ns": 375475,
+            "max_ns": 1903745
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 561204,
+            "p95_ns": 688563,
+            "p99_ns": 959201,
+            "max_ns": 1520465
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 543080,
+            "p95_ns": 674648,
+            "p99_ns": 815041,
+            "max_ns": 1399859
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 1054700,
+            "p95_ns": 13273769,
+            "p99_ns": 15889822,
+            "max_ns": 21545063
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 622960,
+            "p95_ns": 931259,
+            "p99_ns": 1529653,
+            "max_ns": 2402913
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=531338 p95_ns=695777 p99_ns=1114122 max_ns=1590006\nedit count=1375 p50_ns=342634 p95_ns=678535 p99_ns=1121336 max_ns=1707146\nignored count=550 p50_ns=209674 p95_ns=298351 p99_ns=375475 max_ns=1903745\npage count=550 p50_ns=561204 p95_ns=688563 p99_ns=959201 max_ns=1520465\nselect count=550 p50_ns=543080 p95_ns=674648 p99_ns=815041 max_ns=1399859\nsentence count=1529 p50_ns=1054700 p95_ns=13273769 p99_ns=15889822 max_ns=21545063\nshort count=1202 p50_ns=622960 p95_ns=931259 p99_ns=1529653 max_ns=2402913\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      },
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 530877,
+            "p95_ns": 694965,
+            "p99_ns": 904429,
+            "max_ns": 974420
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 361690,
+            "p95_ns": 673305,
+            "p99_ns": 804441,
+            "max_ns": 1808076
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 214673,
+            "p95_ns": 285717,
+            "p99_ns": 584317,
+            "max_ns": 1334837
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 567797,
+            "p95_ns": 702429,
+            "p99_ns": 1011871,
+            "max_ns": 1203651
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 559540,
+            "p95_ns": 687021,
+            "p99_ns": 946898,
+            "max_ns": 1604644
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 1045123,
+            "p95_ns": 13465679,
+            "p99_ns": 17495147,
+            "max_ns": 23820105
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 637817,
+            "p95_ns": 976634,
+            "p99_ns": 1647274,
+            "max_ns": 2606575
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=530877 p95_ns=694965 p99_ns=904429 max_ns=974420\nedit count=1375 p50_ns=361690 p95_ns=673305 p99_ns=804441 max_ns=1808076\nignored count=550 p50_ns=214673 p95_ns=285717 p99_ns=584317 max_ns=1334837\npage count=550 p50_ns=567797 p95_ns=702429 p99_ns=1011871 max_ns=1203651\nselect count=550 p50_ns=559540 p95_ns=687021 p99_ns=946898 max_ns=1604644\nsentence count=1529 p50_ns=1045123 p95_ns=13465679 p99_ns=17495147 max_ns=23820105\nshort count=1202 p50_ns=637817 p95_ns=976634 p99_ns=1647274 max_ns=2606575\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      }
+    ],
+    "after": [
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 531489,
+            "p95_ns": 720653,
+            "p99_ns": 844657,
+            "max_ns": 1160249
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 353484,
+            "p95_ns": 696548,
+            "p99_ns": 904509,
+            "max_ns": 2909103
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 210705,
+            "p95_ns": 330611,
+            "p99_ns": 559741,
+            "max_ns": 973659
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 571403,
+            "p95_ns": 776458,
+            "p99_ns": 1196267,
+            "max_ns": 2726070
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 551396,
+            "p95_ns": 711537,
+            "p99_ns": 863792,
+            "max_ns": 1360745
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 958460,
+            "p95_ns": 4266993,
+            "p99_ns": 6854734,
+            "max_ns": 14076185
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 629953,
+            "p95_ns": 979339,
+            "p99_ns": 1623399,
+            "max_ns": 2326299
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=531489 p95_ns=720653 p99_ns=844657 max_ns=1160249\nedit count=1375 p50_ns=353484 p95_ns=696548 p99_ns=904509 max_ns=2909103\nignored count=550 p50_ns=210705 p95_ns=330611 p99_ns=559741 max_ns=973659\npage count=550 p50_ns=571403 p95_ns=776458 p99_ns=1196267 max_ns=2726070\nselect count=550 p50_ns=551396 p95_ns=711537 p99_ns=863792 max_ns=1360745\nsentence count=1529 p50_ns=958460 p95_ns=4266993 p99_ns=6854734 max_ns=14076185\nshort count=1202 p50_ns=629953 p95_ns=979339 p99_ns=1623399 max_ns=2326299\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      },
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 537830,
+            "p95_ns": 708150,
+            "p99_ns": 1066583,
+            "max_ns": 1995268
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 353945,
+            "p95_ns": 696278,
+            "p99_ns": 1009476,
+            "max_ns": 2036945
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 217669,
+            "p95_ns": 339648,
+            "p99_ns": 680749,
+            "max_ns": 1002342
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 575110,
+            "p95_ns": 739328,
+            "p99_ns": 1094205,
+            "max_ns": 2040292
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 563177,
+            "p95_ns": 713900,
+            "p99_ns": 1092231,
+            "max_ns": 2827821
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 978247,
+            "p95_ns": 4047702,
+            "p99_ns": 4825252,
+            "max_ns": 7238294
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 636686,
+            "p95_ns": 1021759,
+            "p99_ns": 1536034,
+            "max_ns": 2299990
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=537830 p95_ns=708150 p99_ns=1066583 max_ns=1995268\nedit count=1375 p50_ns=353945 p95_ns=696278 p99_ns=1009476 max_ns=2036945\nignored count=550 p50_ns=217669 p95_ns=339648 p99_ns=680749 max_ns=1002342\npage count=550 p50_ns=575110 p95_ns=739328 p99_ns=1094205 max_ns=2040292\nselect count=550 p50_ns=563177 p95_ns=713900 p99_ns=1092231 max_ns=2827821\nsentence count=1529 p50_ns=978247 p95_ns=4047702 p99_ns=4825252 max_ns=7238294\nshort count=1202 p50_ns=636686 p95_ns=1021759 p99_ns=1536034 max_ns=2299990\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      },
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 540455,
+            "p95_ns": 904930,
+            "p99_ns": 1535223,
+            "max_ns": 2623898
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 402907,
+            "p95_ns": 862269,
+            "p99_ns": 1273883,
+            "max_ns": 2551882
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 217319,
+            "p95_ns": 433825,
+            "p99_ns": 686429,
+            "max_ns": 1339035
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 587012,
+            "p95_ns": 1012802,
+            "p99_ns": 1706404,
+            "max_ns": 2838641
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 569590,
+            "p95_ns": 916932,
+            "p99_ns": 1443892,
+            "max_ns": 2264443
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 979760,
+            "p95_ns": 4505822,
+            "p99_ns": 10681751,
+            "max_ns": 177842938
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 710735,
+            "p95_ns": 5766780,
+            "p99_ns": 23317001,
+            "max_ns": 93943250
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=540455 p95_ns=904930 p99_ns=1535223 max_ns=2623898\nedit count=1375 p50_ns=402907 p95_ns=862269 p99_ns=1273883 max_ns=2551882\nignored count=550 p50_ns=217319 p95_ns=433825 p99_ns=686429 max_ns=1339035\npage count=550 p50_ns=587012 p95_ns=1012802 p99_ns=1706404 max_ns=2838641\nselect count=550 p50_ns=569590 p95_ns=916932 p99_ns=1443892 max_ns=2264443\nsentence count=1529 p50_ns=979760 p95_ns=4505822 p99_ns=10681751 max_ns=177842938\nshort count=1202 p50_ns=710735 p95_ns=5766780 p99_ns=23317001 max_ns=93943250\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      },
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 544593,
+            "p95_ns": 1759124,
+            "p99_ns": 4952380,
+            "max_ns": 5997644
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 424437,
+            "p95_ns": 1562985,
+            "p99_ns": 4596963,
+            "max_ns": 12262189
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 219172,
+            "p95_ns": 923044,
+            "p99_ns": 3003190,
+            "max_ns": 4016463
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 591951,
+            "p95_ns": 1949230,
+            "p99_ns": 4336294,
+            "max_ns": 7089885
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 578527,
+            "p95_ns": 1724558,
+            "p99_ns": 4654041,
+            "max_ns": 7016657
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 1869812,
+            "p95_ns": 14394975,
+            "p99_ns": 47688421,
+            "max_ns": 464723824
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 689886,
+            "p95_ns": 2337340,
+            "p99_ns": 8314986,
+            "max_ns": 62938081
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=544593 p95_ns=1759124 p99_ns=4952380 max_ns=5997644\nedit count=1375 p50_ns=424437 p95_ns=1562985 p99_ns=4596963 max_ns=12262189\nignored count=550 p50_ns=219172 p95_ns=923044 p99_ns=3003190 max_ns=4016463\npage count=550 p50_ns=591951 p95_ns=1949230 p99_ns=4336294 max_ns=7089885\nselect count=550 p50_ns=578527 p95_ns=1724558 p99_ns=4654041 max_ns=7016657\nsentence count=1529 p50_ns=1869812 p95_ns=14394975 p99_ns=47688421 max_ns=464723824\nshort count=1202 p50_ns=689886 p95_ns=2337340 p99_ns=8314986 max_ns=62938081\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      },
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 567756,
+            "p95_ns": 735641,
+            "p99_ns": 1077944,
+            "max_ns": 1403987
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 376658,
+            "p95_ns": 775556,
+            "p99_ns": 1223788,
+            "max_ns": 2250106
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 229420,
+            "p95_ns": 350729,
+            "p99_ns": 460535,
+            "max_ns": 1991760
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 605758,
+            "p95_ns": 838605,
+            "p99_ns": 1214701,
+            "max_ns": 2236070
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 584898,
+            "p95_ns": 808829,
+            "p99_ns": 1031006,
+            "max_ns": 1620684
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 930558,
+            "p95_ns": 3967802,
+            "p99_ns": 4708683,
+            "max_ns": 5687130
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 679245,
+            "p95_ns": 1102541,
+            "p99_ns": 1691376,
+            "max_ns": 3178029
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=567756 p95_ns=735641 p99_ns=1077944 max_ns=1403987\nedit count=1375 p50_ns=376658 p95_ns=775556 p99_ns=1223788 max_ns=2250106\nignored count=550 p50_ns=229420 p95_ns=350729 p99_ns=460535 max_ns=1991760\npage count=550 p50_ns=605758 p95_ns=838605 p99_ns=1214701 max_ns=2236070\nselect count=550 p50_ns=584898 p95_ns=808829 p99_ns=1031006 max_ns=1620684\nsentence count=1529 p50_ns=930558 p95_ns=3967802 p99_ns=4708683 max_ns=5687130\nshort count=1202 p50_ns=679245 p95_ns=1102541 p99_ns=1691376 max_ns=3178029\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      },
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 511050,
+            "p95_ns": 649550,
+            "p99_ns": 775256,
+            "max_ns": 808949
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 337073,
+            "p95_ns": 651984,
+            "p99_ns": 774875,
+            "max_ns": 2127586
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 206959,
+            "p95_ns": 281609,
+            "p99_ns": 321724,
+            "max_ns": 578337
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 556805,
+            "p95_ns": 692140,
+            "p99_ns": 803188,
+            "max_ns": 2968175
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 541236,
+            "p95_ns": 679406,
+            "p99_ns": 796977,
+            "max_ns": 1280595
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 890022,
+            "p95_ns": 3875739,
+            "p99_ns": 4451130,
+            "max_ns": 5354956
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 618862,
+            "p95_ns": 926730,
+            "p99_ns": 1420437,
+            "max_ns": 3034469
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=511050 p95_ns=649550 p99_ns=775256 max_ns=808949\nedit count=1375 p50_ns=337073 p95_ns=651984 p99_ns=774875 max_ns=2127586\nignored count=550 p50_ns=206959 p95_ns=281609 p99_ns=321724 max_ns=578337\npage count=550 p50_ns=556805 p95_ns=692140 p99_ns=803188 max_ns=2968175\nselect count=550 p50_ns=541236 p95_ns=679406 p99_ns=796977 max_ns=1280595\nsentence count=1529 p50_ns=890022 p95_ns=3875739 p99_ns=4451130 max_ns=5354956\nshort count=1202 p50_ns=618862 p95_ns=926730 p99_ns=1420437 max_ns=3034469\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      },
+      {
+        "metrics": {
+          "commit": {
+            "count": 275,
+            "p50_ns": 544272,
+            "p95_ns": 705886,
+            "p99_ns": 961896,
+            "max_ns": 2006739
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 363282,
+            "p95_ns": 736553,
+            "p99_ns": 1118821,
+            "max_ns": 2017509
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 222749,
+            "p95_ns": 365797,
+            "p99_ns": 558920,
+            "max_ns": 1952347
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 592853,
+            "p95_ns": 793691,
+            "p99_ns": 1268833,
+            "max_ns": 2609471
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 572244,
+            "p95_ns": 804771,
+            "p99_ns": 1051465,
+            "max_ns": 1353873
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 910460,
+            "p95_ns": 3896077,
+            "p99_ns": 4668618,
+            "max_ns": 5587123
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 663506,
+            "p95_ns": 1111437,
+            "p99_ns": 1530875,
+            "max_ns": 2573393
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        "output": "commit count=275 p50_ns=544272 p95_ns=705886 p99_ns=961896 max_ns=2006739\nedit count=1375 p50_ns=363282 p95_ns=736553 p99_ns=1118821 max_ns=2017509\nignored count=550 p50_ns=222749 p95_ns=365797 p99_ns=558920 max_ns=1952347\npage count=550 p50_ns=592853 p95_ns=793691 p99_ns=1268833 max_ns=2609471\nselect count=550 p50_ns=572244 p95_ns=804771 p99_ns=1051465 max_ns=1353873\nsentence count=1529 p50_ns=910460 p95_ns=3896077 p99_ns=4668618 max_ns=5587123\nshort count=1202 p50_ns=663506 p95_ns=1111437 p99_ns=1530875 max_ns=2573393\nwire_commit signals=825 bytes=349712\nwire_edit signals=1638 bytes=961640\nwire_ignored signals=0 bytes=0\nwire_page signals=926 bytes=755000\nwire_select signals=646 bytes=676336\nwire_sentence signals=2979 bytes=2224236\nwire_short signals=2387 bytes=1716972\nwire signals=9401 bytes=6683896\n"
+      }
+    ]
+  },
+  "diagnostics": [
+    "waypinyin: latency stage=handle count=256 p50_ns=3356 p95_ns=156043 p99_ns=882948 max_ns=1131946",
+    "waypinyin: latency stage=present count=256 p50_ns=79910 p95_ns=119845 p99_ns=147227 max_ns=192652",
+    "waypinyin: latency stage=total count=256 p50_ns=85981 p95_ns=274134 p99_ns=978197 max_ns=1243886",
+    "waypinyin: latency stage=handle count=256 p50_ns=5150 p95_ns=195477 p99_ns=357532 max_ns=909247",
+    "waypinyin: latency stage=present count=256 p50_ns=79399 p95_ns=115417 p99_ns=151445 max_ns=169187",
+    "waypinyin: latency stage=total count=256 p50_ns=86753 p95_ns=297889 p99_ns=458822 max_ns=1021067",
+    "waypinyin: latency stage=handle count=256 p50_ns=4728 p95_ns=165170 p99_ns=800824 max_ns=969721",
+    "waypinyin: latency stage=present count=256 p50_ns=80141 p95_ns=118383 p99_ns=138019 max_ns=147457",
+    "waypinyin: latency stage=total count=256 p50_ns=88135 p95_ns=262593 p99_ns=905370 max_ns=1077443",
+    "waypinyin: latency stage=handle count=256 p50_ns=5721 p95_ns=121648 p99_ns=217288 max_ns=238468",
+    "waypinyin: latency stage=present count=256 p50_ns=81693 p95_ns=134232 p99_ns=151484 max_ns=177083",
+    "waypinyin: latency stage=total count=256 p50_ns=90911 p95_ns=248728 p99_ns=326934 max_ns=368772",
+    "waypinyin: latency stage=handle count=256 p50_ns=5010 p95_ns=150923 p99_ns=351140 max_ns=1083855",
+    "waypinyin: latency stage=present count=256 p50_ns=79610 p95_ns=118733 p99_ns=141996 max_ns=147588",
+    "waypinyin: latency stage=total count=256 p50_ns=86242 p95_ns=258225 p99_ns=493136 max_ns=1214942",
+    "waypinyin: latency stage=handle count=256 p50_ns=6312 p95_ns=167614 p99_ns=401494 max_ns=919447",
+    "waypinyin: latency stage=present count=256 p50_ns=82946 p95_ns=131257 p99_ns=143339 max_ns=166593",
+    "waypinyin: latency stage=total count=256 p50_ns=96181 p95_ns=274615 p99_ns=519976 max_ns=1022120",
+    "waypinyin: latency stage=handle count=256 p50_ns=6272 p95_ns=169138 p99_ns=414599 max_ns=1086811",
+    "waypinyin: latency stage=present count=256 p50_ns=79048 p95_ns=131748 p99_ns=153608 max_ns=230764",
+    "waypinyin: latency stage=total count=256 p50_ns=88276 p95_ns=277802 p99_ns=506411 max_ns=1218559",
+    "waypinyin: latency stage=handle count=256 p50_ns=7113 p95_ns=276469 p99_ns=897155 max_ns=963410",
+    "waypinyin: latency stage=present count=256 p50_ns=80021 p95_ns=122870 p99_ns=139773 max_ns=156454",
+    "waypinyin: latency stage=total count=256 p50_ns=90049 p95_ns=364835 p99_ns=932412 max_ns=1096500",
+    "waypinyin: latency stage=handle count=256 p50_ns=6092 p95_ns=111729 p99_ns=400873 max_ns=842011",
+    "waypinyin: latency stage=present count=256 p50_ns=80280 p95_ns=129162 p99_ns=140413 max_ns=152025",
+    "waypinyin: latency stage=total count=256 p50_ns=88506 p95_ns=222778 p99_ns=491673 max_ns=871767",
+    "waypinyin: latency stage=handle count=256 p50_ns=6362 p95_ns=245902 p99_ns=551356 max_ns=930086",
+    "waypinyin: latency stage=present count=256 p50_ns=77105 p95_ns=121618 p99_ns=139602 max_ns=142157",
+    "waypinyin: latency stage=total count=256 p50_ns=86713 p95_ns=345338 p99_ns=691188 max_ns=1025085",
+    "waypinyin: latency stage=handle count=256 p50_ns=6402 p95_ns=164348 p99_ns=383941 max_ns=869543",
+    "waypinyin: latency stage=present count=256 p50_ns=76935 p95_ns=116048 p99_ns=143890 max_ns=158938",
+    "waypinyin: latency stage=total count=256 p50_ns=84939 p95_ns=263595 p99_ns=507033 max_ns=963118",
+    "waypinyin: latency stage=handle count=256 p50_ns=6542 p95_ns=122060 p99_ns=293421 max_ns=809430",
+    "waypinyin: latency stage=present count=256 p50_ns=76313 p95_ns=102412 p99_ns=130124 max_ns=134843",
+    "waypinyin: latency stage=total count=256 p50_ns=85470 p95_ns=211999 p99_ns=404239 max_ns=840599",
+    "waypinyin: latency stage=handle count=256 p50_ns=7685 p95_ns=141345 p99_ns=253396 max_ns=824378",
+    "waypinyin: latency stage=present count=256 p50_ns=78167 p95_ns=125606 p99_ns=151715 max_ns=165822",
+    "waypinyin: latency stage=total count=256 p50_ns=87735 p95_ns=259347 p99_ns=338305 max_ns=920539",
+    "waypinyin: latency stage=handle count=256 p50_ns=7504 p95_ns=107652 p99_ns=168256 max_ns=328326",
+    "waypinyin: latency stage=present count=256 p50_ns=76964 p95_ns=128371 p99_ns=140594 max_ns=148609",
+    "waypinyin: latency stage=total count=256 p50_ns=86372 p95_ns=212510 p99_ns=269376 max_ns=416311",
+    "waypinyin: latency stage=handle count=256 p50_ns=25087 p95_ns=1524974 p99_ns=2247771 max_ns=2290011",
+    "waypinyin: latency stage=present count=256 p50_ns=82094 p95_ns=125275 p99_ns=139762 max_ns=146475",
+    "waypinyin: latency stage=total count=256 p50_ns=114495 p95_ns=1617228 p99_ns=2387233 max_ns=2418833",
+    "waypinyin: latency stage=handle count=256 p50_ns=25618 p95_ns=1193421 p99_ns=1618330 max_ns=1720611",
+    "waypinyin: latency stage=present count=256 p50_ns=83287 p95_ns=128291 p99_ns=158308 max_ns=184767",
+    "waypinyin: latency stage=total count=256 p50_ns=109897 p95_ns=1284632 p99_ns=1718127 max_ns=1881243",
+    "waypinyin: latency stage=handle count=256 p50_ns=24355 p95_ns=1568215 p99_ns=1861847 max_ns=2191456",
+    "waypinyin: latency stage=present count=256 p50_ns=81152 p95_ns=121538 p99_ns=152216 max_ns=176441",
+    "waypinyin: latency stage=total count=256 p50_ns=107903 p95_ns=1671910 p99_ns=1976262 max_ns=2293698",
+    "waypinyin: latency stage=handle count=256 p50_ns=33553 p95_ns=1967645 p99_ns=2865030 max_ns=3320306",
+    "waypinyin: latency stage=present count=256 p50_ns=83487 p95_ns=126628 p99_ns=143630 max_ns=169027",
+    "waypinyin: latency stage=total count=256 p50_ns=121979 p95_ns=2063155 p99_ns=2975558 max_ns=3430623",
+    "waypinyin: latency stage=handle count=256 p50_ns=34895 p95_ns=1708108 p99_ns=2025444 max_ns=2115473",
+    "waypinyin: latency stage=present count=256 p50_ns=84128 p95_ns=119214 p99_ns=137097 max_ns=144571",
+    "waypinyin: latency stage=total count=256 p50_ns=127058 p95_ns=1799189 p99_ns=2119601 max_ns=2207235",
+    "waypinyin: latency stage=handle count=256 p50_ns=46437 p95_ns=2329595 p99_ns=2641761 max_ns=2682899",
+    "waypinyin: latency stage=present count=256 p50_ns=80491 p95_ns=102613 p99_ns=114175 max_ns=116749",
+    "waypinyin: latency stage=total count=256 p50_ns=120867 p95_ns=2427909 p99_ns=2737030 max_ns=2777016",
+    "waypinyin: latency stage=handle count=256 p50_ns=148689 p95_ns=3060698 p99_ns=3785760 max_ns=3915924",
+    "waypinyin: latency stage=present count=256 p50_ns=86673 p95_ns=113514 p99_ns=125816 max_ns=195868",
+    "waypinyin: latency stage=total count=256 p50_ns=241383 p95_ns=3173059 p99_ns=3903291 max_ns=4021292",
+    "waypinyin: latency stage=handle count=256 p50_ns=249539 p95_ns=3557120 p99_ns=3868134 max_ns=3900616",
+    "waypinyin: latency stage=present count=256 p50_ns=90469 p95_ns=128972 p99_ns=148218 max_ns=149711",
+    "waypinyin: latency stage=total count=256 p50_ns=340730 p95_ns=3668409 p99_ns=3995193 max_ns=4026141",
+    "waypinyin: latency stage=handle count=256 p50_ns=431921 p95_ns=3653792 p99_ns=4029929 max_ns=4621639",
+    "waypinyin: latency stage=present count=256 p50_ns=97273 p95_ns=136376 p99_ns=149912 max_ns=151364",
+    "waypinyin: latency stage=total count=256 p50_ns=555633 p95_ns=3784998 p99_ns=4120869 max_ns=4714704"
+  ],
+  "diagnostics_routed": false,
+  "image_sha256": "58d36908ff619f807bcaae1ce1316d819904c808ce0ce081fb15b97d9bd75b24",
+  "image_bytes": 141873016,
+  "binary_sha256": {
+    "before": "58632c3741fb835a92d84f4b8571793ee9df8795f28c895ad759cf02e2ae5c01",
+    "after": "a6bdfb04329996296927c58caf332e0ce53bfb369e185e231305aa212f2e9191",
+    "probe": "b5bd1ebe4b2aa903ac2fa1cffd0fd2cb42c5495120bd056e5d67f72c8ba0768b"
+  },
+  "source_sha256": {
+    "src/ibus.rs": "6b437866781828390622d92e495111df71cef18592ef414560571729be243ec8",
+    "src/lexicon.rs": "07e8da2f043bd8e2ca262ed75094bca47aeb2275ab057941b81139d663752ed9",
+    "src/latency.rs": "f48470c4503d6a8321de8b80abfd3d22d7d3e9bbd225d66855947d7452b28809",
+    "examples/ibus_latency.rs": "4ee17b10329451cbf1a8f62fc6dffc97d552cafd00fedcabc40657dc8b60e3f8",
+    "scripts/ibus_perf.py": "6d70a994e5339b44a98db858b2b8e94d4381fa829d338389ed9fe90e7ec2994b",
+    "Cargo.lock": "b8ed1f46c999bde88b92beda36bfdf0692ac237489de7ee519b7216d8b48d2d1"
+  }
+}

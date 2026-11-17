@@ -62,8 +62,8 @@ fn compose_sentences(input: &str, lex: &Lexicon) -> Vec<(String, Vec<String>)> {
                     let text = lex.text(word.text);
                     let base = (lex.ln_corpus - (word.score.max(1) as f64).ln()).max(0.0) + penalty;
                     for parent in &parents {
-                        let cost =
-                            parent.cost + base - sentence_bonus(parent.text.chars().last(), text);
+                        let cost = parent.cost + base
+                            - original_sentence_bonus(parent.text.chars().last(), text);
                         // Keep multiple endings: the next word can change which
                         // homophone is best. This is a bounded beam, not greedy.
                         let mut next = parent.clone();
@@ -363,4 +363,56 @@ fn phrase_cursor_stops_after_the_requested_first_page() {
     let mut complete = head;
     complete.extend(cursor);
     assert_eq!(complete, assemble_phrases(&syls, &lex, PHRASE_LIMIT));
+}
+
+fn original_sentence_bonus(previous: Option<char>, word: &str) -> f64 {
+    static PAIRS: OnceLock<HashMap<(char, char), u32>> = OnceLock::new();
+    let pairs = PAIRS.get_or_init(|| {
+        let mut pairs = HashMap::new();
+        for line in include_str!("../data/sentences.txt")
+            .lines()
+            .filter(|l| !l.starts_with('#'))
+        {
+            let chars: Vec<_> = line.chars().collect();
+            for pair in chars.windows(2) {
+                *pairs.entry((pair[0], pair[1])).or_insert(0) += 1;
+            }
+        }
+        pairs
+    });
+    let mut prev = previous;
+    let mut bonus = 0.0;
+    for ch in word.chars() {
+        if let Some(p) = prev {
+            if let Some(count) = pairs.get(&(p, ch)) {
+                bonus += 2.0 * (f64::from(*count)).ln_1p().min(3.0);
+            } else {
+                bonus -= 1.5;
+            }
+        }
+        prev = Some(ch);
+    }
+    bonus
+}
+
+#[test]
+fn precomputed_pair_weights_match_original_float_bits() {
+    let lex = Lexicon::load();
+    for previous in [
+        None,
+        Some('我'),
+        Some('的'),
+        Some('。'),
+        Some('罕'),
+        Some('😀'),
+    ] {
+        for id in (0..lex.texts.off.len() - 1).step_by(97).take(2000) {
+            let word = lex.text(id as u32);
+            assert_eq!(
+                sentence_bonus(previous, word).to_bits(),
+                original_sentence_bonus(previous, word).to_bits(),
+                "{previous:?}/{word}",
+            );
+        }
+    }
 }

@@ -4,6 +4,7 @@
 pub(crate) mod ibus;
 #[allow(dead_code)]
 pub(crate) mod image;
+mod latency;
 pub(crate) mod lexicon;
 pub(crate) mod session;
 

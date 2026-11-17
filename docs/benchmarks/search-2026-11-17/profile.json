@@ -1,0 +1,25 @@
+{
+  "input": "mtxwsdwmzgsmkjmtlyxgzjh",
+  "collected_region": "waypinyin_profile_key: final uncached key only, without preload",
+  "event": "Ir",
+  "instructions": {
+    "before": 168234306,
+    "after": 30635545
+  },
+  "profile_sha256": {
+    "before": "576e611c06276844ff49d100e2e6fbacbb73594296f96646a26919865fd805a3",
+    "after": "c6f80ce3552fdc2d93ef137dca4e32297843372bd5e88b2436041445cfa148ba"
+  },
+  "probe_sha256": {
+    "before": "5ced96cca9d0dbc545b8b01469c547fbd01b194b4c311807a188f5c1fca91f78",
+    "after": "5ad1eede3dd2b80838a09a615ff61898de0df9b474d7bed4cc5029ddc2c6a281"
+  },
+  "image_sha256": "58d36908ff619f807bcaae1ce1316d819904c808ce0ce081fb15b97d9bd75b24",
+  "baseline_lexicon_source_sha256": "b4f4965364508640af865db456c0856b941db0bca265a5a7c86bd2da19bab9cd",
+  "source_sha256": {
+    "src/lexicon.rs": "07e8da2f043bd8e2ca262ed75094bca47aeb2275ab057941b81139d663752ed9",
+    "src/lexicon_reference.rs": "f9be77cd2179889d7f4ca4cdf0962613c30e74aa774e5e88f4161dc3a70bde95",
+    "examples/search_hotspot.rs": "c4cdabc1d1cc36738829a1e7ffc6307c0175b0bb962107b6adc52c2778872c2d",
+    "Cargo.lock": "b8ed1f46c999bde88b92beda36bfdf0692ac237489de7ee519b7216d8b48d2d1"
+  }
+}
