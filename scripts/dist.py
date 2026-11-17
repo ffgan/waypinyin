@@ -21,7 +21,7 @@ name = f'waypinyin-{version}' + ('-review' if args.allow_unresolved else '')
 directories = ['src','data','share','scripts','docs','packaging','tests','examples','.github','LICENSES']
 files = [p for p in root.iterdir() if p.is_file() and p.name in {
     'Cargo.toml','Cargo.lock','build.rs','Makefile','LICENSE','README.md','README.en.md',
-    'CHANGELOG.md','CONTRIBUTING.md','SECURITY.md','.gitignore'
+    'CHANGELOG.md','CONTRIBUTING.md','SECURITY.md','.gitignore','.gitattributes'
 }]
 for directory in directories:
     files += [p for p in (root / directory).rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc']

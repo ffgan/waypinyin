@@ -20,7 +20,7 @@ inventory = json.loads((root / 'data/sources.json').read_text())
 cleared = {s['path'] for s in inventory['files'] if s['license_status'] in ('verified-local', 'verified-upstream')}
 excluded = [s for s in inventory['files'] if s['path'] not in cleared]
 files = [root / name for name in ['Cargo.toml','Cargo.lock','build.rs','Makefile','LICENSE',
-         'README.md','README.en.md','CHANGELOG.md','CONTRIBUTING.md','SECURITY.md','.gitignore']]
+         'README.md','README.en.md','CHANGELOG.md','CONTRIBUTING.md','SECURITY.md','.gitignore','.gitattributes']]
 for directory in ['src','share','scripts','docs','packaging','tests','examples','.github','LICENSES']:
     files += [p for p in (root / directory).rglob('*') if p.is_file()
               and '__pycache__' not in p.parts and p.suffix != '.pyc']

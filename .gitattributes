@@ -1,0 +1,7 @@
+# Imported license/notice files are hash-verified verbatim upstream evidence.
+LICENSES/*.txt -text -whitespace
+LICENSES/dependencies/** -text -whitespace
+
+# Dictionary and demo input hashes must survive checkout unchanged.
+data/*.txt -text
+tests/fixtures/demo/*.txt -text
