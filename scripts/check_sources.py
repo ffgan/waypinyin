@@ -22,9 +22,20 @@ blocked = []
 for source in sources + demo:
     actual = hashlib.sha256((root / source['path']).read_bytes()).hexdigest()
     assert actual == source['sha256'], f"{source['path']}: checksum changed; review and update provenance"
-    assert source['license_status'] in ('verified-local', 'unresolved')
+    assert source['license_status'] in ('verified-local', 'verified-upstream', 'unresolved')
+    if source['license_status'] == 'verified-upstream':
+        assert source['upstream_revision'] and source['evidence'] and not source['required_evidence']
+        for evidence in source['evidence']:
+            assert evidence['url'].startswith('https://')
+            if evidence.get('local_path'):
+                assert hashlib.sha256((root / evidence['local_path']).read_bytes()).hexdigest() == evidence['sha256'], 'local upstream evidence changed'
     if source['license_status'] == 'unresolved':
         blocked.append(source['path'])
+supplements = json.loads((root / 'LICENSES/dependency-supplements.json').read_text())
+for supplement in supplements.values():
+    assert supplement['commit'] and supplement['packages'] and supplement['evidence']
+    for evidence in supplement['evidence']:
+        assert hashlib.sha256((root / evidence['local_path']).read_bytes()).hexdigest() == evidence['sha256'], 'dependency license supplement changed'
 print(f'{len(sources)} data files and {len(demo)} demo files verified; {len(blocked)} have unresolved provenance')
 if args.release and blocked:
     raise SystemExit('Release blocked: ' + ', '.join(blocked))

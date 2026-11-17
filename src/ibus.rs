@@ -7,11 +7,8 @@ use crate::session::{Effect, Session, UserDict};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, OnceLock};
 use zbus::object_server::SignalEmitter;
-use zbus::wire::StructureBuilder;
-use zbus::{
-    connection::Builder, fdo, interface, Array, Connection, Dict, OwnedObjectPath, Signature,
-    Variant,
-};
+use zbus::zvariant::{Array, Dict, OwnedObjectPath, Signature, StructureBuilder, Value as Variant};
+use zbus::{connection::Builder, fdo, interface, Connection};
 
 fn empty_dict() -> Dict<'static, 'static> {
     Dict::new(&Signature::Str, &Signature::Variant)
@@ -42,7 +39,7 @@ fn ibus_text(text: &str) -> Variant<'static> {
             .append_field(Variant::from("IBusText"))
             .append_field(Variant::Dict(empty_dict()))
             .append_field(Variant::from(text.to_owned()))
-            .append_field(Variant::Variant(Box::new(shared_attrs())))
+            .append_field(Variant::Value(Box::new(shared_attrs())))
             .build()
             .expect("ibus text"),
     )
@@ -77,13 +74,13 @@ fn ibus_lookup(view: &View) -> Variant<'static> {
     let mut candidates = Array::new(&Signature::Variant);
     for word in page {
         candidates
-            .append(Variant::Variant(Box::new(ibus_text(word))))
+            .append(Variant::Value(Box::new(ibus_text(word))))
             .expect("candidate variant");
     }
     let mut labels = Array::new(&Signature::Variant);
     for n in 1..=view.page_size {
         labels
-            .append(Variant::Variant(Box::new(shared_label(n))))
+            .append(Variant::Value(Box::new(shared_label(n))))
             .expect("label variant");
     }
     Variant::Structure(
@@ -467,9 +464,9 @@ pub(crate) async fn serve() -> zbus::Result<()> {
         lexicon,
         next_id: AtomicU64::new(1),
     };
-    let _conn = Builder::address(address.as_str())
-        .name("org.freedesktop.IBus.Waypinyin")
-        .serve_at("/org/freedesktop/IBus/Factory", factory)
+    let _conn = Builder::address(address.as_str())?
+        .name("org.freedesktop.IBus.Waypinyin")?
+        .serve_at("/org/freedesktop/IBus/Factory", factory)?
         .build()
         .await?;
     eprintln!("waypinyin: registered org.freedesktop.IBus.Waypinyin");

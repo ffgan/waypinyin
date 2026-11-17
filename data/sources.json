@@ -3,6 +3,31 @@
   "note": "Historical claims are evidence to investigate, not clearance to redistribute. Checksums identify current local bytes, not an upstream snapshot.",
   "files": [
     {
+      "path": "data/freq.txt",
+      "sha256": "25599e00347b893e55c3058a748819b3fe19403291cd12f7c03af128e7f3fe45",
+      "upstream_urls": [
+        "https://github.com/hermitdave/FrequencyWords"
+      ],
+      "upstream_revision": "525f9b560de45753a5ea01069454e72e9aa541c6",
+      "claimed_license": "CC-BY-SA-4.0",
+      "copyright": "Hermit Dave / FrequencyWords contributors; OpenSubtitles contributors",
+      "transformation": "Unmodified byte-for-byte content/2018/zh_cn/zh_cn_50k.txt; attribution and content license retained in LICENSES/FrequencyWords-NOTICE.txt.",
+      "license_status": "verified-upstream",
+      "required_evidence": [],
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/hermitdave/FrequencyWords/525f9b560de45753a5ea01069454e72e9aa541c6/content/2018/zh_cn/zh_cn_50k.txt",
+          "sha256": "25599e00347b893e55c3058a748819b3fe19403291cd12f7c03af128e7f3fe45",
+          "local_path": "data/freq.txt"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/hermitdave/FrequencyWords/525f9b560de45753a5ea01069454e72e9aa541c6/README.md",
+          "sha256": "a92fcc50e27f7b2d5860ec1c1ce794dc4c892d945bfa4c8c3136cdfd213ee710",
+          "local_path": "LICENSES/FrequencyWords-NOTICE.txt"
+        }
+      ]
+    },
+    {
       "path": "data/sentences.txt",
       "sha256": "568d1a32fe1c284805ac8541e8f91dc6776d4d3ea14b3b133a4b94177ad7007b",
       "upstream_urls": [],
@@ -12,6 +37,31 @@
       "transformation": "Locally authored everyday examples; no external corpus or user typing history.",
       "license_status": "verified-local",
       "required_evidence": []
+    },
+    {
+      "path": "data/ts-characters.txt",
+      "sha256": "9ff46a7d30e5765375eb13d33f2b03a34d298913caf2b120380679f33ae1642d",
+      "upstream_urls": [
+        "https://github.com/BYVoid/OpenCC"
+      ],
+      "upstream_revision": "5c764a5a886f46eb365656ed91a0410d7162fac6",
+      "claimed_license": "Apache-2.0",
+      "copyright": "OpenCC contributors",
+      "transformation": "Unmodified byte-for-byte upstream data/dictionary/TSCharacters.txt; pinned source and license verified on 2026-11-16.",
+      "license_status": "verified-upstream",
+      "required_evidence": [],
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/BYVoid/OpenCC/5c764a5a886f46eb365656ed91a0410d7162fac6/data/dictionary/TSCharacters.txt",
+          "sha256": "9ff46a7d30e5765375eb13d33f2b03a34d298913caf2b120380679f33ae1642d",
+          "local_path": "data/ts-characters.txt"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/BYVoid/OpenCC/5c764a5a886f46eb365656ed91a0410d7162fac6/LICENSE",
+          "sha256": "b534e465949558eec2597b04f5092b5e161236a68dfbfd04d547592ac3964308",
+          "local_path": "LICENSES/OpenCC-Apache-2.0.txt"
+        }
+      ]
     }
   ],
   "demo_files": [
@@ -152,21 +202,6 @@
       ]
     },
     {
-      "path": "data/freq.txt",
-      "sha256": "25599e00347b893e55c3058a748819b3fe19403291cd12f7c03af128e7f3fe45",
-      "upstream_urls": [],
-      "upstream_revision": null,
-      "claimed_license": null,
-      "copyright": "Unknown; described historically as OpenSubtitles 2018 word counts",
-      "transformation": "Exact download, license and extraction script are not recorded.",
-      "license_status": "unresolved",
-      "required_evidence": [
-        "Identify exact upstream snapshot and its license notices",
-        "Recover or document the historical extraction and mixing procedure",
-        "Confirm redistribution conditions for the shipped derivative"
-      ]
-    },
-    {
       "path": "data/frost.txt",
       "sha256": "09fd03745cc1cdf4b48fc09d7edfef052164a811640ef857946196c267deeb87",
       "upstream_urls": [
@@ -204,15 +239,21 @@
       "upstream_urls": [
         "https://github.com/mozillazg/pinyin-data"
       ],
-      "upstream_revision": null,
+      "upstream_revision": "0051cab569706cc814a4cffaf58281a1de5481b6",
       "claimed_license": "MIT (repository claim; underlying Unihan data requires verification)",
       "copyright": "mozillazg and upstream data contributors",
-      "transformation": "kMandarin readings; exact snapshot and transformation unavailable.",
+      "transformation": "Unmodified upstream pinyin.txt at the pinned commit. This is a merged reading database, not only kMandarin. README identifies Unihan 18.0, cc_cedict, zdic and manual overrides.",
       "license_status": "unresolved",
       "required_evidence": [
-        "Identify exact upstream snapshot and its license notices",
-        "Recover or document the historical extraction and mixing procedure",
-        "Confirm redistribution conditions for the shipped derivative"
+        "Review attribution/license of merged cc_cedict and other non-Unihan source inputs at the pinned commit; MIT repository license alone is insufficient.",
+        "Retain the applicable Unicode license and original notices for the Unihan 18.0 inputs."
+      ],
+      "evidence": [
+        {
+          "url": "https://raw.githubusercontent.com/mozillazg/pinyin-data/0051cab569706cc814a4cffaf58281a1de5481b6/pinyin.txt",
+          "sha256": "90c11bd680ccfe7f2617a6e25abdb1fb87b5540df3e6f011ca50aaf3c7263a89",
+          "local_path": "data/pinyin.txt"
+        }
       ]
     },
     {
@@ -225,28 +266,9 @@
       "transformation": "Locally maintained terms and weights according to NOTICE; authorship of all historic entries awaits confirmation.",
       "license_status": "unresolved",
       "required_evidence": [
-        "Identify exact upstream snapshot and its license notices",
-        "Recover or document the historical extraction and mixing procedure",
-        "Confirm redistribution conditions for the shipped derivative"
-      ]
-    },
-    {
-      "path": "data/ts-characters.txt",
-      "sha256": "9ff46a7d30e5765375eb13d33f2b03a34d298913caf2b120380679f33ae1642d",
-      "upstream_urls": [
-        "https://github.com/BYVoid/OpenCC"
-      ],
-      "upstream_revision": null,
-      "claimed_license": "Apache-2.0",
-      "copyright": "OpenCC contributors",
-      "transformation": "Traditional-to-simplified character mapping; exact snapshot unavailable.",
-      "license_status": "unresolved",
-      "required_evidence": [
-        "Identify exact upstream snapshot and its license notices",
-        "Recover or document the historical extraction and mixing procedure",
-        "Confirm redistribution conditions for the shipped derivative"
+        "Identify whether the 19 terms/readings/weights were independently authored or imported. Maintainer response on 2026-11-16: origin unknown; no MIT clearance granted."
       ]
     }
   ],
-  "distribution": "public-source-with-original-demo-only"
+  "distribution": "public-source-with-reviewed-data-and-original-demo"
 }

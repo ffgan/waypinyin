@@ -163,3 +163,98 @@ The cache is intentionally allowed to miss under lock contention or eviction.
 
 Full release and demo/system-font regression checks, CLI tests and strict Clippy
 passed. One optional external native-dictionary fixture remains unavailable.
+
+
+### Distribution normalization follow-up — 2026-11-16
+
+The native locked dependency graph now supports Rust 1.89.0 and zbus 5.19.
+On Rust 1.89.0, all 92 full-corpus library tests and three CLI tests passed;
+one external native-dictionary test remained skipped. The demo/system-font
+variant passed 41 library tests and three CLI tests with the same fixture skip.
+Strict all-target Clippy on 1.99.1, formatting and whitespace checks passed.
+
+An actual IBus daemon on a private session bus discovered the generated engine
+XML, started Waypinyin and delivered preedit, lookup-table and commit signals.
+Typing `nihao` committed `你好`. Both the original zbus 6 build and the adapted
+zbus 5 build passed this probe; no active desktop engine or user files changed.
+This is protocol acceptance, not visual GNOME Wayland acceptance.
+
+Release installation with system fonts passed under `/usr` and custom BINDIR
+(containing spaces)/MANDIR layouts, with Cargo disabled during installation.
+The compiled-artifact notice inventory contains 231 packages, including host
+and build dependencies; each registry package has retained notice files.
+The installer and verifier preserve/check those files. Supplemental notices
+were re-fetched from pinned source revisions and matched their recorded hashes.
+The dictionary remains byte-identical to the earlier baseline: SHA-256
+`58d36908ff619f807bcaae1ce1316d819904c808ce0ce081fb15b97d9bd75b24`.
+Cleared source archives generated twice from the same inputs matched exactly.
+
+The unchanged OpenCC table and FrequencyWords counts were matched to fixed
+upstream revisions and their notices retained. The complete historical corpus
+still fails the release gate with seven unresolved records. A history-free
+export includes three reviewed data files plus nine original demo inputs and
+passes the data release gate. No historical dictionary input bytes changed.
+The exact pinyin-data revision was recovered, but its merged sources require
+additional attribution/license review. The maintainer could not establish the
+origin of the 19 local terms; those remain unresolved.
+
+Debian unstable was queried in a disposable container: Rust/Cargo 1.98.1,
+zbus 5.19, rfd 0.18 and plist 1.8 were available, but eframe was not. Actual
+`apt-get -s build-dep .` resolution rejected eframe 0.33 and rfd 0.15. The
+Debian draft cannot be built from this suite's registry until these crates are
+packaged or a compatible, tested dependency adjustment is supplied.
+
+Fedora 45 official repositories provide Rust/Cargo 1.99.1, zbus 5.19 and
+rfd 0.15.4; no rust-eframe package was returned. A disposable Fedora 45
+container installed rust-packaging/cargo-rpm-macros and verified expansion of
+`%cargo_generate_buildrequires -n`. This does not establish a successful RPM
+build; the system-registry eframe gap remains.
+
+The checks above ran locally. Hosted CI, native aarch64 builds, visual glyph
+quality, portal interaction and GNOME Wayland focus/commit acceptance remain
+unverified. No distribution submission, release tag or upload was made.
+
+
+### Arch offline package validation — 2026-11-17
+
+A cleared source archive was built with the Arch review recipe in an official
+Arch base-devel container. Tooling and locked crate sources were prepared first;
+release compilation, release tests and packaging ran with networking disabled.
+The 41 demo library tests and three CLI tests passed, with one optional external
+fixture skipped. All 231 compiled packages had retained notices. Native default
+bundled-font installation was also checked separately: its 232-package inventory
+included the upstream code, OFL and Ubuntu Font License notices.
+
+The resulting x86_64 demo package installed and loaded `/usr/share/waypinyin`
+without a dictionary override. A real private IBus daemon committed `你好` through
+the installed binary. A metadata-only packaging revision was used to exercise a
+real pacman upgrade from 0.1.0-1 to 0.1.0-2, followed by reinstallation and removal.
+Disposable per-user configuration and learning sentinels survived every step.
+Only disposable containers were used; the active host installation was untouched.
+
+Namcap reported no errors. Maintainer, libgcc and hicolor dependency declarations
+were corrected. Remaining warnings concern the loader and declared runtime dependencies. IBus,
+Fontconfig and several window/GL libraries are used via D-Bus, external commands
+or dynamic loading. Review the remaining library list alongside real graphical
+acceptance before submission.
+
+Local artifacts and raw logs are under `build/arch-audit` and
+`build/release-audit` (ignored by Git). The package is a demonstration/review
+artifact, not a released production dictionary or official Arch submission.
+
+
+### User installation and atomic replacement — 2026-11-17
+
+The full local corpus was rebuilt with default bundled fonts and installed to
+`~/.local`. The 232 compiled packages had retained notices. Installed metadata,
+notices and dictionary validation passed, and the installed new binary passed
+the private IBus commit probe. The pre-existing host engine process was left
+running; it keeps its previous executable/image until restarted.
+
+Installation now replaces files through same-directory temporary files and
+rename, including generated desktop and IBus metadata. A regression test holds
+an installed ELF executable running and its dictionary mapped while reinstalling;
+the process stays alive, the old mapping is intact, new files have new inodes,
+and permissions/temp-file cleanup are correct. This test runs in `make check`
+and CI. Previous binary/data inodes were retained locally for rollback; no
+user configuration or learning files were overwritten.

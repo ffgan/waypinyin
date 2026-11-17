@@ -7,22 +7,23 @@ Git history; see [PUBLIC_SOURCE.md](PUBLIC_SOURCE.md). Publishing that source
 does not publish a binary release or submit a distribution package.
 The blockers below apply to the complete historical corpus and full releases.
 
-- Nine current data files have unresolved provenance; see `data/sources.json`.
+- Seven current data files have unresolved provenance; see `data/sources.json`.
   Recover exact snapshots, upstream copyright notices, extraction scripts and
-  mixed-data redistribution conditions. In particular, `freq.txt` and
-  `gb2312.txt` have no recorded license; do not infer permission from access.
+  mixed-data redistribution conditions. In particular, `gb2312.txt` has no established source/license; do not infer permission from access.
   `extra.txt` merges sources and cannot be cleared simply by labeling the
   whole project MIT. rime-frost's exact GPL variant also needs confirmation.
-- The retrieved pinyin-data MIT text is reference evidence about that project,
-  not proof that all underlying kMandarin/Unihan records in this tree share it.
+- The exact pinyin-data snapshot has been recovered. Its merged inputs include
+  cc_cedict, zdic and overrides in addition to Unihan 18.0; the repository MIT
+  declaration alone does not establish all underlying rights.
 - Recover the historical transformation pipeline. Checksums pin local inputs;
   they do not identify upstream revisions or make the source pipeline complete.
 - The canonical public source is https://github.com/ffgan/waypinyin; maintainer
   contact is ffgandev@gmail.com. The historical local repository intentionally
   has no public remote to prevent accidental publication of excluded history.
-- Review actual linked dependency and asset notices. Cargo license declarations
-  alone do not cover embedded fonts or prove compliance. Default distro drafts
-  omit egui bundled fonts; local/default builds currently enable them.
+- Dependency notice files, including bundled-font notices, are now collected
+  and installed for the selected target/features. Supplements pin omitted crate
+  notices to the crate source commits. Review the actual linked-license expression
+  for each binary package; the inventory deliberately includes build dependencies.
 - Resolve system Rust/crate availability in the chosen Debian and Fedora
   suites, replace draft packaging identities/license expressions and verify
   native isolated builds. Missing dependencies must be packaged or compatibility
@@ -32,6 +33,16 @@ The blockers below apply to the complete historical corpus and full releases.
 
 Preserve existing input behavior while researching these issues. If evidence
 cannot be obtained, report the blocker; do not silently remove/relicense data.
+
+## Verified evidence recovered on 2026-11-16
+
+The unchanged OpenCC table and FrequencyWords 2018 Chinese 50k counts match
+fixed upstream commits byte for byte. Their Apache-2.0 and CC-BY-SA-4.0 notices
+are retained in LICENSES. `data/sources.json` records the exact URLs, SHA-256
+values and remaining evidence required per file. `scripts/verify_upstream.py`
+re-fetches the pinned evidence explicitly; normal builds do not use the network.
+The origin of the 19 terms remains unknown according to the maintainer's reply;
+that record stays unresolved. No dictionary bytes were replaced or removed.
 
 ## Release procedure after blockers are resolved
 

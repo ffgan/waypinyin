@@ -7,17 +7,20 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 	dh $@
 
 override_dh_auto_configure:
+	python3 scripts/check_sources.py --release
 	mkdir -p $(CARGO_HOME)
+	test -f debian/cargo-lock.upstream || cp -p Cargo.lock debian/cargo-lock.upstream
+	rm -f Cargo.lock
 	printf '[source.crates-io]\nreplace-with = "debian"\n[source.debian]\ndirectory = "/usr/share/cargo/registry"\n' > $(CARGO_HOME)/config.toml
 
 # The distribution registry may resolve different patched crate revisions.
-# Build offline without --locked, retaining the upstream lockfile as a reference.
+# Resolve offline from the suite registry, preserving the upstream lockfile for clean.
 override_dh_auto_build:
 	$(MAKE) build PREFIX=/usr CARGO_BUILD_FLAGS='--offline --no-default-features'
 
 override_dh_auto_test:
 ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
-	WAYPINYIN_LEXICON=$(CURDIR)/build/lexicon.bin cargo test --offline --no-default-features
+	cargo test --offline --no-default-features
 endif
 
 override_dh_auto_install:
@@ -28,4 +31,5 @@ export PREFIX = /usr
 export DESTDIR = $(CURDIR)/debian/waypinyin
 
 override_dh_auto_clean:
+	if test -f debian/cargo-lock.upstream; then mv debian/cargo-lock.upstream Cargo.lock; fi
 	rm -rf build target debian/cargo-home

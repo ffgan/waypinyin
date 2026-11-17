@@ -1,8 +1,8 @@
 Lexicon sources and historical attribution claims.
 The project's MIT license does NOT relicense third-party data or the compiled
 lexicon. This inventory is not redistribution clearance. data/sources.json
-records current file hashes and unresolved provenance. Public release is blocked
-until exact upstream versions, attribution and combination conditions are verified.
+records current file hashes and unresolved provenance. A release containing unresolved historical data is blocked until its exact
+upstream versions, attribution and combination conditions are verified.
 Canonical license texts are in LICENSES/; their presence does not prove that a
 particular historical file is covered by that license.
 
@@ -15,7 +15,12 @@ data/dict.txt
     so it stays typeable behind every word that has a real count.
 
 data/freq.txt
-    OpenSubtitles 2018 word counts. A word keeps this count when the newer
+    Unmodified FrequencyWords content/2018/zh_cn/zh_cn_50k.txt at
+    525f9b560de45753a5ea01069454e72e9aa541c6 (Hermit Dave/contributors).
+    Content license: CC-BY-SA-4.0; upstream attribution and content license
+    statement are retained in LICENSES/FrequencyWords-NOTICE.txt.
+    Source corpus: OpenSubtitles 2018. No modifications to this input file.
+    A word keeps this count when the newer
     lists do not rank it higher.
 
 data/extra.txt
@@ -49,6 +54,10 @@ data/extra.txt
 
 data/ts-characters.txt
     OpenCC traditional-to-simplified character table. Apache-2.0.
+    Unmodified source at commit 5c764a5a886f46eb365656ed91a0410d7162fac6.
+    Copyright OpenCC contributors; retained file header and upstream LICENSE
+    are shipped in LICENSES/OpenCC-Apache-2.0.txt.
+    See data/sources.json for pinned URLs and matching SHA-256 evidence.
 
 data/pinyin.txt
     kMandarin readings via https://github.com/mozillazg/pinyin-data.

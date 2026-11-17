@@ -9,8 +9,8 @@ URL:            https://github.com/ffgan/waypinyin
 Source0:        %{name}-%{version}.tar.gz
 ExclusiveArch:  x86_64 aarch64
 
-BuildRequires:  cargo >= 1.99.1
-BuildRequires:  rust >= 1.99.1
+BuildRequires:  cargo >= 1.89.0
+BuildRequires:  rust >= 1.89.0
 BuildRequires:  rust-packaging
 BuildRequires:  make
 BuildRequires:  python3 >= 3.11
@@ -27,6 +27,7 @@ with local learning, fuzzy Pinyin and dictionary management.
 
 %prep
 %autosetup
+python3 scripts/check_sources.py --release
 # Use Fedora's system Cargo registry; never vendor or fetch in the sandbox.
 %cargo_prep
 
@@ -45,11 +46,11 @@ PREFIX=%{_prefix} BINDIR=%{_bindir} DATADIR=%{_datadir} MANDIR=%{_mandir} DESTDI
 rm -rf %{buildroot}%{_datadir}/doc/waypinyin %{buildroot}%{_datadir}/licenses/waypinyin
 
 %check
-WAYPINYIN_LEXICON=$PWD/build/lexicon.bin cargo test --offline --no-default-features
+cargo test --offline --no-default-features
 desktop-file-validate %{buildroot}%{_datadir}/applications/waypinyin-settings.desktop
 
 %files
-%license LICENSE data/NOTICE data/sources.json LICENSES/*.txt
+%license LICENSE data/NOTICE data/sources.json LICENSES/*.txt build/dependency-licenses.json build/dependency-notices
 %doc README.md README.en.md CHANGELOG.md docs/PACKAGING.md docs/RELEASE.md docs/VALIDATION.md
 %{_bindir}/waypinyin
 %{_datadir}/waypinyin/

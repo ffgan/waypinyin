@@ -4,8 +4,10 @@ Canonical repository: https://github.com/ffgan/waypinyin
 
 The public repository contains original source, tests, documentation, license
 reference texts, a locally authored sentence sample and a small original MIT
-demonstration vocabulary. It does **not** contain the nine historical dictionary
-files with unresolved provenance, compiled images or the old Git history.
+demonstration vocabulary, plus the reviewed OpenCC conversion table and
+FrequencyWords counts with their original notices. It does **not** contain the
+seven remaining historical dictionary files with unresolved provenance, compiled
+images or the old Git history.
 The excluded records remain in `data/sources.json` as attribution/audit metadata,
 without their contents. The original local checkout and complete corpus remain
 intact. The public tree is suitable for source review and demonstration, not a
@@ -47,7 +49,8 @@ quality examples are meaningful only with that corpus, not with the demo.
 CI verifies the demo build and explicitly exercises it; a source-only public
 CI run cannot establish complete-corpus input quality.
 
-Debian/Fedora files remain review drafts. A demo-source archive can pass the
+Debian/Fedora files remain review drafts. The Arch template has passed local
+offline demo-package and lifecycle checks, as recorded in VALIDATION.md. A demo-source archive can pass the
 data gate, but this is not clearance for external data, bundled dependency
 assets, binary releases or official distribution inclusion.
 

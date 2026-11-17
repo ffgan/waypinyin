@@ -18,3 +18,14 @@ See `data/sources.json` for provenance gaps. Upstream notices must still be
 recovered for the exact versions used. Dependency crate licenses and embedded
 font notices must also be reviewed for the actual release feature set; run
 `scripts/dependency_inventory.py` to inspect Cargo declarations.
+
+`OpenCC-Apache-2.0.txt` is the exact LICENSE from the pinned OpenCC revision
+recorded in `data/sources.json`, matched to the unchanged conversion table.
+Run `python3 scripts/verify_upstream.py` to recheck the pinned upstream bytes.
+
+`dependency-supplements.json` pins notices omitted from the published crate
+archives to their `.cargo_vcs_info.json` source commits. The inventory helper
+checks the local notice hashes and copies notices from each selected dependency
+into `build/dependency-notices/`; the installer ships those verbatim files.
+The hexf-parse supplement retains its upstream CC0 package declaration plus
+the CC0 legal text. Upgrading any listed crate requires reviewing its new notices.

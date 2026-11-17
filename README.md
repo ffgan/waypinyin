@@ -14,7 +14,7 @@
 
 ## 标准安装
 
-需要 Rust 1.99.1（当前验证的最低版本）、Cargo、Python 3.11+、GNU make、C 编译工具和 Fontconfig 开发包。
+需要 Rust 1.89.0（当前验证的最低版本）、Cargo、Python 3.11+、GNU make、C 编译工具和 Fontconfig 开发包。
 运行需要 IBus、Wayland/X11、OpenGL/EGL、Fontconfig 及中文字体；文件选择依赖桌面 portal。
 
 ```sh
@@ -23,6 +23,8 @@ make build
 WAYPINYIN_LEXICON="$PWD/build/lexicon.bin" ./build/waypinyin --check-data
 make install PREFIX=/usr/local DESTDIR="$PWD/build/stage"
 ```
+
+`make install` 只安装已生成的产物，不会编译或访问网络；请先以最终安装路径运行 `make build`。
 
 `DESTDIR` 仅暂存安装文件。实际安装时去掉它并使用相应目录写权限；发行版使用 `PREFIX=/usr`。
 构建与安装时保持 `PREFIX`、`DATADIR` 一致，可另外配置 `BINDIR`、`MANDIR`。

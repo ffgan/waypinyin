@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Export cleared source into an empty directory, never copying Git history."""
 import argparse
-import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -18,7 +17,7 @@ if output.exists() and any(output.iterdir()):
     raise SystemExit('export destination must be empty; use a new directory')
 subprocess.run(['python3',str(root / 'scripts/check_sources.py')],check=True)
 inventory = json.loads((root / 'data/sources.json').read_text())
-cleared = {s['path'] for s in inventory['files'] if s['license_status'] == 'verified-local'}
+cleared = {s['path'] for s in inventory['files'] if s['license_status'] in ('verified-local', 'verified-upstream')}
 excluded = [s for s in inventory['files'] if s['path'] not in cleared]
 files = [root / name for name in ['Cargo.toml','Cargo.lock','build.rs','Makefile','LICENSE',
          'README.md','README.en.md','CHANGELOG.md','CONTRIBUTING.md','SECURITY.md','.gitignore']]
@@ -34,7 +33,7 @@ for source in sorted(files):
     shutil.copy2(source,target)
 inventory['files'] = [s for s in inventory['files'] if s['path'] in cleared]
 inventory['excluded_files'] = inventory.get('excluded_files', []) + excluded
-inventory['distribution'] = 'public-source-with-original-demo-only'
+inventory['distribution'] = 'public-source-with-reviewed-data-and-original-demo'
 (output / 'data/sources.json').write_text(json.dumps(inventory,ensure_ascii=False,indent=2)+'\n')
 # A fresh index can never retain the original corpus objects or old commits.
 assert not (output / '.git').exists()

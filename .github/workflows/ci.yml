@@ -12,7 +12,7 @@ jobs:
           toolchain: 1.99.1
           components: rustfmt, clippy
       - name: Native tools
-        run: sudo apt-get update && sudo apt-get install -y libfontconfig1-dev desktop-file-utils
+        run: sudo apt-get update && sudo apt-get install -y libfontconfig1-dev desktop-file-utils ibus python3-gi gir1.2-ibus-1.0 dbus
       - name: Prepare native Cargo dependencies
         run: |
           cargo fetch --locked --target "$(rustc -vV | sed -n 's/^host: //p')"
@@ -22,11 +22,19 @@ jobs:
           cargo clippy --locked --offline --all-targets -- -D warnings
           cargo test --locked --offline
           python3 scripts/check_sources.py
+          python3 -m unittest discover -s tests -p 'test_*.py'
       - name: Staged release installation
         run: |
-          make install PREFIX=/usr DESTDIR="$PWD/build/stage" CARGO_BUILD_FLAGS='--locked --offline'
+          make build PREFIX=/usr DESTDIR="$PWD/build/stage" CARGO_BUILD_FLAGS='--locked --offline'
+          make install PREFIX=/usr DESTDIR="$PWD/build/stage"
           python3 scripts/verify_install.py "$PWD/build/stage" --prefix /usr
           WAYPINYIN_LEXICON="$PWD/build/stage/usr/share/waypinyin/lexicon.bin" build/stage/usr/bin/waypinyin --check-data
+      - name: Private IBus protocol acceptance
+        run: /usr/bin/python3 scripts/check_ibus.py build/stage/usr/bin/waypinyin build/stage/usr/share/waypinyin/lexicon.bin
+      - name: Custom installation directories
+        run: |
+          make install PREFIX=/usr BINDIR='/usr/libexec/waypinyin tools' MANDIR=/usr/man DESTDIR="$PWD/build/custom-stage" CARGO=false
+          python3 scripts/verify_install.py "$PWD/build/custom-stage" --prefix /usr --bindir '/usr/libexec/waypinyin tools' --mandir /usr/man
       - name: System fonts build
         run: cargo check --locked --offline --no-default-features
       - name: Public source inventory
@@ -36,7 +44,8 @@ jobs:
           build/stage/usr/bin/waypinyin --version | grep 'demo lexicon'
       - name: Installed data works without the build tree
         run: |
-          make install PREFIX="$PWD/build/runtime-prefix" CARGO_BUILD_FLAGS='--locked --offline'
+          make build PREFIX="$PWD/build/runtime-prefix" CARGO_BUILD_FLAGS='--locked --offline'
+          make install PREFIX="$PWD/build/runtime-prefix"
           mv target target-hidden
           trap 'mv target-hidden target' EXIT
           env -u WAYPINYIN_LEXICON build/runtime-prefix/bin/waypinyin --check-data
@@ -47,3 +56,25 @@ jobs:
           sha256sum dist/*-review.tar.gz > build/first.sha256
           python3 scripts/dist.py --allow-unresolved
           sha256sum --check build/first.sha256
+      - name: Rebuild cleared source archive
+        run: |
+          python3 scripts/dist.py
+          mkdir -p build/archive-check
+          version=$(python3 -c 'import tomllib; print(tomllib.load(open("Cargo.toml", "rb"))["package"]["version"])')
+          tar -xzf "dist/waypinyin-$version.tar.gz" -C build/archive-check
+          make -C "build/archive-check/waypinyin-$version" build PREFIX=/usr CARGO_BUILD_FLAGS='--frozen --no-default-features'
+          make -C "build/archive-check/waypinyin-$version" install PREFIX=/usr DESTDIR="$PWD/build/archive-stage" CARGO=false
+          python3 scripts/verify_install.py "$PWD/build/archive-stage" --prefix /usr
+  msrv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.89.0
+      - name: Native tools
+        run: sudo apt-get update && sudo apt-get install -y libfontconfig1-dev
+      - name: Test minimum compiler with system fonts
+        run: |
+          cargo fetch --locked --target "$(rustc -vV | sed -n 's/^host: //p')"
+          cargo test --locked --offline --no-default-features

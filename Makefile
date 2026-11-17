@@ -11,13 +11,14 @@ export PREFIX BINDIR DATADIR MANDIR DESTDIR CARGO CARGO_BUILD_FLAGS
 all: build
 build:
 	python3 scripts/build.py
-install: build
+install:
 	python3 scripts/install.py
 check:
 	$(CARGO) fmt --all -- --check
 	$(CARGO) clippy --locked --all-targets -- -D warnings
 	$(CARGO) test --locked
 	python3 scripts/check_sources.py
+	python3 -m unittest discover -s tests -p 'test_*.py'
 clean:
 	$(CARGO) clean
 	rm -rf build

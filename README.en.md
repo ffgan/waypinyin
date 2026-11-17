@@ -19,7 +19,7 @@ redistribution.** See
 
 ## Build and install
 
-Requires Rust 1.99.1 (the currently tested minimum), Cargo, Python 3.11+, GNU make,
+Requires Rust 1.89.0 (the currently tested minimum), Cargo, Python 3.11+, GNU make,
 a C compiler/linker and development packages for Fontconfig and the GUI stack.
 Runtime requires IBus, a Wayland or X11 desktop, OpenGL/EGL, Fontconfig and a
 Chinese font (for example Noto CJK). The file picker uses the desktop portal.
@@ -30,6 +30,9 @@ make build
 WAYPINYIN_LEXICON="$PWD/build/lexicon.bin" ./build/waypinyin --check-data
 make install PREFIX=/usr/local DESTDIR="$PWD/build/stage"
 ```
+
+`make install` only installs existing artifacts; it does not compile or access the network.
+Run `make build` with the final installation paths first.
 
 `DESTDIR` stages files only. To install on the host, omit `DESTDIR` and run the
 install step with the required directory permissions. Keep build and install

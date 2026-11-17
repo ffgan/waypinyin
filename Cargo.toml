@@ -2,7 +2,7 @@
 name = "waypinyin"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.99.1"
+rust-version = "1.89"
 license = "MIT"
 # Third-party data is not cleared for registry redistribution; see docs/RELEASE.md.
 publish = false
@@ -18,7 +18,7 @@ bundled-fonts = ["eframe/default_fonts"]
 
 [dependencies]
 libc = "0.2"
-zbus = { version = "6", default-features = false, features = ["tokio", "service"] }
+zbus = { version = "5.19", default-features = false, features = ["tokio"] }
 tokio = { version = "1", features = ["macros", "rt"] }
 eframe = { version = "0.33", default-features = false, features = ["glow", "wayland", "x11"] }
 rfd = "0.15"

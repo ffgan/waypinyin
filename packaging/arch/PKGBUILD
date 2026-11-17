@@ -1,0 +1,44 @@
+# Maintainer: ffgan <ffgandev@gmail.com>
+# Review template: select a cleared release and pin its real checksum before use.
+# Do not submit this template to the AUR or official repositories unchanged.
+pkgname=waypinyin
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Offline Chinese Pinyin input method for IBus (demo source edition)'
+arch=('x86_64' 'aarch64')
+url='https://github.com/ffgan/waypinyin'
+license=('MIT' 'Apache-2.0' 'CC-BY-SA-4.0') # Cleared source data; also review linked crates.
+# IBus is used over D-Bus; Fontconfig is invoked by the settings UI.
+# Window/GL libraries are loaded at runtime and are not all ELF NEEDED entries.
+depends=('ibus' 'fontconfig' 'libgcc' 'hicolor-icon-theme' 'glibc' 'libxkbcommon' 'wayland'
+         'libx11' 'libxcursor' 'libxi' 'libxrandr' 'libglvnd')
+makedepends=('cargo' 'rust' 'python' 'make' 'pkgconf')
+checkdepends=('desktop-file-utils')
+optdepends=('noto-fonts-cjk: Chinese glyphs' 'xdg-desktop-portal: dictionary file picker')
+source=("$url/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz")
+# Intentionally invalid until an actual release is reviewed.
+sha256sums=('REPLACE_WITH_REVIEWED_RELEASE_SHA256')
+
+prepare() {
+    cd "$pkgname-$pkgver"
+    python scripts/check_sources.py --release
+    cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+    cd "$pkgname-$pkgver"
+    make build PREFIX=/usr CARGO_BUILD_FLAGS='--frozen --no-default-features'
+}
+
+check() {
+    cd "$pkgname-$pkgver"
+    python scripts/check_sources.py --release
+    cargo test --release --frozen --no-default-features
+    desktop-file-validate share/waypinyin-settings.desktop
+}
+
+package() {
+    cd "$pkgname-$pkgver"
+    make install PREFIX=/usr DESTDIR="$pkgdir"
+    # Arch puts the package's custom license under /usr/share/licenses/$pkgname.
+}
