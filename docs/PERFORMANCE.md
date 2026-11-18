@@ -1,5 +1,12 @@
 # Linux performance
 
+Current-version comprehensive measurements (seven runs per scenario, including
+private IBus routing, long-input stress/CPU diagnosis, loading, import-file
+scaling and engine memory) are in the
+[2026-11-17 benchmark report](BENCHMARK-2026-11-17.md). This establishes a fresh
+absolute baseline and identifies a long-input syllable-segmentation hotspot;
+the historical before/after optimization results below retain their original scope.
+
 ## Long-input search, 2026-11-17
 
 The next optimization targets the synchronous long-input search rather than

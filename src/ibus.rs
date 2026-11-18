@@ -33,6 +33,24 @@ fn shared_attrs() -> Variant<'static> {
         .clone()
 }
 
+fn surrounding_string<'a>(text: &'a Variant<'_>) -> Option<&'a str> {
+    let Variant::Structure(fields) = text else {
+        return None;
+    };
+    if fields
+        .fields()
+        .first()
+        .and_then(|v| <&str>::try_from(v).ok())
+        != Some("IBusText")
+    {
+        return None;
+    }
+    fields
+        .fields()
+        .get(2)
+        .and_then(|v| <&str>::try_from(v).ok())
+}
+
 fn ibus_text(text: &str) -> Variant<'static> {
     Variant::Structure(
         StructureBuilder::new()
@@ -178,6 +196,7 @@ struct Factory {
 
 struct Engine {
     session: Session,
+    capabilities: u32,
     focused: bool,
     content_type: (u32, u32),
     shown_preedit: Option<Preedit>,
@@ -223,6 +242,7 @@ impl Factory {
             .map_err(|err| fdo::Error::Failed(err.to_string()))?;
         let engine = Engine {
             session: Session::with_user(Arc::clone(&self.lexicon), UserDict::load()),
+            capabilities: 0,
             focused: false,
             content_type: (0, 0),
             shown_preedit: None,
@@ -257,7 +277,13 @@ impl Engine {
         state: u32,
     ) -> fdo::Result<bool> {
         let started = self.latency.as_ref().map(|_| std::time::Instant::now());
+        let was_surrounding = self.active_surrounding_text();
         let effect = self.session.handle(keyval, state);
+        if !was_surrounding && self.active_surrounding_text() {
+            Self::require_surrounding_text(&emitter)
+                .await
+                .map_err(|e| fdo::Error::Failed(e.to_string()))?;
+        }
         let handled = started.map(|t| t.elapsed());
         let result = self.present(&emitter, effect).await;
         if let (Some(latency), Some(started), Some(handled)) = (&mut self.latency, started, handled)
@@ -273,7 +299,21 @@ impl Engine {
 
     async fn cancel_hand_writing(&mut self, _n_strokes: u32) {}
 
-    async fn set_capabilities(&mut self, _caps: u32) {}
+    async fn set_capabilities(
+        &mut self,
+        caps: u32,
+        #[zbus(signal_emitter)] emitter: SignalEmitter<'_>,
+    ) -> fdo::Result<()> {
+        self.capabilities = caps;
+        if caps & (1 << 5) == 0 {
+            self.session.clear_ranking_context();
+        } else if self.session.surrounding_enabled() {
+            Self::require_surrounding_text(&emitter)
+                .await
+                .map_err(|e| fdo::Error::Failed(e.to_string()))?;
+        }
+        Ok(())
+    }
 
     async fn property_activate(&mut self, _name: &str, _state: u32) {}
 
@@ -296,14 +336,28 @@ impl Engine {
         Ok(())
     }
 
-    async fn focus_in(&mut self) {
+    async fn focus_in(
+        &mut self,
+        #[zbus(signal_emitter)] emitter: SignalEmitter<'_>,
+    ) -> fdo::Result<()> {
+        self.session.clear_ranking_context();
         self.focused = true;
         self.session.preload();
+        if self.active_surrounding_text() {
+            Self::require_surrounding_text(&emitter)
+                .await
+                .map_err(|e| fdo::Error::Failed(e.to_string()))?;
+        }
+        Ok(())
     }
 
-    async fn focus_in_id(&mut self, _object_path: &str, _client: &str) {
-        self.focused = true;
-        self.session.preload();
+    async fn focus_in_id(
+        &mut self,
+        _object_path: &str,
+        _client: &str,
+        #[zbus(signal_emitter)] emitter: SignalEmitter<'_>,
+    ) -> fdo::Result<()> {
+        self.focus_in(emitter).await
     }
 
     async fn focus_out(
@@ -312,6 +366,7 @@ impl Engine {
     ) -> fdo::Result<()> {
         self.focused = false;
         let effect = self.session.commit_preedit();
+        self.session.clear_ranking_context();
         self.show(&emitter, effect).await
     }
 
@@ -331,7 +386,17 @@ impl Engine {
         self.show(&emitter, effect).await
     }
 
-    async fn enable(&mut self) {}
+    async fn enable(
+        &mut self,
+        #[zbus(signal_emitter)] emitter: SignalEmitter<'_>,
+    ) -> fdo::Result<()> {
+        if self.session.surrounding_enabled() {
+            Self::require_surrounding_text(&emitter)
+                .await
+                .map_err(|e| fdo::Error::Failed(e.to_string()))?;
+        }
+        Ok(())
+    }
 
     async fn disable(
         &mut self,
@@ -375,10 +440,26 @@ impl Engine {
 
     async fn set_surrounding_text(
         &mut self,
-        _text: Variant<'_>,
-        _cursor_pos: u32,
-        _anchor_pos: u32,
-    ) {
+        text: Variant<'_>,
+        cursor_pos: u32,
+        anchor_pos: u32,
+        #[zbus(signal_emitter)] emitter: SignalEmitter<'_>,
+    ) -> fdo::Result<()> {
+        if !self.active_surrounding_text() {
+            if !self.focused || !self.session.learning_enabled() {
+                self.session.clear_ranking_context();
+            }
+        } else if let Some(text) = surrounding_string(&text) {
+            self.session
+                .set_surrounding_text(text, cursor_pos, anchor_pos);
+        } else {
+            self.session.clear_ranking_context();
+        }
+        if self.focused {
+            let view = self.session.view();
+            self.show(&emitter, Effect::Update(view)).await?;
+        }
+        Ok(())
     }
 
     async fn panel_extension_received(&mut self, _event: Variant<'_>) {}
@@ -392,7 +473,7 @@ impl Engine {
 
     #[zbus(property)]
     fn active_surrounding_text(&self) -> bool {
-        false
+        self.focused && self.capabilities & (1 << 5) != 0 && self.session.surrounding_enabled()
     }
 
     #[zbus(property)]
@@ -401,14 +482,27 @@ impl Engine {
     }
 
     #[zbus(property)]
-    fn set_content_type(&mut self, content_type: (u32, u32)) {
-        self.content_type = content_type;
-        // IBusInputPurpose PASSWORD=8/PIN=9, hints PRIVATE=1<<11 and
-        // HIDDEN_TEXT=1<<12 (ibustypes.h). These fields never update learning.
-        let private =
-            matches!(content_type.0, 8 | 9) || content_type.1 & ((1 << 11) | (1 << 12)) != 0;
-        self.session.set_learning_enabled(!private);
+    async fn set_content_type(
+        &mut self,
+        content_type: (u32, u32),
+        #[zbus(signal_emitter)] emitter: SignalEmitter<'_>,
+    ) -> fdo::Result<()> {
+        let was_surrounding = self.active_surrounding_text();
+        self.apply_content_type(content_type);
+        if !was_surrounding && self.active_surrounding_text() {
+            Self::require_surrounding_text(&emitter)
+                .await
+                .map_err(|e| fdo::Error::Failed(e.to_string()))?;
+        }
+        if self.focused {
+            let view = self.session.view();
+            self.show(&emitter, Effect::Update(view)).await?;
+        }
+        Ok(())
     }
+
+    #[zbus(signal)]
+    async fn require_surrounding_text(emitter: &SignalEmitter<'_>) -> zbus::Result<()>;
 
     #[zbus(signal)]
     async fn commit_text(emitter: &SignalEmitter<'_>, text: Variant<'_>) -> zbus::Result<()>;
@@ -431,6 +525,13 @@ impl Engine {
 }
 
 impl Engine {
+    fn apply_content_type(&mut self, content_type: (u32, u32)) {
+        self.content_type = content_type;
+        // IBusInputPurpose PASSWORD=8/PIN=9; PRIVATE=1<<11, HIDDEN_TEXT=1<<12.
+        let private =
+            matches!(content_type.0, 8 | 9) || content_type.1 & ((1 << 11) | (1 << 12)) != 0;
+        self.session.set_learning_enabled(!private);
+    }
     async fn publish(&mut self, emitter: &SignalEmitter<'_>, view: &View) -> fdo::Result<()> {
         let (start, cursor, page) = page_window(view);
         let (text, caret) = displayed_preedit(view);
@@ -612,6 +713,7 @@ mod sig_tests {
     #[test]
     fn password_pin_private_and_hidden_content_types_disable_learning() {
         let mut engine = Engine {
+            capabilities: 0,
             session: Session::with_preferences(
                 Arc::new(Lexicon::load()),
                 UserDict::default(),
@@ -625,10 +727,10 @@ mod sig_tests {
             page_at: 0,
         };
         for content in [(8, 0), (9, 0), (0, 1 << 11), (0, 1 << 12)] {
-            engine.set_content_type(content);
+            engine.apply_content_type(content);
             assert_eq!(engine.content_type(), content);
             assert!(!engine.session.learning_enabled());
-            engine.set_content_type((0, 0));
+            engine.apply_content_type((0, 0));
             assert!(engine.session.learning_enabled());
         }
     }

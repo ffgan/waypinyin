@@ -91,6 +91,7 @@ impl std::fmt::Debug for Preloader {
 
 impl Preloader {
     pub(crate) fn shared(lex: Arc<Lexicon>) -> Option<Arc<Self>> {
+        let lex = Arc::new(lex.with_context(""));
         static SHARED: OnceLock<Option<Arc<Preloader>>> = OnceLock::new();
         SHARED.get_or_init(|| Self::start(lex)).clone()
     }

@@ -1,0 +1,1624 @@
+# callgrind format
+version: 1
+creator: callgrind-3.28.0
+pid: 216232
+cmd:  target/release/examples/search_hotspot jintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugon
+part: 1
+
+
+desc: I1 cache: 
+desc: D1 cache: 
+desc: LL cache: 
+
+desc: Timerange: Basic block 0 - 1194977283
+desc: Trigger: Program termination
+
+positions: line
+events: Ir
+summary: 3377397683
+
+
+ob=(2) /usr/lib64/libc.so.6
+fl=(264) /usr/src/debug/glibc-2.44-2.fc45.x86_64/string/../sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
+fn=(938) __memset_avx2_unaligned_erms
+193 1
++1 2
++5 1
++1 1
++1 1
++1 1
++1 1
++21 1
++1 1
++6 1
++1 1
++12 1
++3 1
++1 1
++12 1
++1 1
++13 1
++1 1
++2 1
++3 1
++3 1
++3 1
++1 1
++1 1
++1 1
++1 1
++1 1
++1 1
+-6 2
++1 2
++1 2
++1 2
++1 2
++1 2
++1 3
++3 1
++1 1
++1 1
++1 1
++3 2
+
+fl=(200) /usr/src/debug/glibc-2.44-2.fc45.x86_64/malloc/malloc.c
+fn=(898) _int_free_merge_chunk
+4105 9766512
++7 8138760
+-6 1627752
++9 4883256
++5 4883256
++4 3255504
+-1 1627752
++1 3255504
+1723 4883256
+4131 3255504
++2 27051
++2 27051
++1 108204
++2 54102
+-4 27051
++4 54102
+cfn=(966) unlink_chunk.isra.0
+calls=137323 1425 
+* 516483
+* 54102
++4 108204
+cfn=(900) _int_free_create_chunk
+calls=137323 +14 
+* 1268376
+* 6402804
+cfn=(900)
+calls=2537442 +14 
+* 61175189
++87 3255504
+-85 9766512
+-29 8138760
+
+fn=(966)
+1425 1439665
++2 4318995
+-2 1439665
++2 2879330
++3 1439665
++3 2879330
+-2 1439665
++2 2879330
++3 1439665
++1 1439665
++1 2883311
++2 1058
++1 1587
++3 1058
++14 529
++1 529
++3 2879330
+
+fn=(1166) _int_free_chunk
+4057 4883220
++5 4883220
++2 3255480
++34 1627740
+-33 1627740
+cfn=(898)
+calls=2489451 +40 
+* 136559471
+
+fn=(888) realloc
+3190 30
++7 30
+-7 60
++11 30
+4535 15
++1 15
+-1 15
++1 15
+-1 30
++2 45
+3230 26
+-22 13
++22 65
++4 26
+1139 13
++2 65
+3241 26
+fi=(199) /usr/src/debug/glibc-2.44-2.fc45.x86_64/malloc/arena.c
+151 39
+fe=(200)
+3266 26
++14 13
++16 39
+4538 15
+3216 30
++2 4
++1 4
++1 2
++76 6
+-28 65
+cfn=(892) _int_realloc
+calls=199633 4262 
+* 3752
+* 13
++1 65
+fi=(199)
+151 52
+fe=(200)
+3269 26
+
+fn=(820) __libc_malloc2
+3067 4366062
++4 1455354
+-4 2910708
++4 1455354
++26 4366062
+-24 4366062
+cfn=(822) _int_malloc
+calls=2117179 3583 
+* 163224991
++1 7276770
+fi=(199)
+151 2910708
+fe=(200)
+
+fn=(822)
+3583 2910722
+-28 1455361
+1139 4366083
+3555 5821444
+1141 2910730
+3592 16
++16 16
++67 8518764
++3 326738
++3 326738
++1 490107
+-3 163369
++5 490107
++1 326738
++2 653476
+-10 163369
++12 326738
++1 326738
++2 326738
++11 653476
++29 720
++1 720
++4 1440
++13 1288
++8 2942
++1 118
++1 118
+-1 118
++4 236
+-4 411
++1 411
+-1 411
++4 822
++5 36
+-2 9
++3 18
++6 3
++3 4
++2 2
++33 5
++1 1
++1 1
++1 1
++1 1
++3 2
+-7 187015
++1 37403
++1 37403
++1 37403
++1 37403
++3 74806
++11 1275127
+-2 2550254
+1716 1275127
+3993 1275127
+1716 6753530
+3592 5821412
+1141 1455353
+3611 1455353
++2 1455353
+-2 1455353
++2 2910706
++2 54269
++1 162807
++6 54269
+-4 54269
++1 54269
++1 54269
++2 108538
++6 162807
++1 108538
+2747 54269
+3633 54269
+2747 54269
+3633 108538
++4 54269
++1 906180
++2 344606
+-2 453036
+1716 54269
+3654 54269
+1716 162807
+4047 5821444
+3662 411
++96 1233
+3610 56
++1 8
++2 8
+-2 8
++2 4203292
++91 326130
++2 162649
+-1 325298
++27 130971
++1 130971
++4 261942
++13 73520
++60 520
+-51 520
++51 1560
+-52 172303
+3642 172303
++1 172303
++1 344606
++2 172303
+2825 172303
++16 172303
+3647 172303
+2829 344606
++4 861515
++8 516909
+3784 24
++1 16
++6 8
++7 8
+-1 8
++1 8
++1 16
++2 8
++1 24
++2 8
++1 16
+-53 73750
++1 73750
++1 36875
+-1 36875
++1 36875
+3902 1275127
++1 1275127
++1 1275127
+-1 1275127
++1 1275127
++1 2550254
++1 3825381
++5 4257038
++16 109188
++2 218376
+-4 3056206
++8 1418915
++3 2837830
++2 143788
++1 143788
++1 143788
+-2 575152
+-27 144960
++7 1192
+-3 891
+1716 94287
+4031 94287
+1716 188574
+3920 879
++1 586
+3739 94287
++1 94287
+-1 94287
++1 188574
+3945 2550254
++3 2550254
++2 1275127
++3 2550254
+-3 6375635
++3 1275127
+cfn=(966)
+calls=1901515 1425 
+* 24228493
++3 10201016
++15 132789
++1 265578
+-6 132789
++8 132789
++1 132789
++1 132789
++1 132789
++3 265578
++1 132789
++1 265578
++2 90
++3 720
++2 270
++1 180
+-3 1061592
++2 398097
++1 265398
+-31 1142338
+-1 1142338
++1 2284676
+3710 31678
+-1 31678
++2 63356
++1 31678
++1 63356
++1 63356
++2 5110
++4 15330
++6 5110
+-6 25550
++2 15330
++1 5110
+1716 15330
+3720 79704
++6 26568
+-6 132840
++2 79704
++1 26568
+1716 79704
+
+fn=(928) free
+3137 5592510
++3 11185020
++7 11185020
+-2 16777530
++6 16777530
++6 16777524
++6 5592508
+-3 11185016
++3 5592508
+-3 5592508
++1 11185016
++2 16777524
+2833 3964770
++8 3964770
+-12 3964770
++4 15859080
++8 3964770
+3164 3964770
++10 4883214
+-31 1627740
++37 3255480
+fi=(199)
+151 4883220
+fe=(200)
+3184 3255480
+cfn=(1166)
+calls=2489452 4057 
+* 152836871
+
+fn=(892)
+4262 52
++11 156
++8 26
++2 13
++1 39
++1 52
++4 26
++14 6
++50 6
++10 6
+-10 6
+-50 18
++60 6
+-8 12
++2 3
++1 1
++14 1
++1 4
+-1 5
++1 48
+-74 26
++12 26
++12 49
+cfn=(822)
+calls=176624 3583 
+* 1432
+* 7
++1 14
++3 7
++6 21
++29 5
++2 5
+-1 5
++5 5
+-4 5
+-1 10
++1 5
++4 5
+-1 5
++1 15
+cfn=(898)
+calls=8690 4105 
+* 397
+* 5
+-55 9
+-1 18
++5 36
+cfn=(966)
+calls=11005 1425 
+* 117
++41 30
+-45 12
++28 7
+fi=(263) /usr/src/debug/glibc-2.44-2.fc45.x86_64/malloc/../string/bits/string_fortified.h
+29 7
+fe=(200)
+4340 7
+fi=(263)
+29 14
+fe=(200)
+4341 14
+fi=(263)
+29 7
+cob=(4) ???
+cfi=(197) ???
+cfn=(894) 0x0000000004bd16b0
+calls=176624 -29 
+* 207
+fe=(200)
+4342 35
+cfn=(898)
+calls=176624 4105 
+* 683
++2 14
+
+fn=(900)
+4156 3255504
+-1 8138760
++7 3255504
++4 1490271
++4 2980542
++9 1265
+-1 1265
++2 2530
++2 2530
++22 1265
+-5 1265
++5 1265
+-4 1265
++1 1265
++1 1265
++2 1265
++1 1265
++15 2530
+-16 1626487
+-5 1626487
++5 1626487
+-4 1626487
++1 1626487
++1 1626487
++2 1626487
++1 1626487
++15 3390455
+-57 687405
+cfn=(966)
+calls=238169 1425 
+* 2617284
++1 549924
++6 274962
++19 3252974
++1 4879461
++1 1626487
++2 3252974
++3 9758922
+
+fn=(818) malloc
+3101 5592415
+1136 11184830
++3 5592415
+3105 5592415
+1141 11184843
+3105 26
++2 39
++2 26
++2 33554490
+2856 8274122
++4 16548244
++4 4137061
++1 4137061
+3112 4137061
+-7 11184804
++19 1455354
+cfn=(820)
+calls=2117178 -57 
+* 192332071
+-17 11184804
+
+fl=(217) /usr/src/debug/glibc-2.44-2.fc45.x86_64/csu/../sysdeps/nptl/libc_start_call_main.h
+fn=(766) (below main)
+cob=(7) /home/emt/src/waypinyin/target/release/examples/search_hotspot
+cfi=(214) ???
+cfn=(774) main
+calls=1 0 
+59 3377397683
+
+fl=(296) /usr/src/debug/glibc-2.44-2.fc45.x86_64/string/../sysdeps/x86_64/multiarch/memcmp-avx2-movbe.S
+fn=(1256) __memcmp_avx2_movbe
+73 2624226
++7 2624226
++1 2624226
++75 518
++10 518
++1 518
++1 518
++3 1036
+401 2624226
++1 2624226
++5 2097829
++1 2097829
++1 2097829
++1 2097829
++1 2097829
++3 2097743
++1 2097743
++1 2097743
++1 2097743
++3 2097743
++1 2097743
++1 2097225
++1 4194450
++6 86
++1 86
++2 86
++1 86
++2 86
++1 86
++2 14
++1 14
++1 14
++1 14
++1 14
++1 14
++1 14
++1 14
++1 14
++2 14
++6 526397
++1 526383
++1 526383
++1 526383
++2 526383
++4 14
++1 14
++2 14
++4 14
++2 14
++81 72
++1 72
++1 72
++1 72
++1 72
++1 72
++1 72
++1 72
++1 72
++1 72
++2 72
++2 72
+
+fl=(252) /usr/src/debug/glibc-2.44-2.fc45.x86_64/string/../sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+fn=(896) __memcpy_avx_unaligned_erms
+255 20
++1 20
++6 20
++1 20
++2 19
++1 19
++1 19
++3 2
++1 2
++1 2
++3 4
++30 1
++1 1
++2 1
++1 1
++2 1
++4 1
++1 1
++1 1
++8 1
++50 2
++1 2
++1 2
++1 2
++1 2
++1 2
++1 4
++5 17
++1 17
++5 17
++1 17
++2 12
++1 12
++1 12
++2 10
++1 10
++1 10
++1 10
++1 10
++1 10
++1 10
++1 10
++1 10
++1 10
++1 10
++1 10
++1 10
++1 10
++1 20
++4 5
++1 5
++4 5
++2 5
++4 5
++1 5
++11 5
++3 5
++2 5
++2 5
++4 5
++1 5
++9 5
++1 5
++2 5
++2 5
++1 5
++1 5
++3 5
++2 5
++2 5
++2 10
++6 5
++1 5
++1 5
++1 5
++1 5
++1 5
++1 5
++1 5
++1 5
++1 5
++1 5
++1 5
+-11 8
++1 8
++1 8
++1 8
++1 8
++1 8
++1 8
++1 8
++1 8
++1 8
++1 8
++1 8
++2 5
++1 5
++1 5
++1 5
++2 5
++4 10
+
+fl=(215) /usr/src/debug/glibc-2.44-2.fc45.x86_64/csu/../csu/libc-start.c
+fn=(742) __libc_start_main@@GLIBC_2.34
+cfi=(217)
+cfn=(766)
+calls=1 30 
+372 3377397683
+
+ob=(7)
+fl=(214)
+fn=(1012) search_hotspot::main
+cfn=(1544) waypinyin_profile_key
+calls=1 0 
+0 3377397683
+
+fn=(1024) __rustc::__rdl_dealloc
+0 5592510
+cob=(2)
+cfi=(200)
+cfn=(928)
+calls=7812575 3137 
+0 340645149
+
+fn=(1222) <waypinyin::lexicon::match_lexicon::SEEN::{K#0}::{closure#0} as core::ops::function::FnOnce<(core::option::Option<&mut core::option::Option<core::cell::RefCell<std::collections::hash::map::HashMap<u64, u8>>>>,)>>::call_once
+0 9
+
+fn=(1340) core::ptr::drop_glue::<core::option::Option<waypinyin::lexicon::MergeState>>
+0 23
+cfn=(1022) __rustc::__rust_dealloc
+calls=250 0 
+0 35
+0 8
+cfn=(1370) <hashbrown::raw::RawTable<(alloc::borrow::Cow<str>, ())> as core::ops::drop::Drop>::drop
+calls=250 0 
+0 349
+
+fn=(1360) <alloc::vec::Vec<alloc::string::String> as alloc::vec::spec_from_iter_nested::SpecFromIterNested<alloc::string::String, core::iter::adapters::map::Map<core::slice::iter::Iter<waypinyin::lexicon::Choice>, <waypinyin::session::Session>::view::{closure#1}>>>::from_iter
+0 21
+cfn=(1000) __rustc::__rust_no_alloc_shim_is_unstable_v2
+calls=256 0 
+0 1
+0 3
+cfn=(1002) __rustc::__rust_alloc
+calls=256 0 
+0 40
+0 12
+cfn=(1202) <alloc::string::String as core::clone::Clone>::clone
+calls=256 0 
+0 220
+0 25
+
+fn=(1366) <waypinyin::session::Session>::insert_char
+0 29
+cob=(2)
+cfi=(252)
+cfn=(896)
+calls=254 255 
+0 13
+0 8
+cfn=(1196) core::ptr::drop_glue::<core::option::Option<waypinyin::session::Board>>
+calls=254 0 
+0 14880
+0 7
+
+fn=(1402) core::slice::sort::shared::smallsort::insertion_sort_shift_left::<u16, <[u16]>::sort_by<waypinyin::lexicon::segmentations::walk::{closure#0}>::{closure#0}>
+0 77594513
+cfn=(1404) <[u16]>::sort_by::<waypinyin::lexicon::segmentations::walk::{closure#0}>::{closure#0}
+calls=2806959 0 
+0 154664741
+0 18874341
+
+fn=(1538) <alloc::string::String as core::iter::traits::collect::FromIterator<char>>::from_iter::<core::iter::adapters::filter::Filter<core::str::iter::Chars, waypinyin::lexicon::plan::{closure#6}>>
+0 5392
+cfn=(1112) <alloc::raw_vec::RawVecInner<_>>::reserve::do_reserve_and_handle::<alloc::alloc::Global>
+calls=30 0 
+0 1610
+0 39
+
+fn=(776) std::rt::lang_start_internal
+cfn=(1008) std::rt::lang_start::<()>::{closure#0}
+calls=1 0 
+0 3377397683
+
+fn=(1000)
+0 5592416
+
+fn=(1114) <alloc::raw_vec::RawVecInner>::finish_grow
+0 354
+cfn=(1116) __rustc::__rust_realloc
+calls=226043 0 
+0 3497
+0 32
+cfn=(1000)
+calls=21175 0 
+0 4
+0 12
+cfn=(1002)
+calls=21175 0 
+0 156
+0 106430649
+cfn=(1116)
+calls=2439 0 
+0 1518
+0 15204346
+cfn=(1000)
+calls=6806933 0 
+0 5068112
+0 15204336
+cfn=(1002)
+calls=6806933 0 
+0 301128710
+0 65885511
+
+fn=(1372) core::ptr::drop_glue::<core::option::Option<waypinyin::lexicon::PhraseCursor>>
+0 38
+
+fn=(1218) waypinyin::lexicon::plan
+0 15
+cfn=(1000)
+calls=255 0 
+0 1
+0 5
+cfn=(1002)
+calls=255 0 
+0 40
+0 7
+cob=(2)
+cfi=(252)
+cfn=(896)
+calls=255 255 
+0 30
+0 3113
+cfn=(1128) core::slice::memchr::memchr_aligned
+calls=240 0 
+0 353
+0 23
+cfn=(1220) <std::thread::local::LocalKey<core::cell::RefCell<std::collections::hash::map::HashMap<u64, u8>>>>::with::<waypinyin::lexicon::match_lexicon::{closure#1}, ()>
+calls=255 0 
+0 599528
+0 9
+cfn=(1128)
+calls=240 0 
+0 353
+0 7
+cfn=(1266) <waypinyin::lexicon::Lexicon>::auto_walk
+calls=255 0 
+0 254
+0 37
+cfn=(1128)
+calls=240 0 
+0 353
+0 15
+cfn=(1270) waypinyin::lexicon::segmentations::walk
+calls=255 0 
+0 3376766458
+0 7
+cfn=(1022)
+calls=255 0 
+0 35
+0 67
+cfn=(1300) <alloc::vec::Vec<(alloc::string::String, i64, alloc::string::String)> as alloc::vec::spec_extend::SpecExtend<(alloc::string::String, i64, alloc::string::String), alloc::vec::into_iter::IntoIter<(alloc::string::String, i64, alloc::string::String)>>>::spec_extend
+calls=249 0 
+0 37
+0 16
+cfn=(1300)
+calls=239 0 
+0 37
+0 19
+cfn=(1300)
+calls=12 0 
+0 37
+0 16
+cfn=(1300)
+calls=11 0 
+0 37
+0 17
+cfn=(1300)
+calls=13 0 
+0 37
+0 14
+cfn=(1300)
+calls=16 0 
+0 37
+0 16
+cfn=(1300)
+calls=255 0 
+0 37
+0 16
+cfn=(1300)
+calls=13 0 
+0 37
+0 14
+cfn=(1300)
+calls=13 0 
+0 37
+0 66
+cfn=(1538)
+calls=5 0 
+0 7041
+0 106
+
+fn=(1244) <hashbrown::map::HashMap<u64, u8, std::hash::random::RandomState>>::insert
+0 3822
+cfn=(1246) <std::hash::random::RandomState as core::hash::BuildHasher>::hash_one::<&usize>
+calls=74157 0 
+0 41454
+0 17385
+
+fn=(1010) std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+cfn=(1012)
+calls=1 0 
+0 3377397683
+
+fn=(1118) __rustc::__rdl_realloc
+0 330
+cob=(2)
+cfi=(200)
+cfn=(888)
+calls=229908 3190 
+0 4670
+
+fn=(1174) <waypinyin::session::Session>::handle
+0 55
+cfn=(1366)
+calls=254 0 
+0 14937
+0 4
+cfn=(1198) <waypinyin::session::Session>::view
+calls=254 0 
+0 3377382613
+0 5
+cfn=(1362) <waypinyin::session::Session>::schedule_preload
+calls=255 0 
+0 23
+0 5
+cob=(2)
+cfi=(252)
+cfn=(896)
+calls=255 255 
+0 30
+0 9
+
+fn=(1200) <waypinyin::session::Session>::fill
+0 16
+cfn=(1202)
+calls=255 0 
+0 104
+0 19
+cfn=(1204) <waypinyin::session::UserDict>::overlay
+calls=255 0 
+0 195
+0 19
+cfn=(1212) <waypinyin::imports::Catalog>::choices_with_preferences
+calls=255 0 
+0 56
+0 12
+cfn=(1214) <alloc::vec::Vec<waypinyin::lexicon::Choice> as alloc::vec::spec_extend::SpecExtend<waypinyin::lexicon::Choice, alloc::vec::into_iter::IntoIter<waypinyin::lexicon::Choice>>>::spec_extend
+calls=255 0 
+0 37
+0 14
+cfn=(1216) <waypinyin::session::Session>::recall
+calls=255 0 
+0 3377380413
+0 15
+cfn=(1314) <waypinyin::lexicon::Pool>::open
+calls=255 0 
+0 414
+0 4
+cob=(2)
+cfi=(252)
+cfn=(896)
+calls=255 255 
+0 77
+0 6
+cfn=(1000)
+calls=255 0 
+0 1
+0 3
+cfn=(1002)
+calls=255 0 
+0 40
+0 11
+cfn=(1196)
+calls=255 0 
+0 13
+0 4
+cob=(2)
+cfi=(252)
+cfn=(896)
+calls=255 255 
+0 77
+0 12
+cfn=(1022)
+calls=255 0 
+0 35
+0 8
+
+fn=(1210) <hashbrown::raw::RawIntoIter<(alloc::string::String, waypinyin::lexicon::Choice)> as core::ops::drop::Drop>::drop
+0 22
+
+fn=(1212)
+0 38
+cfn=(1000)
+calls=255 0 
+0 1
+0 17
+
+fn=(1242) <alloc::raw_vec::RawVec<waypinyin::lexicon::Step>>::grow_one
+0 105
+cfn=(1114)
+calls=1855 0 
+0 2742
+0 63
+
+fn=(1248) <core::hash::sip::Hasher<core::hash::sip::Sip13Rounds> as core::hash::Hasher>::write
+0 33765
+
+fn=(1252) <waypinyin::lexicon::Lexicon>::edges_for
+0 21001
+
+fn=(740) (below main)
+cob=(2)
+cfi=(215)
+cfn=(742)
+calls=1 242 
+0 3377397683
+
+fn=(774)
+cfn=(776)
+calls=1 0 
+0 3377397683
+
+fn=(1008)
+cfn=(1010)
+calls=1 0 
+0 3377397683
+
+fn=(1022)
+0 5592510
+cfn=(1024)
+calls=7812575 0 
+0 346237659
+
+fn=(1202)
+0 68
+cfn=(1000)
+calls=120547 0 
+0 4
+0 12
+cfn=(1002)
+calls=120547 0 
+0 276
+0 28
+cob=(2)
+cfi=(252)
+cfn=(896)
+calls=120547 255 
+0 120
+0 66
+
+fn=(1220)
+0 11
+cfn=(1222)
+calls=255 0 
+0 9
+0 19
+cob=(2)
+cfi=(264)
+cfn=(938)
+calls=254 193 
+0 50
+0 23
+cfn=(1242)
+calls=254 0 
+0 105
+0 13196
+cfn=(1248)
+calls=73902 0 
+0 16115
+0 27293
+cfn=(1244)
+calls=74157 0 
+0 62661
+0 16753
+cfn=(1252)
+calls=73864 0 
+0 21001
+0 37013
+cfn=(1254) waypinyin::lexicon::piece_match_plain
+calls=301314 0 
+0 378545
+0 19023
+cfn=(1242)
+calls=1536 0 
+0 2805
+0 4712
+cfn=(1022)
+calls=255 0 
+0 35
+0 12
+cfn=(1022)
+calls=254 0 
+0 135
+0 12
+
+fn=(1266)
+0 53
+cfn=(1267) <waypinyin::lexicon::Lexicon>::auto_walk'2
+calls=255 0 
+0 189
+0 12
+
+fn=(1267)
+0 155
+cfn=(1267)
+calls=507 0 
+0 183
+0 34
+
+fn=(1270)
+0 150
+cfn=(1274) <alloc::raw_vec::RawVec<u16>>::grow_one
+calls=253 0 
+0 101
+0 114
+cfn=(1274)
+calls=253 0 
+0 101
+0 44
+cfn=(1271) waypinyin::lexicon::segmentations::walk'2
+calls=505 0 
+0 3376765593
+0 35
+cfn=(1022)
+calls=253 0 
+0 188
+0 8
+cfn=(1402)
+calls=252 0 
+0 122
+0 2
+
+fn=(1271)
+0 876608334
+cfn=(1274)
+calls=6780432 0 
+0 630555788
+0 71128302
+cfn=(1000)
+calls=701511 0 
+0 524288
+0 1572864
+cfn=(1002)
+calls=701511 0 
+0 80886813
+0 38273024
+cob=(2)
+cfi=(296)
+cfn=(1256)
+calls=702957 73 
+0 9961472
+0 181403648
+cfn=(1022)
+calls=701511 0 
+0 53029129
+0 506985794
+cfn=(1274)
+calls=910 0 
+0 1838
+0 157635676
+cfn=(1271)
+calls=9587139 0 
+0 302780058410
+0 194335816
+cfn=(1022)
+calls=6780432 0 
+0 298786892
+0 19748146
+cfn=(1402)
+calls=2806707 0 
+0 251133473
+0 4194296
+
+fn=(1274)
+0 76021755
+cfn=(1114)
+calls=6809372 0 
+0 508923020
+0 45613053
+
+fn=(1310) <std::hash::random::RandomState as core::hash::BuildHasher>::hash_one::<&alloc::string::String>
+0 19
+cfn=(1248)
+calls=2071 0 
+0 667
+0 5
+cfn=(1248)
+calls=2071 0 
+0 73
+0 69
+
+fn=(1332) <alloc::raw_vec::RawVec<waypinyin::lexicon::Choice>>::grow_one
+0 15
+cfn=(1114)
+calls=12826 0 
+0 81
+0 9
+
+fn=(1374) <alloc::sync::Arc<alloc::vec::Vec<waypinyin::lexicon::Choice>>>::drop_slow
+0 58
+cfn=(1022)
+calls=1255 0 
+0 611
+0 30
+cfn=(1022)
+calls=1250 0 
+0 643
+0 13
+cfn=(1022)
+calls=255 0 
+0 155
+0 13
+cfn=(1022)
+calls=255 0 
+0 160
+
+fn=(1542) <waypinyin::lexicon::PhraseCursor as core::iter::traits::iterator::Iterator>::next
+0 21
+
+fn=(1544)
+0 2
+cfn=(1174)
+calls=1 0 
+0 3377397681
+
+fn=(1198)
+0 11
+cfn=(1200)
+calls=256 0 
+0 3377381605
+0 7
+cfn=(1316) <waypinyin::session::Session>::ensure_through
+calls=256 0 
+0 409
+0 22
+cfn=(1202)
+calls=256 0 
+0 21
+0 4
+cfn=(1202)
+calls=256 0 
+0 104
+0 7
+cfn=(1360)
+calls=256 0 
+0 322
+0 8
+cfn=(1000)
+calls=256 0 
+0 1
+0 3
+cfn=(1002)
+calls=256 0 
+0 36
+0 53
+
+fn=(1208) <alloc::vec::Vec<waypinyin::lexicon::Choice> as alloc::vec::spec_from_iter_nested::SpecFromIterNested<waypinyin::lexicon::Choice, std::collections::hash::map::IntoValues<alloc::string::String, waypinyin::lexicon::Choice>>>::from_iter
+0 17
+cfn=(1210)
+calls=255 0 
+0 22
+0 9
+
+fn=(1246)
+0 5292
+cfn=(1248)
+calls=74601 0 
+0 16170
+0 19992
+
+fn=(1370)
+0 115
+cfn=(1022)
+calls=1457 0 
+0 175
+0 24
+cfn=(1022)
+calls=499 0 
+0 35
+
+fn=(1404)
+0 90177407
+cob=(2)
+cfi=(296)
+cfn=(1256)
+calls=2806959 73 
+0 35127248
+0 29360086
+
+fn=(1002)
+0 5592415
+cfn=(1004) __rustc::__rdl_alloc
+calls=7811911 0 
+0 376423816
+
+fn=(1004)
+0 50331735
+cob=(2)
+cfi=(200)
+cfn=(818)
+calls=7811911 3101 
+0 326092081
+
+fn=(1112)
+0 162
+cfn=(1114)
+calls=226888 0 
+0 1394
+0 54
+
+fn=(1128)
+0 140901
+
+fn=(1206) <alloc::vec::into_iter::IntoIter<alloc::sync::Arc<str>> as core::ops::drop::Drop>::drop
+0 19
+
+fn=(1300)
+0 333
+
+fn=(1376) <std::hash::random::RandomState as core::hash::BuildHasher>::hash_one::<&str>
+0 16
+cfn=(1248)
+calls=1366 0 
+0 667
+0 5
+cfn=(1248)
+calls=1366 0 
+0 73
+0 69
+
+fn=(1216)
+0 16
+cfn=(1376)
+calls=254 0 
+0 830
+0 29
+cfn=(1218)
+calls=255 0 
+0 3377378384
+0 3
+cfn=(1000)
+calls=255 0 
+0 1
+0 3
+cfn=(1002)
+calls=255 0 
+0 40
+0 8
+cob=(2)
+cfi=(252)
+cfn=(896)
+calls=255 255 
+0 65
+0 7
+cfn=(1000)
+calls=255 0 
+0 1
+0 4
+cfn=(1002)
+calls=255 0 
+0 40
+0 7
+cob=(2)
+cfi=(252)
+cfn=(896)
+calls=255 255 
+0 30
+0 10
+cfn=(1308) <hashbrown::map::HashMap<alloc::string::String, alloc::sync::Arc<waypinyin::lexicon::Plan>, std::hash::random::RandomState>>::insert
+calls=255 0 
+0 923
+0 12
+
+fn=(1314)
+0 113
+cfn=(1000)
+calls=5 0 
+0 1
+0 3
+cfn=(1002)
+calls=5 0 
+0 40
+0 8
+cfn=(1202)
+calls=5 0 
+0 104
+0 4
+cfn=(1202)
+calls=5 0 
+0 21
+0 34
+cob=(2)
+cfi=(252)
+cfn=(896)
+calls=5 255 
+0 77
+0 9
+
+fn=(1316)
+0 40
+cfn=(1318) <waypinyin::lexicon::Pool>::next
+calls=255 0 
+0 35
+0 4
+cfn=(1318)
+calls=1005 0 
+0 152
+0 41
+cfn=(1332)
+calls=505 0 
+0 105
+0 32
+
+fn=(1368) core::ptr::drop_glue::<waypinyin::lexicon::Pool>
+0 13
+cfn=(1340)
+calls=254 0 
+0 415
+0 16
+cfn=(1022)
+calls=356 0 
+0 35
+0 6
+cfn=(1022)
+calls=356 0 
+0 35
+0 9
+cfn=(1022)
+calls=246 0 
+0 35
+0 110
+cfn=(1022)
+calls=1250 0 
+0 175
+0 17
+cfn=(1022)
+calls=250 0 
+0 35
+0 373
+cfn=(1022)
+calls=9470 0 
+0 5750
+0 234
+cfn=(1022)
+calls=9470 0 
+0 5737
+0 47
+cfn=(1022)
+calls=243 0 
+0 104
+0 9
+cfn=(1372)
+calls=254 0 
+0 19
+
+fn=(1116)
+0 15
+cfn=(1118)
+calls=229908 0 
+0 5000
+
+fn=(1196)
+0 20
+cfn=(1368)
+calls=254 0 
+0 13174
+0 12
+cfn=(1374)
+calls=254 0 
+0 1683
+0 4
+
+fn=(1204)
+0 78
+cfn=(1206)
+calls=255 0 
+0 19
+0 33
+cfn=(1208)
+calls=255 0 
+0 48
+0 17
+
+fn=(1214)
+0 37
+
+fn=(1254)
+0 25797
+cob=(2)
+cfi=(296)
+cfn=(1256)
+calls=203461 73 
+0 13571
+0 12806
+cfn=(1128)
+calls=258384 0 
+0 69921
+0 7280
+cfn=(1128)
+calls=258384 0 
+0 69921
+0 27221
+cob=(2)
+cfi=(296)
+cfn=(1256)
+calls=258384 73 
+0 9086
+0 3677
+cob=(2)
+cfi=(296)
+cfn=(1256)
+calls=15409 73 
+0 314
+0 22395
+cob=(2)
+cfi=(296)
+cfn=(1256)
+calls=56610 73 
+0 4258
+0 90858
+cob=(2)
+cfi=(296)
+cfn=(1256)
+calls=258384 73 
+0 9086
+0 12354
+
+fn=(1308)
+0 14
+cfn=(1310)
+calls=255 0 
+0 833
+0 76
+
+fn=(1318)
+0 80
+cfn=(1540) waypinyin::lexicon::phrase_cursor
+calls=5 0 
+0 20
+0 2
+cfn=(1372)
+calls=5 0 
+0 19
+0 4
+cob=(2)
+cfi=(252)
+cfn=(896)
+calls=5 255 
+0 30
+0 6
+cfn=(1542)
+calls=5 0 
+0 21
+0 5
+
+fn=(1362)
+0 23
+
+fn=(1540)
+0 20
+
+ob=(4)
+fl=(197)
+fn=(894)
+0 14
+cob=(2)
+cfi=(252)
+cfn=(896)
+calls=176669 255 
+0 193
+
+ob=(1) /usr/lib64/ld-linux-x86-64.so.2
+fl=(1) ???
+fn=(0) 0x000000000002d920
+cob=(7)
+cfi=(214)
+cfn=(740)
+calls=1 0 
+0 3377397683
+
+totals: 3377397683

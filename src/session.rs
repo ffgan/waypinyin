@@ -889,6 +889,8 @@ pub struct Session {
     context: Option<String>,
     /// Reading of `context`, used to find longer lexicon words.
     context_reading: Option<String>,
+    surrounding_context: Option<String>,
+    local_context: String,
     /// Post-commit association list. Kept off so the lookup closes with the word.
     associating: bool,
     /// The next `"` is an opening quote.
@@ -934,6 +936,8 @@ impl Session {
             pending: Vec::new(),
             context: None,
             context_reading: None,
+            surrounding_context: None,
+            local_context: String::new(),
             associating: false,
             quote_open: true,
             preferences_source: None,
@@ -963,6 +967,78 @@ impl Session {
         self.learning_enabled
     }
 
+    pub fn surrounding_enabled(&self) -> bool {
+        self.can_learn() && self.lexicon.context_enabled() && self.lexicon.preferences.surrounding
+    }
+
+    /// IBus positions count Unicode characters, not UTF-8 bytes. App text is
+    /// ephemeral and never enters the learning journal or speculative worker.
+    pub fn set_surrounding_text(&mut self, text: &str, cursor: u32, anchor: u32) {
+        if !self.surrounding_enabled() {
+            return;
+        }
+        if text.len() > 65536 {
+            self.clear_ranking_context();
+            return;
+        }
+        let count = text.chars().count();
+        if cursor != anchor || cursor as usize > count || anchor as usize > count {
+            self.clear_ranking_context();
+            return;
+        }
+        let next = context_tail(text.chars().take(cursor as usize));
+        let moved = self
+            .surrounding_context
+            .as_ref()
+            .is_some_and(|old| old != &next)
+            || (self.surrounding_context.is_none()
+                && self
+                    .context
+                    .as_ref()
+                    .is_some_and(|last| !next.ends_with(last)));
+        if moved {
+            // An external edit/cursor move is not an adjacent personal choice.
+            // Do not learn a link or coin a word across those locations.
+            self.context = None;
+            self.context_reading = None;
+            self.local_context.clear();
+            self.pending.clear();
+            self.invalidate();
+        }
+        self.surrounding_context = Some(next);
+        self.refresh_ranking_context();
+    }
+
+    pub fn clear_ranking_context(&mut self) {
+        self.surrounding_context = None;
+        self.local_context.clear();
+        self.context = None;
+        self.context_reading = None;
+        self.refresh_ranking_context();
+        self.invalidate();
+    }
+
+    fn refresh_ranking_context(&mut self) {
+        let text = if self.can_learn() && self.lexicon.context_enabled() {
+            if self.lexicon.preferences.surrounding {
+                self.surrounding_context
+                    .as_deref()
+                    .unwrap_or(&self.local_context)
+            } else {
+                &self.local_context
+            }
+        } else {
+            ""
+        };
+        if self.lexicon.ranking_context() == text {
+            return;
+        }
+        self.cursor = 0;
+        self.lexicon = Arc::new(self.lexicon.with_context(text));
+        self.plans.clear();
+        self.invalidate();
+    }
+
     /// Hosts should disable learning for private/password input contexts.
     pub fn set_learning_enabled(&mut self, enabled: bool) {
         if self.learning_enabled == enabled {
@@ -974,6 +1050,7 @@ impl Session {
             self.pending.clear();
             self.context = None;
             self.context_reading = None;
+            self.clear_ranking_context();
         } else if self.raw.is_empty() {
             self.learn_composition = true;
         }
@@ -993,6 +1070,15 @@ impl Session {
     }
 
     fn schedule_preload(&self, reading: Option<&str>) {
+        if self.lexicon.context_enabled()
+            && (!self.local_context.is_empty()
+                || self
+                    .surrounding_context
+                    .as_ref()
+                    .is_some_and(|s| !s.is_empty()))
+        {
+            return;
+        }
         if !self.can_learn() {
             return;
         }
@@ -1048,6 +1134,7 @@ impl Session {
     }
 
     pub fn clear(&mut self) {
+        self.clear_ranking_context();
         self.raw.clear();
         self.learn_composition = self.learning_enabled;
         self.caret = 0;
@@ -1103,6 +1190,14 @@ impl Session {
         let prepared = self
             .preloader
             .as_ref()
+            .filter(|_| {
+                !self.lexicon.context_enabled()
+                    || (self.local_context.is_empty()
+                        && self
+                            .surrounding_context
+                            .as_ref()
+                            .is_none_or(String::is_empty))
+            })
             .and_then(|p| p.get(&raw, self.lexicon.preferences));
         let (mut users, partials) = self
             .user
@@ -1308,6 +1403,11 @@ impl Session {
                 .and_then(|source| source.refresh())
             {
                 self.lexicon = Arc::new(self.lexicon.with_preferences(prefs));
+                if !prefs.contextual || !prefs.surrounding {
+                    self.clear_ranking_context();
+                } else {
+                    self.refresh_ranking_context();
+                }
                 self.plans.clear();
                 self.invalidate();
             }
@@ -1685,6 +1785,13 @@ impl Session {
         } else {
             Some(choice.reading.clone())
         };
+        self.local_context.push_str(&choice.word);
+        self.local_context = context_tail(self.local_context.chars());
+        if let Some(context) = &mut self.surrounding_context {
+            context.push_str(&choice.word);
+            *context = context_tail(context.chars());
+        }
+        self.refresh_ranking_context();
     }
 
     fn seal(&mut self, now: u32) {
@@ -1730,6 +1837,7 @@ impl Session {
     }
 
     fn close_sentence(&mut self) {
+        self.clear_ranking_context();
         self.context = None;
         self.context_reading = None;
         self.associating = false;
@@ -1865,6 +1973,24 @@ impl Board {
     }
 }
 
+fn context_tail(chars: impl Iterator<Item = char>) -> String {
+    let mut tail = std::collections::VecDeque::with_capacity(64);
+    for ch in chars {
+        if matches!(
+            ch,
+            '。' | '！' | '？' | '\n' | '\r' | '.' | '!' | '?' | ';' | '；'
+        ) {
+            tail.clear();
+        } else {
+            if tail.len() == 64 {
+                tail.pop_front();
+            }
+            tail.push_back(ch);
+        }
+    }
+    tail.into_iter().collect()
+}
+
 fn chinese_punct(ch: char) -> Option<char> {
     Some(match ch {
         '.' | '。' => '。',
@@ -1888,6 +2014,120 @@ fn chinese_punct(ch: char) -> Option<char> {
 #[cfg(test)]
 mod refresh_tests {
     use super::*;
+
+    #[test]
+    fn disabled_context_ignores_app_text_without_disabling_personal_links() {
+        let lex = Arc::new(Lexicon::load());
+        let mut s = Session::with_preferences(
+            lex,
+            UserDict::default(),
+            crate::InputPreferences {
+                contextual: false,
+                ..Default::default()
+            },
+        );
+        for ch in "nihao".chars() {
+            s.handle(ch as u32, 0);
+        }
+        s.handle(0x20, 0);
+        s.set_surrounding_text("不参与排序的应用内容", 10, 10);
+        for ch in "zhongguo".chars() {
+            s.handle(ch as u32, 0);
+        }
+        s.handle(0x20, 0);
+        assert!(s
+            .user
+            .links
+            .get("你好")
+            .is_some_and(|links| links.contains_key("中国")));
+        assert!(s.surrounding_context.is_none());
+    }
+
+    #[test]
+    fn application_cursor_moves_do_not_train_false_personal_links() {
+        let lex = Arc::new(Lexicon::load().with_test_model());
+        let mut s = Session::with_preferences(lex, UserDict::default(), Default::default());
+        s.set_surrounding_text("我", 1, 1);
+        for ch in "nihao".chars() {
+            s.handle(ch as u32, 0);
+        }
+        s.handle(0x20, 0);
+        s.set_surrounding_text("我你好", 3, 3);
+        assert_eq!(
+            s.context.as_deref(),
+            Some("你好"),
+            "application acknowledgement must preserve adjacency"
+        );
+        s.set_surrounding_text("别处", 2, 2);
+        for ch in "zhongguo".chars() {
+            s.handle(ch as u32, 0);
+        }
+        s.handle(0x20, 0);
+        assert!(
+            !s.user.links.contains_key("你好"),
+            "cursor movement trained a false link"
+        );
+        assert_eq!(
+            s.user.words.len(),
+            2,
+            "surrounding application text became a learned entry"
+        );
+    }
+
+    #[test]
+    fn clearing_an_empty_ranking_context_keeps_dictionary_plans() {
+        let lex = Arc::new(Lexicon::load());
+        let mut session = Session::with_preferences(lex, UserDict::default(), Default::default());
+        for ch in "nihao".chars() {
+            session.handle(ch as u32, 0);
+        }
+        let first = session.plans["nihao"].clone();
+        session.clear();
+        for ch in "nihao".chars() {
+            session.handle(ch as u32, 0);
+        }
+        assert!(Arc::ptr_eq(&first, &session.plans["nihao"]));
+    }
+
+    #[test]
+    #[cfg(waypinyin_full_lexicon)]
+    fn surrounding_context_is_unicode_bounded_ephemeral_and_invalidates_ranking() {
+        let lex = Arc::new(Lexicon::load().with_test_model());
+        let mut session = Session::with_preferences(lex, UserDict::default(), Default::default());
+        session.set_surrounding_text("🙂我想去", 4, 4);
+        assert_eq!(session.surrounding_context.as_deref(), Some("🙂我想去"));
+        for ch in "beijing".chars() {
+            session.handle(ch as u32, 0);
+        }
+        assert_eq!(session.view().candidates[0], "北京");
+        session.set_surrounding_text("看", 1, 1);
+        assert_eq!(session.view().candidates[0], "背景");
+        session.set_surrounding_text("去", 1, 0);
+        assert!(session.surrounding_context.is_none());
+        session.set_surrounding_text(&"字".repeat(100), 100, 100);
+        assert_eq!(
+            session
+                .surrounding_context
+                .as_ref()
+                .unwrap()
+                .chars()
+                .count(),
+            64
+        );
+        session.set_surrounding_text("去。看", 3, 3);
+        assert_eq!(session.surrounding_context.as_deref(), Some("看"));
+        session.set_learning_enabled(false);
+        session.set_surrounding_text("去", 1, 1);
+        assert!(session.surrounding_context.is_none());
+        assert!(session.local_context.is_empty());
+        assert!(session.user.words.is_empty() && session.user.inputs.is_empty());
+        session.set_learning_enabled(true);
+        session.set_surrounding_text("去", 1, 1);
+        session.reset();
+        assert!(session.surrounding_context.is_none());
+        session.set_surrounding_text("去", 5, 5);
+        assert!(session.surrounding_context.is_none());
+    }
 
     #[test]
     fn prepared_page_is_shared_until_paging_and_learning_stays_live() {

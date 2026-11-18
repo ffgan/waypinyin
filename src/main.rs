@@ -16,7 +16,15 @@ async fn main() -> zbus::Result<()> {
             Ok(())
         }
         [arg] if arg == "--check-data" => {
-            waypinyin::Lexicon::load();
+            let lex = waypinyin::Lexicon::load();
+            println!(
+                "waypinyin: context model {}",
+                if lex.model_available() {
+                    "validated"
+                } else {
+                    "unavailable; dictionary fallback"
+                }
+            );
             println!(
                 "waypinyin: {} lexicon validated",
                 env!("WAYPINYIN_LEXICON_KIND")

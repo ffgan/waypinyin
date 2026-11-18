@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Add optional fingerprint-bound offline word/character backoff models, bounded
+  contextual sentence search, source-frequency shrinkage, one-edit repair on
+  search failure, and 300-word/600-sentence template-grouped quality fixtures.
+- Use configurable IBus surrounding text only in memory, clear it on focus and
+  private boundaries, isolate ranking from shared preload caches, and retain
+  decaying personal learning above limited contextual word boosts.
+
+- Complete the open final syllable during sentence search using context and a
+  frequency penalty for extending a complete syllable; retain completed readings
+  for commits and learning, and respect closed syllable boundaries.
+
 - Release destroyed IBus engine objects, notification watches and journal files;
   verify repeated engine lifecycles on a private bus in CI.
 

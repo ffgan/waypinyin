@@ -31,6 +31,7 @@ class InstallTests(unittest.TestCase):
             original = b'old mapped dictionary\n' * 4096
             replacement = b'new dictionary\n' * 8192
             (build / 'lexicon.bin').write_bytes(original)
+            (build / 'lexicon.lm').write_bytes(b'old optional model')
             env = dict(os.environ, PREFIX='/usr', BINDIR='/usr/bin',
                        DATADIR='/usr/share', MANDIR='/usr/share/man', DESTDIR=str(stage),
                        CARGO='false')
@@ -42,13 +43,19 @@ class InstallTests(unittest.TestCase):
             install()
             binary = stage / 'usr/bin/waypinyin'
             image = stage / 'usr/share/waypinyin/lexicon.bin'
+            model = stage / 'usr/share/waypinyin/lexicon.lm'
+            self.assertEqual(model.read_bytes(), b'old optional model')
+            model_inode = model.stat().st_ino
             executable_inode, image_inode = binary.stat().st_ino, image.stat().st_ino
             process = subprocess.Popen([str(binary), '30'])
             try:
                 with image.open('rb') as incoming:
                     with mmap.mmap(incoming.fileno(), 0, access=mmap.ACCESS_READ) as mapped:
                         (build / 'lexicon.bin').write_bytes(replacement)
+                        (build / 'lexicon.lm').write_bytes(b'new optional model')
                         install()
+                        self.assertEqual(model.read_bytes(),b'new optional model')
+                        self.assertNotEqual(model.stat().st_ino,model_inode)
                         self.assertIsNone(process.poll())
                         self.assertEqual(mapped[:], original)
                         self.assertEqual(image.read_bytes(), replacement)
@@ -57,6 +64,9 @@ class InstallTests(unittest.TestCase):
                         self.assertEqual(binary.stat().st_mode & 0o777, 0o755)
                         self.assertEqual(image.stat().st_mode & 0o777, 0o644)
                         self.assertEqual(list(stage.rglob('.*')), [])
+                        (build / 'lexicon.lm').unlink()
+                        install()
+                        self.assertFalse(model.exists())
             finally:
                 process.terminate()
                 process.wait(timeout=5)

@@ -62,6 +62,39 @@
           "local_path": "LICENSES/OpenCC-Apache-2.0.txt"
         }
       ]
+    },
+    {
+      "path": "data/office-training.txt",
+      "sha256": "9d8ae6738784036a7a11e46cc5cc66d0b170bc170edffd718570a595a0517aa6",
+      "upstream_urls": [],
+      "upstream_revision": null,
+      "claimed_license": "MIT",
+      "copyright": "Waypinyin contributors",
+      "transformation": "Original synthetic office/conversational training examples; 2,000 unique sentences; authored template combinations, not personal input.",
+      "license_status": "verified-local",
+      "required_evidence": []
+    },
+    {
+      "path": "data/conversation-training.txt",
+      "sha256": "21b439524bae799baf723e3ffcbb19a411370ee930f27940f9d8d2905c356caa",
+      "upstream_urls": [],
+      "upstream_revision": null,
+      "claimed_license": "MIT",
+      "copyright": "Waypinyin contributors",
+      "transformation": "Original conversational training clauses, independently authored for contextual probability examples.",
+      "license_status": "verified-local",
+      "required_evidence": []
+    },
+    {
+      "path": "data/context-model.txt",
+      "sha256": "cadf0458f18e8536bc2bc760db0124f8bc94914feead7dca233a89cd41fe70e1",
+      "upstream_urls": [],
+      "upstream_revision": null,
+      "claimed_license": "MIT",
+      "copyright": "Waypinyin contributors",
+      "transformation": "Deterministic statistical fixture derived only from original office-training.txt; not the external Tatoeba local trial model.",
+      "license_status": "verified-local",
+      "required_evidence": []
     }
   ],
   "demo_files": [

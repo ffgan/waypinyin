@@ -185,56 +185,102 @@ fn assemble(
     let simplified: HashSet<char> = gb2312.chars().collect();
     let mut trie = TrieBuilder::new();
 
-    for line in dict
-        .lines()
-        .chain(extra.lines())
-        .chain(frost.lines())
-        .chain(cedict.lines())
-    {
-        if line.is_empty() || line.starts_with('#') {
-            continue;
-        }
-        let mut parts = line.split('\t');
-        let Some(word) = parts.next() else { continue };
-        let Some(pinyin) = parts.next() else { continue };
-        let listed = parts
-            .next()
-            .and_then(|field| field.parse::<i64>().ok())
-            .filter(|score| *score > 0)
-            .unwrap_or(0);
-        if word.is_empty()
-            || word.chars().any(|ch| traditional.contains(&ch))
-            || !pinyin.bytes().all(|b| b.is_ascii_lowercase() || b == b'\'')
-        {
-            continue;
-        }
-        let syls: Vec<&str> = pinyin.split('\'').filter(|s| !s.is_empty()).collect();
-        if syls.is_empty() || syls.iter().any(|syl| !has_vowel(syl)) {
-            continue;
-        }
-        if word.chars().count() == 1 {
-            let ch = word.chars().next().unwrap();
-            if !simplified.contains(&ch) || syls.len() != 1 {
+    // Each source has its own frequency scale. Align positive multi-character
+    // weights using the median shared-word count ratio. Tiny coverage-only
+    // weights (1..=3) never establish a calibration scale.
+    let sources = [dict, extra, frost, cedict];
+    let scales: Vec<f64> = sources
+        .iter()
+        .map(|source| {
+            let mut ratios: Vec<f64> = source
+                .lines()
+                .filter_map(|line| {
+                    let mut cols = line.split('\t');
+                    let word = cols.next()?;
+                    let _reading = cols.next()?;
+                    let listed = cols.next()?.parse::<f64>().ok()?;
+                    let count = *word_freq.get(word)?;
+                    (listed > 3.0 && word.chars().count() > 1).then_some(f64::from(count) / listed)
+                })
+                .collect();
+            if ratios.len() < 100 {
+                return 1.0;
+            }
+            ratios.sort_by(f64::total_cmp);
+            ratios[ratios.len() / 2].clamp(0.01, 100.0)
+        })
+        .collect();
+    for (source_index, source) in sources.iter().enumerate() {
+        for line in source.lines() {
+            if line.is_empty() || line.starts_with('#') {
                 continue;
             }
-            let count = char_freq.get(&ch).copied().unwrap_or(0) as i64;
-            // A listed score can lift a character the subtitles barely
-            // counted, such as 栈. It only applies to the primary reading.
-            let score = match primary.get(&ch) {
-                Some(reading) if reading == syls[0] => count.max(listed),
-                Some(_) => count / 200,
-                None => count.max(listed),
-            };
-            if score <= 0 {
+            let mut parts = line.split('\t');
+            let Some(word) = parts.next() else { continue };
+            let Some(pinyin) = parts.next() else { continue };
+            let listed = parts
+                .next()
+                .and_then(|field| field.parse::<i64>().ok())
+                .filter(|score| *score > 0)
+                .unwrap_or(0);
+            if word.is_empty()
+                || word.chars().any(|ch| traditional.contains(&ch))
+                || !pinyin.bytes().all(|b| b.is_ascii_lowercase() || b == b'\'')
+            {
                 continue;
             }
-            trie.insert(&syls, word, score, count);
-        } else if word.chars().all(|ch| simplified.contains(&ch)) {
-            let count = word_freq.get(word).copied().map(i64::from).unwrap_or(0);
-            // libime lists words such as 合入 with no count. Keep them
-            // typeable, behind every word that has a real frequency.
-            let score = count.max(listed).max(1);
-            trie.insert(&syls, word, score, count);
+            let syls: Vec<&str> = pinyin.split('\'').filter(|s| !s.is_empty()).collect();
+            if syls.is_empty() || syls.iter().any(|syl| !has_vowel(syl)) {
+                continue;
+            }
+            if word.chars().count() == 1 {
+                let ch = word.chars().next().unwrap();
+                if !simplified.contains(&ch) || syls.len() != 1 {
+                    continue;
+                }
+                let count = char_freq.get(&ch).copied().unwrap_or(0) as i64;
+                // A listed score can lift a character the subtitles barely
+                // counted, such as 栈. It only applies to the primary reading.
+                let score = match primary.get(&ch) {
+                    Some(reading) if reading == syls[0] => count.max(listed),
+                    Some(_) => count / 200,
+                    None => count.max(listed),
+                };
+                if score <= 0 {
+                    continue;
+                }
+                trie.insert(&syls, word, score, count);
+            } else if word.chars().all(|ch| simplified.contains(&ch)) {
+                let count = word_freq.get(word).copied().map(i64::from).unwrap_or(0);
+                // libime lists words such as 合入 with no count. Keep them
+                // typeable, behind every word that has a real frequency.
+                let calibrated = if listed <= 3 {
+                    listed
+                } else {
+                    // Historical mixed sources include authored priors as well as
+                    // corpus counts. Shrink toward the aligned count instead of
+                    // erasing that prior on the strength of a sparse reference.
+                    (listed as f64 * (0.5 + 0.5 * scales[source_index]))
+                        .round()
+                        .max(1.0) as i64
+                };
+                // Preserve established corpus anchors while calibrating words
+                // missing from that corpus. This avoids displacing ordinary
+                // homophones merely because a source used a different unit.
+                let mut chars = word.chars();
+                let unit = chars
+                    .next_back()
+                    .is_some_and(|ch| "点时分秒年月日天周岁".contains(ch));
+                let numeric_unit = unit
+                    && chars.clone().next().is_some()
+                    && chars.all(|ch| "零〇一二两三四五六七八九十百千万".contains(ch));
+                let score = if count > 0 || numeric_unit {
+                    count.max(listed)
+                } else {
+                    calibrated.max(1)
+                };
+                trie.insert(&syls, word, score, count);
+            }
         }
     }
 

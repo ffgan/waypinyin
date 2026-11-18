@@ -38,6 +38,23 @@ fn explicit_missing_dictionary_is_an_error() {
 }
 
 #[test]
+fn invalid_optional_model_falls_back_without_losing_dictionary() {
+    let path =
+        std::env::temp_dir().join(format!("waypinyin-invalid-model-{}.lm", std::process::id()));
+    std::fs::write(&path, b"WAYPINYIN-LM\t999\t0\t0\ncorrupt").unwrap();
+    let result = Command::new(env!("CARGO_BIN_EXE_waypinyin"))
+        .arg("--check-data")
+        .env("WAYPINYIN_LEXICON", env!("WAYPINYIN_LEXICON"))
+        .env("WAYPINYIN_MODEL", &path)
+        .output()
+        .unwrap();
+    std::fs::remove_file(path).unwrap();
+    assert!(result.status.success());
+    assert!(String::from_utf8_lossy(&result.stdout).contains("dictionary fallback"));
+    assert!(String::from_utf8_lossy(&result.stderr).contains("mismatch"));
+}
+
+#[test]
 fn valid_lexicon_can_be_checked_without_ibus_or_a_display() {
     let result = Command::new(env!("CARGO_BIN_EXE_waypinyin"))
         .arg("--check-data")

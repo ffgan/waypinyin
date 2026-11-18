@@ -48,6 +48,17 @@ def install(source, directory, name=None, executable=False):
 
 install('build/waypinyin', bindir, executable=True)
 install('build/lexicon.bin', datadir + '/waypinyin')
+if (root / 'build/lexicon.lm').is_file():
+    install('build/lexicon.lm', datadir + '/waypinyin')
+    for name in ('language-model.json', 'language-model-attribution.tsv'):
+        if (root / 'build' / name).is_file():
+            install('build/' + name, datadir + '/licenses/waypinyin')
+        else:
+            Path(destdir + datadir + '/licenses/waypinyin/' + name).unlink(missing_ok=True)
+else:
+    Path(destdir + datadir + '/waypinyin/lexicon.lm').unlink(missing_ok=True)
+    for name in ('language-model.json', 'language-model-attribution.tsv'):
+        Path(destdir + datadir + '/licenses/waypinyin/' + name).unlink(missing_ok=True)
 xml = (root / 'share/waypinyin.xml').read_text().replace('@BINDIR@', html.escape(shlex.quote(bindir)))
 component = Path(destdir + datadir + '/ibus/component/waypinyin.xml')
 write_atomic(component, text=xml)

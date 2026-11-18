@@ -1,0 +1,316 @@
+{
+  "runs": 7,
+  "sha256": {
+    "engine": "b193b884e6384dc20fe3e21c2220dd159464123f7932ac105f115576f7afb6a9",
+    "probe": "bc31b58d48ade8d0e73114faa06eed6ca5fa9a567af79f8ebdb388f035821bd3",
+    "image": "58d36908ff619f807bcaae1ce1316d819904c808ce0ce081fb15b97d9bd75b24",
+    "driver": "4e7c8771dd45b70c65c7393fd607a9b60f2dbf426447108d8ca276c4a18ef59a",
+    "ibus_driver": "883c9dccd0005582bd97463392be0ad23ace83f4cce49d5769e16eed37dd8efb"
+  },
+  "scenarios": {
+    "bench": {
+      "samples": [
+        {
+          "VmRSS_kib": 150148,
+          "VmHWM_kib": 150312,
+          "RssAnon_kib": 3952,
+          "RssFile_kib": 146196,
+          "Pss_kib": 147536,
+          "Pss_Anon_kib": 3952,
+          "Pss_File_kib": 143584,
+          "Private_Clean_kib": 143564,
+          "Private_Dirty_kib": 3952,
+          "threads": 3,
+          "fds": 13
+        },
+        {
+          "VmRSS_kib": 150204,
+          "VmHWM_kib": 150204,
+          "RssAnon_kib": 4036,
+          "RssFile_kib": 146168,
+          "Pss_kib": 147461,
+          "Pss_Anon_kib": 4036,
+          "Pss_File_kib": 143425,
+          "Private_Clean_kib": 143404,
+          "Private_Dirty_kib": 4036,
+          "threads": 3,
+          "fds": 13
+        },
+        {
+          "VmRSS_kib": 150048,
+          "VmHWM_kib": 150048,
+          "RssAnon_kib": 3996,
+          "RssFile_kib": 146052,
+          "Pss_kib": 147572,
+          "Pss_Anon_kib": 3996,
+          "Pss_File_kib": 143576,
+          "Private_Clean_kib": 143556,
+          "Private_Dirty_kib": 3996,
+          "threads": 3,
+          "fds": 13
+        },
+        {
+          "VmRSS_kib": 150232,
+          "VmHWM_kib": 150232,
+          "RssAnon_kib": 3976,
+          "RssFile_kib": 146256,
+          "Pss_kib": 147616,
+          "Pss_Anon_kib": 3976,
+          "Pss_File_kib": 143640,
+          "Private_Clean_kib": 143620,
+          "Private_Dirty_kib": 3976,
+          "threads": 3,
+          "fds": 13
+        },
+        {
+          "VmRSS_kib": 149984,
+          "VmHWM_kib": 149984,
+          "RssAnon_kib": 3936,
+          "RssFile_kib": 146048,
+          "Pss_kib": 147479,
+          "Pss_Anon_kib": 3936,
+          "Pss_File_kib": 143543,
+          "Private_Clean_kib": 143520,
+          "Private_Dirty_kib": 3936,
+          "threads": 3,
+          "fds": 13
+        },
+        {
+          "VmRSS_kib": 150220,
+          "VmHWM_kib": 150536,
+          "RssAnon_kib": 3952,
+          "RssFile_kib": 146268,
+          "Pss_kib": 147538,
+          "Pss_Anon_kib": 3952,
+          "Pss_File_kib": 143586,
+          "Private_Clean_kib": 143564,
+          "Private_Dirty_kib": 3952,
+          "threads": 3,
+          "fds": 13
+        },
+        {
+          "VmRSS_kib": 147952,
+          "VmHWM_kib": 149732,
+          "RssAnon_kib": 3916,
+          "RssFile_kib": 144036,
+          "Pss_kib": 145270,
+          "Pss_Anon_kib": 3916,
+          "Pss_File_kib": 141354,
+          "Private_Clean_kib": 141332,
+          "Private_Dirty_kib": 3916,
+          "threads": 3,
+          "fds": 13
+        }
+      ],
+      "summary": {
+        "VmRSS_kib": {
+          "median": 150148,
+          "min": 147952,
+          "max": 150232
+        },
+        "VmHWM_kib": {
+          "median": 150204,
+          "min": 149732,
+          "max": 150536
+        },
+        "RssAnon_kib": {
+          "median": 3952,
+          "min": 3916,
+          "max": 4036
+        },
+        "RssFile_kib": {
+          "median": 146168,
+          "min": 144036,
+          "max": 146268
+        },
+        "Pss_kib": {
+          "median": 147536,
+          "min": 145270,
+          "max": 147616
+        },
+        "Pss_Anon_kib": {
+          "median": 3952,
+          "min": 3916,
+          "max": 4036
+        },
+        "Pss_File_kib": {
+          "median": 143576,
+          "min": 141354,
+          "max": 143640
+        },
+        "Private_Clean_kib": {
+          "median": 143556,
+          "min": 141332,
+          "max": 143620
+        },
+        "Private_Dirty_kib": {
+          "median": 3952,
+          "min": 3916,
+          "max": 4036
+        },
+        "threads": {
+          "median": 3,
+          "min": 3,
+          "max": 3
+        },
+        "fds": {
+          "median": 13,
+          "min": 13,
+          "max": 13
+        }
+      }
+    },
+    "lifecycle": {
+      "samples": [
+        {
+          "VmRSS_kib": 147228,
+          "VmHWM_kib": 147228,
+          "RssAnon_kib": 1236,
+          "RssFile_kib": 145992,
+          "Pss_kib": 144741,
+          "Pss_Anon_kib": 1236,
+          "Pss_File_kib": 143505,
+          "Private_Clean_kib": 143488,
+          "Private_Dirty_kib": 1236,
+          "threads": 3,
+          "fds": 10
+        },
+        {
+          "VmRSS_kib": 146908,
+          "VmHWM_kib": 146908,
+          "RssAnon_kib": 1236,
+          "RssFile_kib": 145672,
+          "Pss_kib": 144421,
+          "Pss_Anon_kib": 1236,
+          "Pss_File_kib": 143185,
+          "Private_Clean_kib": 143168,
+          "Private_Dirty_kib": 1236,
+          "threads": 3,
+          "fds": 10
+        },
+        {
+          "VmRSS_kib": 147164,
+          "VmHWM_kib": 147164,
+          "RssAnon_kib": 1240,
+          "RssFile_kib": 145924,
+          "Pss_kib": 144733,
+          "Pss_Anon_kib": 1240,
+          "Pss_File_kib": 143493,
+          "Private_Clean_kib": 143476,
+          "Private_Dirty_kib": 1240,
+          "threads": 3,
+          "fds": 10
+        },
+        {
+          "VmRSS_kib": 147400,
+          "VmHWM_kib": 147400,
+          "RssAnon_kib": 1236,
+          "RssFile_kib": 146164,
+          "Pss_kib": 144779,
+          "Pss_Anon_kib": 1236,
+          "Pss_File_kib": 143543,
+          "Private_Clean_kib": 143524,
+          "Private_Dirty_kib": 1236,
+          "threads": 3,
+          "fds": 10
+        },
+        {
+          "VmRSS_kib": 147092,
+          "VmHWM_kib": 147092,
+          "RssAnon_kib": 1240,
+          "RssFile_kib": 145852,
+          "Pss_kib": 144728,
+          "Pss_Anon_kib": 1240,
+          "Pss_File_kib": 143488,
+          "Private_Clean_kib": 143472,
+          "Private_Dirty_kib": 1240,
+          "threads": 3,
+          "fds": 10
+        },
+        {
+          "VmRSS_kib": 146988,
+          "VmHWM_kib": 146988,
+          "RssAnon_kib": 1236,
+          "RssFile_kib": 145752,
+          "Pss_kib": 144685,
+          "Pss_Anon_kib": 1236,
+          "Pss_File_kib": 143449,
+          "Private_Clean_kib": 143432,
+          "Private_Dirty_kib": 1236,
+          "threads": 3,
+          "fds": 10
+        },
+        {
+          "VmRSS_kib": 147264,
+          "VmHWM_kib": 147264,
+          "RssAnon_kib": 1240,
+          "RssFile_kib": 146024,
+          "Pss_kib": 144777,
+          "Pss_Anon_kib": 1240,
+          "Pss_File_kib": 143537,
+          "Private_Clean_kib": 143520,
+          "Private_Dirty_kib": 1240,
+          "threads": 3,
+          "fds": 10
+        }
+      ],
+      "summary": {
+        "VmRSS_kib": {
+          "median": 147164,
+          "min": 146908,
+          "max": 147400
+        },
+        "VmHWM_kib": {
+          "median": 147164,
+          "min": 146908,
+          "max": 147400
+        },
+        "RssAnon_kib": {
+          "median": 1236,
+          "min": 1236,
+          "max": 1240
+        },
+        "RssFile_kib": {
+          "median": 145924,
+          "min": 145672,
+          "max": 146164
+        },
+        "Pss_kib": {
+          "median": 144733,
+          "min": 144421,
+          "max": 144779
+        },
+        "Pss_Anon_kib": {
+          "median": 1236,
+          "min": 1236,
+          "max": 1240
+        },
+        "Pss_File_kib": {
+          "median": 143493,
+          "min": 143185,
+          "max": 143543
+        },
+        "Private_Clean_kib": {
+          "median": 143476,
+          "min": 143168,
+          "max": 143524
+        },
+        "Private_Dirty_kib": {
+          "median": 1236,
+          "min": 1236,
+          "max": 1240
+        },
+        "threads": {
+          "median": 3,
+          "min": 3,
+          "max": 3
+        },
+        "fds": {
+          "median": 10,
+          "min": 10,
+          "max": 10
+        }
+      }
+    }
+  }
+}

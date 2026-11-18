@@ -1,0 +1,6051 @@
+{
+  "started_utc": "2026-11-17T15:29:33.317713+00:00",
+  "revision": "49b69323cd2b89e2cc436843fbd4b8c914b8664c",
+  "working_tree": "?? examples/stress_latency.rs\n?? scripts/benchmark.py\n",
+  "runs": 7,
+  "platform": "Linux-7.3.3-300.fc45.x86_64-x86_64-with-glibc2.44",
+  "cpu": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           48 bits physical, 48 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  32\nOn-line CPU(s) list:                     0-31\nVendor ID:                               AuthenticAMD\nModel name:                              AMD Ryzen 9 7940HX with Radeon Graphics\nCPU family:                              25\nModel:                                   97\nThread(s) per core:                      2\nCore(s) per socket:                      16\nSocket(s):                               1\nStepping:                                2\nMicrocode version:                       0xa60120a\nFrequency boost:                         enabled\nCPU(s) scaling MHz:                      75%\nCPU max MHz:                             2401.0000\nCPU min MHz:                             416.1740\nBogoMIPS:                                4791.24\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good amd_lbr_v2 nopl xtopology nonstop_tsc cpuid extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpuid_fault cpb cat_l3 cdp_l3 hw_pstate ssbd mba perfmon_v2 ibrs ibpb stibp ibrs_enhanced vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid cqm rdt_a avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local user_shstk avx512_bf16 clzero irperf xsaveerptr rdpru wbnoinvd cppc arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold avic vgif x2avic v_spec_ctrl vnmi avx512vbmi umip pku ospke avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid overflow_recov succor smca fsrm flush_l1d amd_lbr_pmc_freeze\nVirtualization:                          AMD-V\nL1d cache:                               512 KiB (16 instances)\nL1i cache:                               512 KiB (16 instances)\nL2 cache:                                16 MiB (16 instances)\nL3 cache:                                64 MiB (2 instances)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-31\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Mitigation; Safe RET\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; STIBP always-on; PBRSB-eIBRS Not affected; BHI Not affected\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Mitigation; Clear CPU buffers\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Mitigation; IBPB before exit to userspace\n",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)\nbinary: rustc\ncommit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67\ncommit-date: 2026-10-13\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.1\nLLVM version: 23.1.1\n",
+  "load_start": [
+    1.6689453125,
+    2.4931640625,
+    2.72802734375
+  ],
+  "image_bytes": 141873016,
+  "image_sha256": "58d36908ff619f807bcaae1ce1316d819904c808ce0ce081fb15b97d9bd75b24",
+  "binaries": {
+    "kernel_perf": {
+      "path": "/home/emt/src/waypinyin/target/release/examples/kernel_perf",
+      "sha256": "f0a77830bb27c5be82b473239a18c76bafd87553d99a5f2d9e66bac836ea4512",
+      "bytes": 2846928
+    },
+    "input_latency": {
+      "path": "/home/emt/src/waypinyin/target/release/examples/input_latency",
+      "sha256": "5db67b99dc9d641dcc3be6b8a20bc53d4e362837184a8a1ceb38cd7e80a2dc71",
+      "bytes": 2905896
+    },
+    "first_screen": {
+      "path": "/home/emt/src/waypinyin/target/release/examples/first_screen",
+      "sha256": "08bb609f016c2af9b2f9d525ccfe3f9687a98337b23923b4a8eb182ec2229e88",
+      "bytes": 2852304
+    },
+    "quality": {
+      "path": "/home/emt/src/waypinyin/target/release/examples/quality",
+      "sha256": "4e1452c93d3d17b7b6aa1ec81663e42018760dad34dd19a623a1769ab17dc21e",
+      "bytes": 2413184
+    },
+    "sentence_quality": {
+      "path": "/home/emt/src/waypinyin/target/release/examples/sentence_quality",
+      "sha256": "c1a891ba798d4b16f716b6642d9941c9cbb290eac3612fa44cdf4aacbf6bb9ae",
+      "bytes": 2848440
+    },
+    "stress_latency": {
+      "path": "/home/emt/src/waypinyin/target/release/examples/stress_latency",
+      "sha256": "6daa3ae4e075210a8a88a76e018ff9791232d5bc5cd06d71a82f8c2306738cbf",
+      "bytes": 2768256
+    },
+    "ibus_latency": {
+      "path": "/home/emt/src/waypinyin/target/release/examples/ibus_latency",
+      "sha256": "bc31b58d48ade8d0e73114faa06eed6ca5fa9a567af79f8ebdb388f035821bd3",
+      "bytes": 5742072
+    },
+    "engine": {
+      "path": "/home/emt/src/waypinyin/target/release/waypinyin",
+      "sha256": "b193b884e6384dc20fe3e21c2220dd159464123f7932ac105f115576f7afb6a9",
+      "bytes": 18808920
+    }
+  },
+  "source_sha256": {
+    "src/ibus.rs": "1470c5c58dd7ce6672ddce084099eccbdd30cabd9a786883252f6a41f58623d2",
+    "src/image.rs": "54623662bc43cf619deebbde32781104b4aa3245e8b5009a7f883f86b203f54a",
+    "src/imports.rs": "0f5f2d5d2bce40c5a065a7d945537db647b39ae1943a1048717a07b25a9e177a",
+    "src/latency.rs": "f48470c4503d6a8321de8b80abfd3d22d7d3e9bbd225d66855947d7452b28809",
+    "src/lexicon.rs": "07e8da2f043bd8e2ca262ed75094bca47aeb2275ab057941b81139d663752ed9",
+    "src/lexicon_build.rs": "a448e899cd33ead9829304b2a1ee66499fcf1a1f1f900a0a9cd7ec6d896241a4",
+    "src/lexicon_reference.rs": "f9be77cd2179889d7f4ca4cdf0962613c30e74aa774e5e88f4161dc3a70bde95",
+    "src/lib.rs": "01dd5036a41d92bd8109e792fb7bfcf6942519177d939bbdf8060adbb01bd1e2",
+    "src/main.rs": "4a478e91421ef56def9393a5f832ac9e5753ce445a91dc320f557317d3166537",
+    "src/paths.rs": "c687c2450e5b81adcb1dad17dc7914b543c07647f95516ae40ca3dcba1522042",
+    "src/preferences.rs": "0542cc84889b5108c93a809aff7dc9deb40e0b5658afa86e0e077a8a1a7b3c4d",
+    "src/preload.rs": "002d806d614891c78962429ecc4f766a1eee8dffe5769cd4a05a1f1fef421929",
+    "src/session.rs": "3a1a4d86c80f0f79314031e92e352d4447263f864b1b3301937ddceb709d5447",
+    "src/settings.rs": "391520617a7f754874effae7f647a42ea07448217ad34f37c35c6f4aac122bc1",
+    "src/tests.rs": "1b8a14e50764e47f1d5ed637d22c26f36249ba9d34116e0940096a4af008c21f",
+    "src/watch.rs": "048c6714da48b2e10c57b3b199bb976f3f4445c8fa6eea064036e37ab2a49f51",
+    "examples/check_candidates.rs": "2d3d4b687babb001a7f91b03f7a4cdac808b48a732d3445756aa9383dff9f877",
+    "examples/first_screen.rs": "4a785fda951de21ebb1bbaa9de7568d2bbb16dcb89b04ee50e6487642a1a5835",
+    "examples/ibus_latency.rs": "acaaaa09d2b203c20204dc1b75a40998b97f440c92dd41f606b51a4d20845e81",
+    "examples/import_dictionary.rs": "c403fc1fcd532392cc26c674a471f39cea430f16b7bd20a3d06d1a660064e628",
+    "examples/input_latency.rs": "767cc4483f2ff7d9f6b9f821d6f94aee9d51f39cabd859ba946815116e4bfc12",
+    "examples/kernel_perf.rs": "09d4daea245643196006477e11ebcaa61c43a3ad2363670894acfcbf61eaba90",
+    "examples/quality.rs": "cb827aece46269c31882560131079d68133c85622388c27fa75bc1f9c9dc3490",
+    "examples/search_hotspot.rs": "c4cdabc1d1cc36738829a1e7ffc6307c0175b0bb962107b6adc52c2778872c2d",
+    "examples/sentence_quality.rs": "f86e3659f1da578819e94a5da4bfc696877eabca5b4119e35af6010f18401522",
+    "examples/stress_latency.rs": "22d9d8cca1e2be2d055c795d71aec0d19f5f85cd94608cb32b6c87e7a512ba5f",
+    "scripts/benchmark.py": "7444597aace8bac4f86dcb42aaf74958a6184104fd4a2cae9ef5fa77225671fd",
+    "Cargo.lock": "b8ed1f46c999bde88b92beda36bfdf0692ac237489de7ee519b7216d8b48d2d1"
+  },
+  "suites": {
+    "quality": {
+      "summary": {
+        "quality": {
+          "cases": {
+            "median": 200,
+            "min": 200,
+            "max": 200
+          },
+          "top1": {
+            "median": 200,
+            "min": 200,
+            "max": 200
+          },
+          "top7": {
+            "median": 200,
+            "min": 200,
+            "max": 200
+          },
+          "p95_us": {
+            "median": 576,
+            "min": 517,
+            "max": 631
+          }
+        }
+      },
+      "samples": [
+        {
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "top7": 200,
+            "p95_us": 584
+          }
+        },
+        {
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "top7": 200,
+            "p95_us": 517
+          }
+        },
+        {
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "top7": 200,
+            "p95_us": 569
+          }
+        },
+        {
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "top7": 200,
+            "p95_us": 581
+          }
+        },
+        {
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "top7": 200,
+            "p95_us": 576
+          }
+        },
+        {
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "top7": 200,
+            "p95_us": 631
+          }
+        },
+        {
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "top7": 200,
+            "p95_us": 529
+          }
+        }
+      ],
+      "resources": [
+        {
+          "wall_s": 0.09,
+          "user_s": 0.08,
+          "system_s": 0.01,
+          "maxrss_kib": 142604.0,
+          "minor_faults": 1777.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 0.09,
+          "user_s": 0.08,
+          "system_s": 0.0,
+          "maxrss_kib": 142704.0,
+          "minor_faults": 1766.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 0.09,
+          "user_s": 0.08,
+          "system_s": 0.0,
+          "maxrss_kib": 143016.0,
+          "minor_faults": 1823.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 0.09,
+          "user_s": 0.08,
+          "system_s": 0.0,
+          "maxrss_kib": 142560.0,
+          "minor_faults": 1751.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 0.1,
+          "user_s": 0.09,
+          "system_s": 0.0,
+          "maxrss_kib": 143060.0,
+          "minor_faults": 1770.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 0.09,
+          "user_s": 0.08,
+          "system_s": 0.0,
+          "maxrss_kib": 142668.0,
+          "minor_faults": 1796.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 0.09,
+          "user_s": 0.09,
+          "system_s": 0.0,
+          "maxrss_kib": 142428.0,
+          "minor_faults": 1788.0,
+          "major_faults": 0.0
+        }
+      ]
+    },
+    "sentence_quality": {
+      "summary": {
+        "quality": {
+          "cases": {
+            "median": 75,
+            "min": 75,
+            "max": 75
+          },
+          "first": {
+            "median": 74,
+            "min": 74,
+            "max": 74
+          },
+          "top7": {
+            "median": 74,
+            "min": 74,
+            "max": 74
+          },
+          "key_p95_us": {
+            "median": 3165,
+            "min": 3128,
+            "max": 3202
+          },
+          "key_max_us": {
+            "median": 4523,
+            "min": 4405,
+            "max": 5037
+          }
+        }
+      },
+      "samples": [
+        {
+          "quality": {
+            "cases": 75,
+            "first": 74,
+            "top7": 74,
+            "key_p95_us": 3128,
+            "key_max_us": 4705
+          }
+        },
+        {
+          "quality": {
+            "cases": 75,
+            "first": 74,
+            "top7": 74,
+            "key_p95_us": 3130,
+            "key_max_us": 4523
+          }
+        },
+        {
+          "quality": {
+            "cases": 75,
+            "first": 74,
+            "top7": 74,
+            "key_p95_us": 3151,
+            "key_max_us": 5037
+          }
+        },
+        {
+          "quality": {
+            "cases": 75,
+            "first": 74,
+            "top7": 74,
+            "key_p95_us": 3186,
+            "key_max_us": 4474
+          }
+        },
+        {
+          "quality": {
+            "cases": 75,
+            "first": 74,
+            "top7": 74,
+            "key_p95_us": 3165,
+            "key_max_us": 4505
+          }
+        },
+        {
+          "quality": {
+            "cases": 75,
+            "first": 74,
+            "top7": 74,
+            "key_p95_us": 3202,
+            "key_max_us": 4584
+          }
+        },
+        {
+          "quality": {
+            "cases": 75,
+            "first": 74,
+            "top7": 74,
+            "key_p95_us": 3181,
+            "key_max_us": 4405
+          }
+        }
+      ],
+      "resources": [
+        {
+          "wall_s": 1.38,
+          "user_s": 2.57,
+          "system_s": 0.02,
+          "maxrss_kib": 143776.0,
+          "minor_faults": 3362.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 1.38,
+          "user_s": 2.59,
+          "system_s": 0.02,
+          "maxrss_kib": 143360.0,
+          "minor_faults": 3161.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 1.37,
+          "user_s": 2.57,
+          "system_s": 0.02,
+          "maxrss_kib": 143684.0,
+          "minor_faults": 5069.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 1.39,
+          "user_s": 2.61,
+          "system_s": 0.03,
+          "maxrss_kib": 143684.0,
+          "minor_faults": 5188.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 1.38,
+          "user_s": 2.57,
+          "system_s": 0.04,
+          "maxrss_kib": 144212.0,
+          "minor_faults": 5131.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 1.39,
+          "user_s": 2.61,
+          "system_s": 0.01,
+          "maxrss_kib": 143664.0,
+          "minor_faults": 3223.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 1.36,
+          "user_s": 2.56,
+          "system_s": 0.02,
+          "maxrss_kib": 144508.0,
+          "minor_faults": 4446.0,
+          "major_faults": 0.0
+        }
+      ]
+    },
+    "input_latency": {
+      "summary": {
+        "cached_key": {
+          "count": {
+            "median": 2731,
+            "min": 2731,
+            "max": 2731
+          },
+          "p50_ns": {
+            "median": 2976,
+            "min": 2554,
+            "max": 3246
+          },
+          "p95_ns": {
+            "median": 25498,
+            "min": 22993,
+            "max": 27461
+          },
+          "max_ns": {
+            "median": 3087938,
+            "min": 1176834,
+            "max": 3700020
+          }
+        },
+        "edit": {
+          "count": {
+            "median": 1375,
+            "min": 1375,
+            "max": 1375
+          },
+          "p50_ns": {
+            "median": 1683,
+            "min": 1643,
+            "max": 1694
+          },
+          "p95_ns": {
+            "median": 1545738,
+            "min": 1507085,
+            "max": 1577778
+          },
+          "max_ns": {
+            "median": 4179162,
+            "min": 4141411,
+            "max": 4985900
+          }
+        },
+        "page": {
+          "count": {
+            "median": 275,
+            "min": 275,
+            "max": 275
+          },
+          "p50_ns": {
+            "median": 4349,
+            "min": 4218,
+            "max": 4508
+          },
+          "p95_ns": {
+            "median": 10440,
+            "min": 10159,
+            "max": 12353
+          },
+          "max_ns": {
+            "median": 30858,
+            "min": 23634,
+            "max": 34886
+          }
+        },
+        "sentence_key": {
+          "count": {
+            "median": 1529,
+            "min": 1529,
+            "max": 1529
+          },
+          "p50_ns": {
+            "median": 247586,
+            "min": 240112,
+            "max": 257043
+          },
+          "p95_ns": {
+            "median": 3096765,
+            "min": 3084622,
+            "max": 3150317
+          },
+          "max_ns": {
+            "median": 4408173,
+            "min": 4371534,
+            "max": 4540812
+          }
+        },
+        "short_key": {
+          "count": {
+            "median": 1202,
+            "min": 1202,
+            "max": 1202
+          },
+          "p50_ns": {
+            "median": 50575,
+            "min": 49904,
+            "max": 52168
+          },
+          "p95_ns": {
+            "median": 250331,
+            "min": 242346,
+            "max": 255120
+          },
+          "max_ns": {
+            "median": 1042721,
+            "min": 1006283,
+            "max": 1257505
+          }
+        },
+        "suggest": {
+          "count": {
+            "median": 200,
+            "min": 200,
+            "max": 200
+          },
+          "p50_ns": {
+            "median": 262574,
+            "min": 257755,
+            "max": 270679
+          },
+          "p95_ns": {
+            "median": 573820,
+            "min": 539425,
+            "max": 586122
+          },
+          "max_ns": {
+            "median": 2407088,
+            "min": 2311438,
+            "max": 3313383
+          }
+        },
+        "view": {
+          "count": {
+            "median": 275,
+            "min": 275,
+            "max": 275
+          },
+          "p50_ns": {
+            "median": 331,
+            "min": 321,
+            "max": 341
+          },
+          "p95_ns": {
+            "median": 460,
+            "min": 440,
+            "max": 481
+          },
+          "max_ns": {
+            "median": 741,
+            "min": 571,
+            "max": 7825
+          }
+        }
+      },
+      "samples": [
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 2976,
+            "p95_ns": 22993,
+            "max_ns": 3671607
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1654,
+            "p95_ns": 1577778,
+            "max_ns": 4179162
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4308,
+            "p95_ns": 10159,
+            "max_ns": 24336
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 253276,
+            "p95_ns": 3095864,
+            "max_ns": 4429192
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 50334,
+            "p95_ns": 252355,
+            "max_ns": 1123634
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 262574,
+            "p95_ns": 581864,
+            "max_ns": 2407088
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 330,
+            "p95_ns": 481,
+            "max_ns": 571
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 3036,
+            "p95_ns": 25398,
+            "max_ns": 2012265
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1683,
+            "p95_ns": 1556057,
+            "max_ns": 4985900
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4349,
+            "p95_ns": 10440,
+            "max_ns": 32441
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 257043,
+            "p95_ns": 3113146,
+            "max_ns": 4408173
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 52168,
+            "p95_ns": 242346,
+            "max_ns": 1006283
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 259198,
+            "p95_ns": 539425,
+            "max_ns": 2327108
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 321,
+            "p95_ns": 450,
+            "max_ns": 581
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 3075,
+            "p95_ns": 25498,
+            "max_ns": 3087938
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1693,
+            "p95_ns": 1536300,
+            "max_ns": 4141411
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4508,
+            "p95_ns": 12353,
+            "max_ns": 23634
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 244880,
+            "p95_ns": 3150317,
+            "max_ns": 4371534
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 51938,
+            "p95_ns": 253067,
+            "max_ns": 1015831
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 270679,
+            "p95_ns": 584840,
+            "max_ns": 2447284
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 341,
+            "p95_ns": 460,
+            "max_ns": 7825
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 2875,
+            "p95_ns": 25989,
+            "max_ns": 1176834
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1673,
+            "p95_ns": 1539265,
+            "max_ns": 4201774
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4218,
+            "p95_ns": 10400,
+            "max_ns": 34886
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 247215,
+            "p95_ns": 3084622,
+            "max_ns": 4540812
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 49904,
+            "p95_ns": 249449,
+            "max_ns": 1085151
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 260089,
+            "p95_ns": 547109,
+            "max_ns": 2311438
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 331,
+            "p95_ns": 471,
+            "max_ns": 741
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 3246,
+            "p95_ns": 27461,
+            "max_ns": 3700020
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1694,
+            "p95_ns": 1545738,
+            "max_ns": 4214658
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4488,
+            "p95_ns": 11021,
+            "max_ns": 25168
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 250641,
+            "p95_ns": 3096765,
+            "max_ns": 4399486
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 51477,
+            "p95_ns": 255120,
+            "max_ns": 1257505
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 263335,
+            "p95_ns": 586122,
+            "max_ns": 3313383
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 341,
+            "p95_ns": 471,
+            "max_ns": 1643
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 2655,
+            "p95_ns": 25978,
+            "max_ns": 3514651
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1693,
+            "p95_ns": 1550006,
+            "max_ns": 4147632
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4338,
+            "p95_ns": 11351,
+            "max_ns": 30858
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 247586,
+            "p95_ns": 3086817,
+            "max_ns": 4405298
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 50375,
+            "p95_ns": 250331,
+            "max_ns": 1018406
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 264137,
+            "p95_ns": 573820,
+            "max_ns": 2614127
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 330,
+            "p95_ns": 451,
+            "max_ns": 591
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 2554,
+            "p95_ns": 23855,
+            "max_ns": 3046631
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1643,
+            "p95_ns": 1507085,
+            "max_ns": 4177980
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4379,
+            "p95_ns": 10159,
+            "max_ns": 34495
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 240112,
+            "p95_ns": 3118977,
+            "max_ns": 4416809
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 50575,
+            "p95_ns": 242777,
+            "max_ns": 1042721
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 257755,
+            "p95_ns": 557118,
+            "max_ns": 2359299
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 331,
+            "p95_ns": 440,
+            "max_ns": 2204
+          }
+        }
+      ],
+      "resources": [
+        {
+          "wall_s": 2.16,
+          "user_s": 3.88,
+          "system_s": 0.04,
+          "maxrss_kib": 145080.0,
+          "minor_faults": 2927.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 2.19,
+          "user_s": 3.94,
+          "system_s": 0.02,
+          "maxrss_kib": 145092.0,
+          "minor_faults": 2906.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 2.25,
+          "user_s": 3.98,
+          "system_s": 0.03,
+          "maxrss_kib": 145984.0,
+          "minor_faults": 3183.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 2.16,
+          "user_s": 3.87,
+          "system_s": 0.04,
+          "maxrss_kib": 145116.0,
+          "minor_faults": 2813.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 2.18,
+          "user_s": 3.91,
+          "system_s": 0.04,
+          "maxrss_kib": 145212.0,
+          "minor_faults": 2700.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 2.2,
+          "user_s": 3.92,
+          "system_s": 0.04,
+          "maxrss_kib": 144588.0,
+          "minor_faults": 2891.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 2.28,
+          "user_s": 3.95,
+          "system_s": 0.03,
+          "maxrss_kib": 145168.0,
+          "minor_faults": 2827.0,
+          "major_faults": 0.0
+        }
+      ]
+    },
+    "stress_latency": {
+      "summary": {
+        "ambiguous_8": {
+          "count": {
+            "median": 8,
+            "min": 8,
+            "max": 8
+          },
+          "total_ns": {
+            "median": 19830594,
+            "min": 18722079,
+            "max": 24926670
+          },
+          "p50_ns": {
+            "median": 3014390,
+            "min": 2957684,
+            "max": 3322570
+          },
+          "p95_ns": {
+            "median": 4231991,
+            "min": 3631070,
+            "max": 6299030
+          },
+          "max_ns": {
+            "median": 4231991,
+            "min": 3631070,
+            "max": 6299030
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "ambiguous_16": {
+          "count": {
+            "median": 16,
+            "min": 16,
+            "max": 16
+          },
+          "total_ns": {
+            "median": 82643505,
+            "min": 81259382,
+            "max": 92729588
+          },
+          "p50_ns": {
+            "median": 6764986,
+            "min": 6546435,
+            "max": 7455014
+          },
+          "p95_ns": {
+            "median": 9890405,
+            "min": 9637780,
+            "max": 12059656
+          },
+          "max_ns": {
+            "median": 9890405,
+            "min": 9637780,
+            "max": 12059656
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "ambiguous_32": {
+          "count": {
+            "median": 32,
+            "min": 32,
+            "max": 32
+          },
+          "total_ns": {
+            "median": 260012394,
+            "min": 258914208,
+            "max": 282065499
+          },
+          "p50_ns": {
+            "median": 8804402,
+            "min": 8713571,
+            "max": 10098838
+          },
+          "p95_ns": {
+            "median": 14054018,
+            "min": 13984116,
+            "max": 15187890
+          },
+          "max_ns": {
+            "median": 14562094,
+            "min": 14459270,
+            "max": 15221163
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "ambiguous_64": {
+          "count": {
+            "median": 64,
+            "min": 64,
+            "max": 64
+          },
+          "total_ns": {
+            "median": 749081659,
+            "min": 735385504,
+            "max": 1014690881
+          },
+          "p50_ns": {
+            "median": 14780254,
+            "min": 14683912,
+            "max": 14989868
+          },
+          "p95_ns": {
+            "median": 15371456,
+            "min": 14934084,
+            "max": 53651887
+          },
+          "max_ns": {
+            "median": 16565402,
+            "min": 15179014,
+            "max": 155309782
+          },
+          "candidates": {
+            "median": 1,
+            "min": 1,
+            "max": 1
+          }
+        },
+        "ambiguous_128": {
+          "count": {
+            "median": 128,
+            "min": 128,
+            "max": 128
+          },
+          "total_ns": {
+            "median": 1729743926,
+            "min": 1687903718,
+            "max": 2106676115
+          },
+          "p50_ns": {
+            "median": 14932831,
+            "min": 14821180,
+            "max": 15039201
+          },
+          "p95_ns": {
+            "median": 15606528,
+            "min": 14974460,
+            "max": 16990101
+          },
+          "max_ns": {
+            "median": 16623221,
+            "min": 15111226,
+            "max": 361592422
+          },
+          "candidates": {
+            "median": 1,
+            "min": 1,
+            "max": 1
+          }
+        },
+        "ambiguous_256": {
+          "count": {
+            "median": 256,
+            "min": 256,
+            "max": 256
+          },
+          "total_ns": {
+            "median": 1784026160,
+            "min": 1767620518,
+            "max": 1956054371
+          },
+          "p50_ns": {
+            "median": 729913,
+            "min": 696049,
+            "max": 2981469
+          },
+          "p95_ns": {
+            "median": 15077543,
+            "min": 14899959,
+            "max": 16604345
+          },
+          "max_ns": {
+            "median": 16523373,
+            "min": 15028751,
+            "max": 114878865
+          },
+          "candidates": {
+            "median": 1,
+            "min": 1,
+            "max": 1
+          }
+        },
+        "abbreviation_8": {
+          "count": {
+            "median": 8,
+            "min": 8,
+            "max": 8
+          },
+          "total_ns": {
+            "median": 15639230,
+            "min": 6889680,
+            "max": 247783119
+          },
+          "p50_ns": {
+            "median": 1288063,
+            "min": 1258558,
+            "max": 31010526
+          },
+          "p95_ns": {
+            "median": 10249420,
+            "min": 1648350,
+            "max": 97914332
+          },
+          "max_ns": {
+            "median": 10249420,
+            "min": 1648350,
+            "max": 97914332
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "abbreviation_16": {
+          "count": {
+            "median": 16,
+            "min": 16,
+            "max": 16
+          },
+          "total_ns": {
+            "median": 26596301,
+            "min": 26065774,
+            "max": 249690507
+          },
+          "p50_ns": {
+            "median": 1879746,
+            "min": 1851493,
+            "max": 16199995
+          },
+          "p95_ns": {
+            "median": 3049436,
+            "min": 2990516,
+            "max": 55739775
+          },
+          "max_ns": {
+            "median": 3049436,
+            "min": 2990516,
+            "max": 55739775
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "abbreviation_32": {
+          "count": {
+            "median": 32,
+            "min": 32,
+            "max": 32
+          },
+          "total_ns": {
+            "median": 99394827,
+            "min": 95869014,
+            "max": 298314495
+          },
+          "p50_ns": {
+            "median": 2981538,
+            "min": 2950881,
+            "max": 5963990
+          },
+          "p95_ns": {
+            "median": 5753533,
+            "min": 5490990,
+            "max": 40387866
+          },
+          "max_ns": {
+            "median": 5771628,
+            "min": 5660107,
+            "max": 47087980
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "abbreviation_64": {
+          "count": {
+            "median": 64,
+            "min": 64,
+            "max": 64
+          },
+          "total_ns": {
+            "median": 395914437,
+            "min": 378320940,
+            "max": 443613506
+          },
+          "p50_ns": {
+            "median": 6136854,
+            "min": 5899457,
+            "max": 7605668
+          },
+          "p95_ns": {
+            "median": 11500504,
+            "min": 11305768,
+            "max": 14690846
+          },
+          "max_ns": {
+            "median": 12409975,
+            "min": 11707704,
+            "max": 18235194
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "abbreviation_128": {
+          "count": {
+            "median": 128,
+            "min": 128,
+            "max": 128
+          },
+          "total_ns": {
+            "median": 1588597257,
+            "min": 1558398739,
+            "max": 2381829370
+          },
+          "p50_ns": {
+            "median": 12421888,
+            "min": 11844411,
+            "max": 16491042
+          },
+          "p95_ns": {
+            "median": 24014064,
+            "min": 23375163,
+            "max": 54950530
+          },
+          "max_ns": {
+            "median": 28958706,
+            "min": 24338103,
+            "max": 138550065
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "abbreviation_256": {
+          "count": {
+            "median": 256,
+            "min": 256,
+            "max": 256
+          },
+          "total_ns": {
+            "median": 1803268407,
+            "min": 1554297214,
+            "max": 1976396318
+          },
+          "p50_ns": {
+            "median": 106871,
+            "min": 97934,
+            "max": 125386
+          },
+          "p95_ns": {
+            "median": 25628802,
+            "min": 21965250,
+            "max": 32448731
+          },
+          "max_ns": {
+            "median": 34030927,
+            "min": 24410711,
+            "max": 130167084
+          },
+          "candidates": {
+            "median": 1,
+            "min": 1,
+            "max": 1
+          }
+        },
+        "full_pinyin_8": {
+          "count": {
+            "median": 8,
+            "min": 8,
+            "max": 8
+          },
+          "total_ns": {
+            "median": 826595,
+            "min": 762885,
+            "max": 16443703
+          },
+          "p50_ns": {
+            "median": 96391,
+            "min": 94588,
+            "max": 636988
+          },
+          "p95_ns": {
+            "median": 237286,
+            "min": 203513,
+            "max": 10292782
+          },
+          "max_ns": {
+            "median": 237286,
+            "min": 203513,
+            "max": 10292782
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "full_pinyin_16": {
+          "count": {
+            "median": 16,
+            "min": 16,
+            "max": 16
+          },
+          "total_ns": {
+            "median": 4096155,
+            "min": 3969587,
+            "max": 35133461
+          },
+          "p50_ns": {
+            "median": 91382,
+            "min": 86643,
+            "max": 143860
+          },
+          "p95_ns": {
+            "median": 968192,
+            "min": 922104,
+            "max": 30848661
+          },
+          "max_ns": {
+            "median": 968192,
+            "min": 922104,
+            "max": 30848661
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "full_pinyin_32": {
+          "count": {
+            "median": 32,
+            "min": 32,
+            "max": 32
+          },
+          "total_ns": {
+            "median": 7835730,
+            "min": 7546245,
+            "max": 56312883
+          },
+          "p50_ns": {
+            "median": 181732,
+            "min": 161493,
+            "max": 319011
+          },
+          "p95_ns": {
+            "median": 848907,
+            "min": 770369,
+            "max": 5382405
+          },
+          "max_ns": {
+            "median": 1140335,
+            "min": 1054985,
+            "max": 38145537
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "full_pinyin_64": {
+          "count": {
+            "median": 64,
+            "min": 64,
+            "max": 64
+          },
+          "total_ns": {
+            "median": 20342517,
+            "min": 19599229,
+            "max": 35984532
+          },
+          "p50_ns": {
+            "median": 243067,
+            "min": 234742,
+            "max": 253316
+          },
+          "p95_ns": {
+            "median": 749149,
+            "min": 726807,
+            "max": 842465
+          },
+          "max_ns": {
+            "median": 2449258,
+            "min": 2230977,
+            "max": 15196547
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "full_pinyin_128": {
+          "count": {
+            "median": 128,
+            "min": 128,
+            "max": 128
+          },
+          "total_ns": {
+            "median": 72095073,
+            "min": 70440469,
+            "max": 78886608
+          },
+          "p50_ns": {
+            "median": 413518,
+            "min": 409801,
+            "max": 435640
+          },
+          "p95_ns": {
+            "median": 1087706,
+            "min": 1081234,
+            "max": 1330784
+          },
+          "max_ns": {
+            "median": 6289631,
+            "min": 5980260,
+            "max": 7434446
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "full_pinyin_256": {
+          "count": {
+            "median": 256,
+            "min": 256,
+            "max": 256
+          },
+          "total_ns": {
+            "median": 541432018,
+            "min": 528566446,
+            "max": 581943906
+          },
+          "p50_ns": {
+            "median": 142889,
+            "min": 139141,
+            "max": 149542
+          },
+          "p95_ns": {
+            "median": 1070033,
+            "min": 1055746,
+            "max": 1119707
+          },
+          "max_ns": {
+            "median": 328393720,
+            "min": 317858111,
+            "max": 374061628
+          },
+          "candidates": {
+            "median": 5,
+            "min": 5,
+            "max": 5
+          }
+        },
+        "invalid_8": {
+          "count": {
+            "median": 8,
+            "min": 8,
+            "max": 8
+          },
+          "total_ns": {
+            "median": 66856,
+            "min": 64271,
+            "max": 99608
+          },
+          "p50_ns": {
+            "median": 8927,
+            "min": 8696,
+            "max": 13896
+          },
+          "p95_ns": {
+            "median": 17593,
+            "min": 16822,
+            "max": 23524
+          },
+          "max_ns": {
+            "median": 17593,
+            "min": 16822,
+            "max": 23524
+          },
+          "candidates": {
+            "median": 1,
+            "min": 1,
+            "max": 1
+          }
+        },
+        "invalid_16": {
+          "count": {
+            "median": 16,
+            "min": 16,
+            "max": 16
+          },
+          "total_ns": {
+            "median": 121689,
+            "min": 119204,
+            "max": 214564
+          },
+          "p50_ns": {
+            "median": 8616,
+            "min": 8346,
+            "max": 13966
+          },
+          "p95_ns": {
+            "median": 9628,
+            "min": 9187,
+            "max": 27662
+          },
+          "max_ns": {
+            "median": 9628,
+            "min": 9187,
+            "max": 27662
+          },
+          "candidates": {
+            "median": 1,
+            "min": 1,
+            "max": 1
+          }
+        },
+        "invalid_32": {
+          "count": {
+            "median": 32,
+            "min": 32,
+            "max": 32
+          },
+          "total_ns": {
+            "median": 164219,
+            "min": 149461,
+            "max": 198974
+          },
+          "p50_ns": {
+            "median": 3226,
+            "min": 2335,
+            "max": 3317
+          },
+          "p95_ns": {
+            "median": 9177,
+            "min": 8676,
+            "max": 22192
+          },
+          "max_ns": {
+            "median": 11241,
+            "min": 8926,
+            "max": 22873
+          },
+          "candidates": {
+            "median": 1,
+            "min": 1,
+            "max": 1
+          }
+        },
+        "invalid_64": {
+          "count": {
+            "median": 64,
+            "min": 64,
+            "max": 64
+          },
+          "total_ns": {
+            "median": 233880,
+            "min": 222739,
+            "max": 307659
+          },
+          "p50_ns": {
+            "median": 2164,
+            "min": 2084,
+            "max": 2445
+          },
+          "p95_ns": {
+            "median": 8846,
+            "min": 8446,
+            "max": 13144
+          },
+          "max_ns": {
+            "median": 15108,
+            "min": 9488,
+            "max": 23795
+          },
+          "candidates": {
+            "median": 1,
+            "min": 1,
+            "max": 1
+          }
+        },
+        "invalid_128": {
+          "count": {
+            "median": 128,
+            "min": 128,
+            "max": 128
+          },
+          "total_ns": {
+            "median": 432253,
+            "min": 378062,
+            "max": 480534
+          },
+          "p50_ns": {
+            "median": 2475,
+            "min": 2324,
+            "max": 2535
+          },
+          "p95_ns": {
+            "median": 8706,
+            "min": 7995,
+            "max": 13185
+          },
+          "max_ns": {
+            "median": 13826,
+            "min": 9177,
+            "max": 37891
+          },
+          "candidates": {
+            "median": 1,
+            "min": 1,
+            "max": 1
+          }
+        },
+        "invalid_256": {
+          "count": {
+            "median": 256,
+            "min": 256,
+            "max": 256
+          },
+          "total_ns": {
+            "median": 776541,
+            "min": 686963,
+            "max": 1158670
+          },
+          "p50_ns": {
+            "median": 2284,
+            "min": 2154,
+            "max": 3777
+          },
+          "p95_ns": {
+            "median": 8616,
+            "min": 7975,
+            "max": 12293
+          },
+          "max_ns": {
+            "median": 24907,
+            "min": 14217,
+            "max": 48080
+          },
+          "candidates": {
+            "median": 1,
+            "min": 1,
+            "max": 1
+          }
+        }
+      },
+      "samples": [
+        {
+          "ambiguous_8": {
+            "count": 8,
+            "total_ns": 18722079,
+            "p50_ns": 2962433,
+            "p95_ns": 3631070,
+            "max_ns": 3631070,
+            "candidates": 5
+          },
+          "ambiguous_16": {
+            "count": 16,
+            "total_ns": 82643505,
+            "p50_ns": 7455014,
+            "p95_ns": 9700889,
+            "max_ns": 9700889,
+            "candidates": 5
+          },
+          "ambiguous_32": {
+            "count": 32,
+            "total_ns": 260663138,
+            "p50_ns": 8932644,
+            "p95_ns": 14067143,
+            "max_ns": 14483155,
+            "candidates": 5
+          },
+          "ambiguous_64": {
+            "count": 64,
+            "total_ns": 742926510,
+            "p50_ns": 14780254,
+            "p95_ns": 15371456,
+            "max_ns": 15809961,
+            "candidates": 1
+          },
+          "ambiguous_128": {
+            "count": 128,
+            "total_ns": 1687903718,
+            "p50_ns": 14821180,
+            "p95_ns": 14997733,
+            "max_ns": 15111226,
+            "candidates": 1
+          },
+          "ambiguous_256": {
+            "count": 256,
+            "total_ns": 1784026160,
+            "p50_ns": 696049,
+            "p95_ns": 15077543,
+            "max_ns": 16523373,
+            "candidates": 1
+          },
+          "abbreviation_8": {
+            "count": 8,
+            "total_ns": 6889680,
+            "p50_ns": 1273897,
+            "p95_ns": 1648350,
+            "max_ns": 1648350,
+            "candidates": 5
+          },
+          "abbreviation_16": {
+            "count": 16,
+            "total_ns": 26065774,
+            "p50_ns": 1851493,
+            "p95_ns": 2990516,
+            "max_ns": 2990516,
+            "candidates": 5
+          },
+          "abbreviation_32": {
+            "count": 32,
+            "total_ns": 95869014,
+            "p50_ns": 2950881,
+            "p95_ns": 5490990,
+            "max_ns": 5660107,
+            "candidates": 5
+          },
+          "abbreviation_64": {
+            "count": 64,
+            "total_ns": 378320940,
+            "p50_ns": 5899457,
+            "p95_ns": 11481439,
+            "max_ns": 11707704,
+            "candidates": 5
+          },
+          "abbreviation_128": {
+            "count": 128,
+            "total_ns": 1558398739,
+            "p50_ns": 11844411,
+            "p95_ns": 23503513,
+            "max_ns": 24338103,
+            "candidates": 5
+          },
+          "abbreviation_256": {
+            "count": 256,
+            "total_ns": 1554297214,
+            "p50_ns": 105328,
+            "p95_ns": 21965250,
+            "max_ns": 24647306,
+            "candidates": 1
+          },
+          "full_pinyin_8": {
+            "count": 8,
+            "total_ns": 762885,
+            "p50_ns": 95019,
+            "p95_ns": 203513,
+            "max_ns": 203513,
+            "candidates": 5
+          },
+          "full_pinyin_16": {
+            "count": 16,
+            "total_ns": 3969587,
+            "p50_ns": 86893,
+            "p95_ns": 927735,
+            "max_ns": 927735,
+            "candidates": 5
+          },
+          "full_pinyin_32": {
+            "count": 32,
+            "total_ns": 7724501,
+            "p50_ns": 161493,
+            "p95_ns": 782973,
+            "max_ns": 1090953,
+            "candidates": 5
+          },
+          "full_pinyin_64": {
+            "count": 64,
+            "total_ns": 19621751,
+            "p50_ns": 234742,
+            "p95_ns": 726807,
+            "max_ns": 2252297,
+            "candidates": 5
+          },
+          "full_pinyin_128": {
+            "count": 128,
+            "total_ns": 70511933,
+            "p50_ns": 414139,
+            "p95_ns": 1082837,
+            "max_ns": 5980260,
+            "candidates": 5
+          },
+          "full_pinyin_256": {
+            "count": 256,
+            "total_ns": 541432018,
+            "p50_ns": 144723,
+            "p95_ns": 1070033,
+            "max_ns": 332170485,
+            "candidates": 5
+          },
+          "invalid_8": {
+            "count": 8,
+            "total_ns": 64271,
+            "p50_ns": 8697,
+            "p95_ns": 17292,
+            "max_ns": 17292,
+            "candidates": 1
+          },
+          "invalid_16": {
+            "count": 16,
+            "total_ns": 119204,
+            "p50_ns": 8356,
+            "p95_ns": 9187,
+            "max_ns": 9187,
+            "candidates": 1
+          },
+          "invalid_32": {
+            "count": 32,
+            "total_ns": 150293,
+            "p50_ns": 2444,
+            "p95_ns": 8676,
+            "max_ns": 9147,
+            "candidates": 1
+          },
+          "invalid_64": {
+            "count": 64,
+            "total_ns": 233880,
+            "p50_ns": 2084,
+            "p95_ns": 8466,
+            "max_ns": 23795,
+            "candidates": 1
+          },
+          "invalid_128": {
+            "count": 128,
+            "total_ns": 385085,
+            "p50_ns": 2394,
+            "p95_ns": 8145,
+            "max_ns": 9177,
+            "candidates": 1
+          },
+          "invalid_256": {
+            "count": 256,
+            "total_ns": 686963,
+            "p50_ns": 2204,
+            "p95_ns": 8025,
+            "max_ns": 18174,
+            "candidates": 1
+          }
+        },
+        {
+          "ambiguous_8": {
+            "count": 8,
+            "total_ns": 18829611,
+            "p50_ns": 2968173,
+            "p95_ns": 3688178,
+            "max_ns": 3688178,
+            "candidates": 5
+          },
+          "ambiguous_16": {
+            "count": 16,
+            "total_ns": 81259382,
+            "p50_ns": 6546435,
+            "p95_ns": 9793623,
+            "max_ns": 9793623,
+            "candidates": 5
+          },
+          "ambiguous_32": {
+            "count": 32,
+            "total_ns": 258914208,
+            "p50_ns": 8804402,
+            "p95_ns": 13984116,
+            "max_ns": 14517740,
+            "candidates": 5
+          },
+          "ambiguous_64": {
+            "count": 64,
+            "total_ns": 736518866,
+            "p50_ns": 14699392,
+            "p95_ns": 15007952,
+            "max_ns": 15391894,
+            "candidates": 1
+          },
+          "ambiguous_128": {
+            "count": 128,
+            "total_ns": 1788207826,
+            "p50_ns": 14946086,
+            "p95_ns": 16990101,
+            "max_ns": 56036293,
+            "candidates": 1
+          },
+          "ambiguous_256": {
+            "count": 256,
+            "total_ns": 1840042495,
+            "p50_ns": 1110168,
+            "p95_ns": 15406382,
+            "max_ns": 52147667,
+            "candidates": 1
+          },
+          "abbreviation_8": {
+            "count": 8,
+            "total_ns": 40285242,
+            "p50_ns": 4725629,
+            "p95_ns": 14006067,
+            "max_ns": 14006067,
+            "candidates": 5
+          },
+          "abbreviation_16": {
+            "count": 16,
+            "total_ns": 68783873,
+            "p50_ns": 4447036,
+            "p95_ns": 11621021,
+            "max_ns": 11621021,
+            "candidates": 5
+          },
+          "abbreviation_32": {
+            "count": 32,
+            "total_ns": 145369172,
+            "p50_ns": 2991728,
+            "p95_ns": 10122532,
+            "max_ns": 12725028,
+            "candidates": 5
+          },
+          "abbreviation_64": {
+            "count": 64,
+            "total_ns": 438627826,
+            "p50_ns": 6157714,
+            "p95_ns": 14690846,
+            "max_ns": 18235194,
+            "candidates": 5
+          },
+          "abbreviation_128": {
+            "count": 128,
+            "total_ns": 2381829370,
+            "p50_ns": 16491042,
+            "p95_ns": 54950530,
+            "max_ns": 138550065,
+            "candidates": 5
+          },
+          "abbreviation_256": {
+            "count": 256,
+            "total_ns": 1862826555,
+            "p50_ns": 97934,
+            "p95_ns": 26500471,
+            "max_ns": 34030927,
+            "candidates": 1
+          },
+          "full_pinyin_8": {
+            "count": 8,
+            "total_ns": 1423227,
+            "p50_ns": 121749,
+            "p95_ns": 579300,
+            "max_ns": 579300,
+            "candidates": 5
+          },
+          "full_pinyin_16": {
+            "count": 16,
+            "total_ns": 5745458,
+            "p50_ns": 101491,
+            "p95_ns": 2328971,
+            "max_ns": 2328971,
+            "candidates": 5
+          },
+          "full_pinyin_32": {
+            "count": 32,
+            "total_ns": 13504715,
+            "p50_ns": 233980,
+            "p95_ns": 1852585,
+            "max_ns": 4258571,
+            "candidates": 5
+          },
+          "full_pinyin_64": {
+            "count": 64,
+            "total_ns": 21547264,
+            "p50_ns": 248357,
+            "p95_ns": 747807,
+            "max_ns": 3283106,
+            "candidates": 5
+          },
+          "full_pinyin_128": {
+            "count": 128,
+            "total_ns": 72095073,
+            "p50_ns": 410432,
+            "p95_ns": 1162827,
+            "max_ns": 6279062,
+            "candidates": 5
+          },
+          "full_pinyin_256": {
+            "count": 256,
+            "total_ns": 581943906,
+            "p50_ns": 141546,
+            "p95_ns": 1071656,
+            "max_ns": 374061628,
+            "candidates": 5
+          },
+          "invalid_8": {
+            "count": 8,
+            "total_ns": 66766,
+            "p50_ns": 8917,
+            "p95_ns": 17603,
+            "max_ns": 17603,
+            "candidates": 1
+          },
+          "invalid_16": {
+            "count": 16,
+            "total_ns": 145404,
+            "p50_ns": 9729,
+            "p95_ns": 14988,
+            "max_ns": 14988,
+            "candidates": 1
+          },
+          "invalid_32": {
+            "count": 32,
+            "total_ns": 164219,
+            "p50_ns": 3226,
+            "p95_ns": 9247,
+            "max_ns": 11241,
+            "candidates": 1
+          },
+          "invalid_64": {
+            "count": 64,
+            "total_ns": 307659,
+            "p50_ns": 2445,
+            "p95_ns": 13144,
+            "max_ns": 15279,
+            "candidates": 1
+          },
+          "invalid_128": {
+            "count": 128,
+            "total_ns": 440689,
+            "p50_ns": 2535,
+            "p95_ns": 9117,
+            "max_ns": 13846,
+            "candidates": 1
+          },
+          "invalid_256": {
+            "count": 256,
+            "total_ns": 1158670,
+            "p50_ns": 3777,
+            "p95_ns": 12293,
+            "max_ns": 24907,
+            "candidates": 1
+          }
+        },
+        {
+          "ambiguous_8": {
+            "count": 8,
+            "total_ns": 24926670,
+            "p50_ns": 3322570,
+            "p95_ns": 6299030,
+            "max_ns": 6299030,
+            "candidates": 5
+          },
+          "ambiguous_16": {
+            "count": 16,
+            "total_ns": 92729588,
+            "p50_ns": 6764986,
+            "p95_ns": 12059656,
+            "max_ns": 12059656,
+            "candidates": 5
+          },
+          "ambiguous_32": {
+            "count": 32,
+            "total_ns": 282065499,
+            "p50_ns": 10098838,
+            "p95_ns": 15187890,
+            "max_ns": 15221163,
+            "candidates": 5
+          },
+          "ambiguous_64": {
+            "count": 64,
+            "total_ns": 1014690881,
+            "p50_ns": 14989868,
+            "p95_ns": 53651887,
+            "max_ns": 100960192,
+            "candidates": 1
+          },
+          "ambiguous_128": {
+            "count": 128,
+            "total_ns": 2106676115,
+            "p50_ns": 14932831,
+            "p95_ns": 15606528,
+            "max_ns": 361592422,
+            "candidates": 1
+          },
+          "ambiguous_256": {
+            "count": 256,
+            "total_ns": 1781993246,
+            "p50_ns": 2981469,
+            "p95_ns": 14899959,
+            "max_ns": 16367199,
+            "candidates": 1
+          },
+          "abbreviation_8": {
+            "count": 8,
+            "total_ns": 247783119,
+            "p50_ns": 31010526,
+            "p95_ns": 97914332,
+            "max_ns": 97914332,
+            "candidates": 5
+          },
+          "abbreviation_16": {
+            "count": 16,
+            "total_ns": 249690507,
+            "p50_ns": 16199995,
+            "p95_ns": 55739775,
+            "max_ns": 55739775,
+            "candidates": 5
+          },
+          "abbreviation_32": {
+            "count": 32,
+            "total_ns": 298314495,
+            "p50_ns": 5963990,
+            "p95_ns": 40387866,
+            "max_ns": 47087980,
+            "candidates": 5
+          },
+          "abbreviation_64": {
+            "count": 64,
+            "total_ns": 395914437,
+            "p50_ns": 5996029,
+            "p95_ns": 11667298,
+            "max_ns": 17523534,
+            "candidates": 5
+          },
+          "abbreviation_128": {
+            "count": 128,
+            "total_ns": 1758118674,
+            "p50_ns": 13632124,
+            "p95_ns": 26310825,
+            "max_ns": 28958706,
+            "candidates": 5
+          },
+          "abbreviation_256": {
+            "count": 256,
+            "total_ns": 1935295610,
+            "p50_ns": 106871,
+            "p95_ns": 32448731,
+            "max_ns": 37120379,
+            "candidates": 1
+          },
+          "full_pinyin_8": {
+            "count": 8,
+            "total_ns": 16443703,
+            "p50_ns": 527843,
+            "p95_ns": 10292782,
+            "max_ns": 10292782,
+            "candidates": 5
+          },
+          "full_pinyin_16": {
+            "count": 16,
+            "total_ns": 26097744,
+            "p50_ns": 93285,
+            "p95_ns": 22553687,
+            "max_ns": 22553687,
+            "candidates": 5
+          },
+          "full_pinyin_32": {
+            "count": 32,
+            "total_ns": 51448062,
+            "p50_ns": 319011,
+            "p95_ns": 4666298,
+            "max_ns": 35313360,
+            "candidates": 5
+          },
+          "full_pinyin_64": {
+            "count": 64,
+            "total_ns": 33169627,
+            "p50_ns": 250061,
+            "p95_ns": 784906,
+            "max_ns": 13709740,
+            "candidates": 5
+          },
+          "full_pinyin_128": {
+            "count": 128,
+            "total_ns": 72854761,
+            "p50_ns": 413518,
+            "p95_ns": 1087706,
+            "max_ns": 6617359,
+            "candidates": 5
+          },
+          "full_pinyin_256": {
+            "count": 256,
+            "total_ns": 528566446,
+            "p50_ns": 142889,
+            "p95_ns": 1070463,
+            "max_ns": 317858111,
+            "candidates": 5
+          },
+          "invalid_8": {
+            "count": 8,
+            "total_ns": 65383,
+            "p50_ns": 8927,
+            "p95_ns": 16822,
+            "max_ns": 16822,
+            "candidates": 1
+          },
+          "invalid_16": {
+            "count": 16,
+            "total_ns": 121689,
+            "p50_ns": 8616,
+            "p95_ns": 9588,
+            "max_ns": 9588,
+            "candidates": 1
+          },
+          "invalid_32": {
+            "count": 32,
+            "total_ns": 167374,
+            "p50_ns": 2695,
+            "p95_ns": 9177,
+            "max_ns": 22873,
+            "candidates": 1
+          },
+          "invalid_64": {
+            "count": 64,
+            "total_ns": 222739,
+            "p50_ns": 2094,
+            "p95_ns": 8666,
+            "max_ns": 9488,
+            "candidates": 1
+          },
+          "invalid_128": {
+            "count": 128,
+            "total_ns": 462700,
+            "p50_ns": 2445,
+            "p95_ns": 9548,
+            "max_ns": 37891,
+            "candidates": 1
+          },
+          "invalid_256": {
+            "count": 256,
+            "total_ns": 720696,
+            "p50_ns": 2284,
+            "p95_ns": 8616,
+            "max_ns": 14217,
+            "candidates": 1
+          }
+        },
+        {
+          "ambiguous_8": {
+            "count": 8,
+            "total_ns": 19646919,
+            "p50_ns": 2957684,
+            "p95_ns": 3799367,
+            "max_ns": 3799367,
+            "candidates": 5
+          },
+          "ambiguous_16": {
+            "count": 16,
+            "total_ns": 86961288,
+            "p50_ns": 6829327,
+            "p95_ns": 10091684,
+            "max_ns": 10091684,
+            "candidates": 5
+          },
+          "ambiguous_32": {
+            "count": 32,
+            "total_ns": 264500506,
+            "p50_ns": 9191050,
+            "p95_ns": 14054018,
+            "max_ns": 14641072,
+            "candidates": 5
+          },
+          "ambiguous_64": {
+            "count": 64,
+            "total_ns": 749449340,
+            "p50_ns": 14859212,
+            "p95_ns": 15323777,
+            "max_ns": 16565402,
+            "candidates": 1
+          },
+          "ambiguous_128": {
+            "count": 128,
+            "total_ns": 1831939081,
+            "p50_ns": 15039201,
+            "p95_ns": 16315322,
+            "max_ns": 97559966,
+            "candidates": 1
+          },
+          "ambiguous_256": {
+            "count": 256,
+            "total_ns": 1956054371,
+            "p50_ns": 843527,
+            "p95_ns": 16604345,
+            "max_ns": 114878865,
+            "candidates": 1
+          },
+          "abbreviation_8": {
+            "count": 8,
+            "total_ns": 189957910,
+            "p50_ns": 17553601,
+            "p95_ns": 76262111,
+            "max_ns": 76262111,
+            "candidates": 5
+          },
+          "abbreviation_16": {
+            "count": 16,
+            "total_ns": 64370961,
+            "p50_ns": 3145387,
+            "p95_ns": 26234832,
+            "max_ns": 26234832,
+            "candidates": 5
+          },
+          "abbreviation_32": {
+            "count": 32,
+            "total_ns": 105761704,
+            "p50_ns": 2970037,
+            "p95_ns": 6371967,
+            "max_ns": 6664427,
+            "candidates": 5
+          },
+          "abbreviation_64": {
+            "count": 64,
+            "total_ns": 443613506,
+            "p50_ns": 6659438,
+            "p95_ns": 14084756,
+            "max_ns": 14503022,
+            "candidates": 5
+          },
+          "abbreviation_128": {
+            "count": 128,
+            "total_ns": 1754527668,
+            "p50_ns": 12971762,
+            "p95_ns": 25979912,
+            "max_ns": 36409302,
+            "candidates": 5
+          },
+          "abbreviation_256": {
+            "count": 256,
+            "total_ns": 1976396318,
+            "p50_ns": 125386,
+            "p95_ns": 25628802,
+            "max_ns": 130167084,
+            "candidates": 1
+          },
+          "full_pinyin_8": {
+            "count": 8,
+            "total_ns": 9691482,
+            "p50_ns": 636988,
+            "p95_ns": 3011215,
+            "max_ns": 3011215,
+            "candidates": 5
+          },
+          "full_pinyin_16": {
+            "count": 16,
+            "total_ns": 35133461,
+            "p50_ns": 143860,
+            "p95_ns": 30848661,
+            "max_ns": 30848661,
+            "candidates": 5
+          },
+          "full_pinyin_32": {
+            "count": 32,
+            "total_ns": 56312883,
+            "p50_ns": 232698,
+            "p95_ns": 5382405,
+            "max_ns": 38145537,
+            "candidates": 5
+          },
+          "full_pinyin_64": {
+            "count": 64,
+            "total_ns": 35984532,
+            "p50_ns": 253316,
+            "p95_ns": 842465,
+            "max_ns": 15196547,
+            "candidates": 5
+          },
+          "full_pinyin_128": {
+            "count": 128,
+            "total_ns": 78886608,
+            "p50_ns": 435640,
+            "p95_ns": 1330784,
+            "max_ns": 6552927,
+            "candidates": 5
+          },
+          "full_pinyin_256": {
+            "count": 256,
+            "total_ns": 565861624,
+            "p50_ns": 149542,
+            "p95_ns": 1119707,
+            "max_ns": 328393720,
+            "candidates": 5
+          },
+          "invalid_8": {
+            "count": 8,
+            "total_ns": 71174,
+            "p50_ns": 9688,
+            "p95_ns": 17363,
+            "max_ns": 17363,
+            "candidates": 1
+          },
+          "invalid_16": {
+            "count": 16,
+            "total_ns": 127079,
+            "p50_ns": 8747,
+            "p95_ns": 11391,
+            "max_ns": 11391,
+            "candidates": 1
+          },
+          "invalid_32": {
+            "count": 32,
+            "total_ns": 156334,
+            "p50_ns": 3236,
+            "p95_ns": 8937,
+            "max_ns": 10439,
+            "candidates": 1
+          },
+          "invalid_64": {
+            "count": 64,
+            "total_ns": 251062,
+            "p50_ns": 2205,
+            "p95_ns": 9728,
+            "max_ns": 15108,
+            "candidates": 1
+          },
+          "invalid_128": {
+            "count": 128,
+            "total_ns": 480534,
+            "p50_ns": 2505,
+            "p95_ns": 13185,
+            "max_ns": 18865,
+            "candidates": 1
+          },
+          "invalid_256": {
+            "count": 256,
+            "total_ns": 776541,
+            "p50_ns": 2254,
+            "p95_ns": 9488,
+            "max_ns": 24676,
+            "candidates": 1
+          }
+        },
+        {
+          "ambiguous_8": {
+            "count": 8,
+            "total_ns": 20968465,
+            "p50_ns": 3014390,
+            "p95_ns": 5118990,
+            "max_ns": 5118990,
+            "candidates": 5
+          },
+          "ambiguous_16": {
+            "count": 16,
+            "total_ns": 82059988,
+            "p50_ns": 6661431,
+            "p95_ns": 9890405,
+            "max_ns": 9890405,
+            "candidates": 5
+          },
+          "ambiguous_32": {
+            "count": 32,
+            "total_ns": 260012394,
+            "p50_ns": 8767062,
+            "p95_ns": 14007430,
+            "max_ns": 14562094,
+            "candidates": 5
+          },
+          "ambiguous_64": {
+            "count": 64,
+            "total_ns": 907238046,
+            "p50_ns": 14826541,
+            "p95_ns": 18103265,
+            "max_ns": 155309782,
+            "candidates": 1
+          },
+          "ambiguous_128": {
+            "count": 128,
+            "total_ns": 1706601352,
+            "p50_ns": 14951456,
+            "p95_ns": 15259536,
+            "max_ns": 16345458,
+            "candidates": 1
+          },
+          "ambiguous_256": {
+            "count": 256,
+            "total_ns": 1775769648,
+            "p50_ns": 729913,
+            "p95_ns": 14990500,
+            "max_ns": 15723809,
+            "candidates": 1
+          },
+          "abbreviation_8": {
+            "count": 8,
+            "total_ns": 15639230,
+            "p50_ns": 1258558,
+            "p95_ns": 10249420,
+            "max_ns": 10249420,
+            "candidates": 5
+          },
+          "abbreviation_16": {
+            "count": 16,
+            "total_ns": 26482087,
+            "p50_ns": 1869487,
+            "p95_ns": 3049436,
+            "max_ns": 3049436,
+            "candidates": 5
+          },
+          "abbreviation_32": {
+            "count": 32,
+            "total_ns": 99394827,
+            "p50_ns": 2976960,
+            "p95_ns": 5753533,
+            "max_ns": 5758552,
+            "candidates": 5
+          },
+          "abbreviation_64": {
+            "count": 64,
+            "total_ns": 385848431,
+            "p50_ns": 5980560,
+            "p95_ns": 11305768,
+            "max_ns": 11753680,
+            "candidates": 5
+          },
+          "abbreviation_128": {
+            "count": 128,
+            "total_ns": 1569201240,
+            "p50_ns": 12180203,
+            "p95_ns": 23402955,
+            "max_ns": 24552006,
+            "candidates": 5
+          },
+          "abbreviation_256": {
+            "count": 256,
+            "total_ns": 1577552280,
+            "p50_ns": 100108,
+            "p95_ns": 22371554,
+            "max_ns": 24410711,
+            "candidates": 1
+          },
+          "full_pinyin_8": {
+            "count": 8,
+            "total_ns": 767774,
+            "p50_ns": 94588,
+            "p95_ns": 213551,
+            "max_ns": 213551,
+            "candidates": 5
+          },
+          "full_pinyin_16": {
+            "count": 16,
+            "total_ns": 3979666,
+            "p50_ns": 86643,
+            "p95_ns": 922104,
+            "max_ns": 922104,
+            "candidates": 5
+          },
+          "full_pinyin_32": {
+            "count": 32,
+            "total_ns": 7546245,
+            "p50_ns": 168186,
+            "p95_ns": 770369,
+            "max_ns": 1054985,
+            "candidates": 5
+          },
+          "full_pinyin_64": {
+            "count": 64,
+            "total_ns": 19599229,
+            "p50_ns": 239370,
+            "p95_ns": 729492,
+            "max_ns": 2230977,
+            "candidates": 5
+          },
+          "full_pinyin_128": {
+            "count": 128,
+            "total_ns": 70440469,
+            "p50_ns": 413337,
+            "p95_ns": 1083408,
+            "max_ns": 5989778,
+            "candidates": 5
+          },
+          "full_pinyin_256": {
+            "count": 256,
+            "total_ns": 563219042,
+            "p50_ns": 139141,
+            "p95_ns": 1065654,
+            "max_ns": 350378857,
+            "candidates": 5
+          },
+          "invalid_8": {
+            "count": 8,
+            "total_ns": 67507,
+            "p50_ns": 9207,
+            "p95_ns": 17733,
+            "max_ns": 17733,
+            "candidates": 1
+          },
+          "invalid_16": {
+            "count": 16,
+            "total_ns": 119505,
+            "p50_ns": 8456,
+            "p95_ns": 9357,
+            "max_ns": 9357,
+            "candidates": 1
+          },
+          "invalid_32": {
+            "count": 32,
+            "total_ns": 182793,
+            "p50_ns": 3317,
+            "p95_ns": 13575,
+            "max_ns": 16711,
+            "candidates": 1
+          },
+          "invalid_64": {
+            "count": 64,
+            "total_ns": 230564,
+            "p50_ns": 2164,
+            "p95_ns": 8946,
+            "max_ns": 11080,
+            "candidates": 1
+          },
+          "invalid_128": {
+            "count": 128,
+            "total_ns": 402036,
+            "p50_ns": 2475,
+            "p95_ns": 8446,
+            "max_ns": 12293,
+            "candidates": 1
+          },
+          "invalid_256": {
+            "count": 256,
+            "total_ns": 887520,
+            "p50_ns": 2354,
+            "p95_ns": 8396,
+            "max_ns": 48080,
+            "candidates": 1
+          }
+        },
+        {
+          "ambiguous_8": {
+            "count": 8,
+            "total_ns": 19830594,
+            "p50_ns": 3038466,
+            "p95_ns": 4242912,
+            "max_ns": 4242912,
+            "candidates": 5
+          },
+          "ambiguous_16": {
+            "count": 16,
+            "total_ns": 82000897,
+            "p50_ns": 6675528,
+            "p95_ns": 9637780,
+            "max_ns": 9637780,
+            "candidates": 5
+          },
+          "ambiguous_32": {
+            "count": 32,
+            "total_ns": 259507554,
+            "p50_ns": 8713571,
+            "p95_ns": 14068004,
+            "max_ns": 14593443,
+            "candidates": 5
+          },
+          "ambiguous_64": {
+            "count": 64,
+            "total_ns": 749081659,
+            "p50_ns": 14771568,
+            "p95_ns": 16182492,
+            "max_ns": 17039905,
+            "candidates": 1
+          },
+          "ambiguous_128": {
+            "count": 128,
+            "total_ns": 1729743926,
+            "p50_ns": 14905319,
+            "p95_ns": 15838254,
+            "max_ns": 16623221,
+            "candidates": 1
+          },
+          "ambiguous_256": {
+            "count": 256,
+            "total_ns": 1793136638,
+            "p50_ns": 708252,
+            "p95_ns": 15199733,
+            "max_ns": 17733068,
+            "candidates": 1
+          },
+          "abbreviation_8": {
+            "count": 8,
+            "total_ns": 7060953,
+            "p50_ns": 1288063,
+            "p95_ns": 1723312,
+            "max_ns": 1723312,
+            "candidates": 5
+          },
+          "abbreviation_16": {
+            "count": 16,
+            "total_ns": 26573429,
+            "p50_ns": 1879746,
+            "p95_ns": 3003280,
+            "max_ns": 3003280,
+            "candidates": 5
+          },
+          "abbreviation_32": {
+            "count": 32,
+            "total_ns": 97149173,
+            "p50_ns": 2981538,
+            "p95_ns": 5558597,
+            "max_ns": 5740118,
+            "candidates": 5
+          },
+          "abbreviation_64": {
+            "count": 64,
+            "total_ns": 412854694,
+            "p50_ns": 7605668,
+            "p95_ns": 11500504,
+            "max_ns": 11712513,
+            "candidates": 5
+          },
+          "abbreviation_128": {
+            "count": 128,
+            "total_ns": 1578445010,
+            "p50_ns": 12421888,
+            "p95_ns": 23375163,
+            "max_ns": 24528672,
+            "candidates": 5
+          },
+          "abbreviation_256": {
+            "count": 256,
+            "total_ns": 1803268407,
+            "p50_ns": 120767,
+            "p95_ns": 26599558,
+            "max_ns": 33156863,
+            "candidates": 1
+          },
+          "full_pinyin_8": {
+            "count": 8,
+            "total_ns": 807960,
+            "p50_ns": 96391,
+            "p95_ns": 223370,
+            "max_ns": 223370,
+            "candidates": 5
+          },
+          "full_pinyin_16": {
+            "count": 16,
+            "total_ns": 4096155,
+            "p50_ns": 90811,
+            "p95_ns": 968192,
+            "max_ns": 968192,
+            "candidates": 5
+          },
+          "full_pinyin_32": {
+            "count": 32,
+            "total_ns": 7835730,
+            "p50_ns": 177073,
+            "p95_ns": 844078,
+            "max_ns": 1140335,
+            "candidates": 5
+          },
+          "full_pinyin_64": {
+            "count": 64,
+            "total_ns": 20342517,
+            "p50_ns": 243067,
+            "p95_ns": 750923,
+            "max_ns": 2449258,
+            "candidates": 5
+          },
+          "full_pinyin_128": {
+            "count": 128,
+            "total_ns": 71660645,
+            "p50_ns": 414229,
+            "p95_ns": 1081234,
+            "max_ns": 6289631,
+            "candidates": 5
+          },
+          "full_pinyin_256": {
+            "count": 256,
+            "total_ns": 536803150,
+            "p50_ns": 141355,
+            "p95_ns": 1055746,
+            "max_ns": 327019545,
+            "candidates": 5
+          },
+          "invalid_8": {
+            "count": 8,
+            "total_ns": 99608,
+            "p50_ns": 13896,
+            "p95_ns": 23524,
+            "max_ns": 23524,
+            "candidates": 1
+          },
+          "invalid_16": {
+            "count": 16,
+            "total_ns": 214564,
+            "p50_ns": 13966,
+            "p95_ns": 27662,
+            "max_ns": 27662,
+            "candidates": 1
+          },
+          "invalid_32": {
+            "count": 32,
+            "total_ns": 198974,
+            "p50_ns": 3286,
+            "p95_ns": 22192,
+            "max_ns": 22221,
+            "candidates": 1
+          },
+          "invalid_64": {
+            "count": 64,
+            "total_ns": 230433,
+            "p50_ns": 2214,
+            "p95_ns": 8846,
+            "max_ns": 9679,
+            "candidates": 1
+          },
+          "invalid_128": {
+            "count": 128,
+            "total_ns": 432253,
+            "p50_ns": 2484,
+            "p95_ns": 8706,
+            "max_ns": 13826,
+            "candidates": 1
+          },
+          "invalid_256": {
+            "count": 256,
+            "total_ns": 818650,
+            "p50_ns": 2355,
+            "p95_ns": 9027,
+            "max_ns": 33473,
+            "candidates": 1
+          }
+        },
+        {
+          "ambiguous_8": {
+            "count": 8,
+            "total_ns": 20537164,
+            "p50_ns": 3114269,
+            "p95_ns": 4231991,
+            "max_ns": 4231991,
+            "candidates": 5
+          },
+          "ambiguous_16": {
+            "count": 16,
+            "total_ns": 88609187,
+            "p50_ns": 7135122,
+            "p95_ns": 9910182,
+            "max_ns": 9910182,
+            "candidates": 5
+          },
+          "ambiguous_32": {
+            "count": 32,
+            "total_ns": 259774496,
+            "p50_ns": 8786419,
+            "p95_ns": 14022679,
+            "max_ns": 14459270,
+            "candidates": 5
+          },
+          "ambiguous_64": {
+            "count": 64,
+            "total_ns": 735385504,
+            "p50_ns": 14683912,
+            "p95_ns": 14934084,
+            "max_ns": 15179014,
+            "candidates": 1
+          },
+          "ambiguous_128": {
+            "count": 128,
+            "total_ns": 1688865598,
+            "p50_ns": 14842261,
+            "p95_ns": 14974460,
+            "max_ns": 15179164,
+            "candidates": 1
+          },
+          "ambiguous_256": {
+            "count": 256,
+            "total_ns": 1767620518,
+            "p50_ns": 702341,
+            "p95_ns": 14921149,
+            "max_ns": 15028751,
+            "candidates": 1
+          },
+          "abbreviation_8": {
+            "count": 8,
+            "total_ns": 7021970,
+            "p50_ns": 1267795,
+            "p95_ns": 1689929,
+            "max_ns": 1689929,
+            "candidates": 5
+          },
+          "abbreviation_16": {
+            "count": 16,
+            "total_ns": 26596301,
+            "p50_ns": 1874626,
+            "p95_ns": 3046210,
+            "max_ns": 3046210,
+            "candidates": 5
+          },
+          "abbreviation_32": {
+            "count": 32,
+            "total_ns": 97157779,
+            "p50_ns": 2995175,
+            "p95_ns": 5527768,
+            "max_ns": 5771628,
+            "candidates": 5
+          },
+          "abbreviation_64": {
+            "count": 64,
+            "total_ns": 393075466,
+            "p50_ns": 6136854,
+            "p95_ns": 11492078,
+            "max_ns": 12409975,
+            "candidates": 5
+          },
+          "abbreviation_128": {
+            "count": 128,
+            "total_ns": 1588597257,
+            "p50_ns": 12083581,
+            "p95_ns": 24014064,
+            "max_ns": 31321040,
+            "candidates": 5
+          },
+          "abbreviation_256": {
+            "count": 256,
+            "total_ns": 1689743379,
+            "p50_ns": 109376,
+            "p95_ns": 24792288,
+            "max_ns": 45023877,
+            "candidates": 1
+          },
+          "full_pinyin_8": {
+            "count": 8,
+            "total_ns": 826595,
+            "p50_ns": 96051,
+            "p95_ns": 237286,
+            "max_ns": 237286,
+            "candidates": 5
+          },
+          "full_pinyin_16": {
+            "count": 16,
+            "total_ns": 4004362,
+            "p50_ns": 91382,
+            "p95_ns": 941622,
+            "max_ns": 941622,
+            "candidates": 5
+          },
+          "full_pinyin_32": {
+            "count": 32,
+            "total_ns": 7810273,
+            "p50_ns": 181732,
+            "p95_ns": 848907,
+            "max_ns": 1136367,
+            "candidates": 5
+          },
+          "full_pinyin_64": {
+            "count": 64,
+            "total_ns": 19875208,
+            "p50_ns": 238198,
+            "p95_ns": 749149,
+            "max_ns": 2339321,
+            "candidates": 5
+          },
+          "full_pinyin_128": {
+            "count": 128,
+            "total_ns": 75702659,
+            "p50_ns": 409801,
+            "p95_ns": 1126920,
+            "max_ns": 7434446,
+            "candidates": 5
+          },
+          "full_pinyin_256": {
+            "count": 256,
+            "total_ns": 530904714,
+            "p50_ns": 143720,
+            "p95_ns": 1068731,
+            "max_ns": 323093319,
+            "candidates": 5
+          },
+          "invalid_8": {
+            "count": 8,
+            "total_ns": 66856,
+            "p50_ns": 8696,
+            "p95_ns": 17593,
+            "max_ns": 17593,
+            "candidates": 1
+          },
+          "invalid_16": {
+            "count": 16,
+            "total_ns": 119806,
+            "p50_ns": 8346,
+            "p95_ns": 9628,
+            "max_ns": 9628,
+            "candidates": 1
+          },
+          "invalid_32": {
+            "count": 32,
+            "total_ns": 149461,
+            "p50_ns": 2335,
+            "p95_ns": 8897,
+            "max_ns": 8926,
+            "candidates": 1
+          },
+          "invalid_64": {
+            "count": 64,
+            "total_ns": 234762,
+            "p50_ns": 2104,
+            "p95_ns": 8446,
+            "max_ns": 20208,
+            "candidates": 1
+          },
+          "invalid_128": {
+            "count": 128,
+            "total_ns": 378062,
+            "p50_ns": 2324,
+            "p95_ns": 7995,
+            "max_ns": 9488,
+            "candidates": 1
+          },
+          "invalid_256": {
+            "count": 256,
+            "total_ns": 689707,
+            "p50_ns": 2154,
+            "p95_ns": 7975,
+            "max_ns": 27772,
+            "candidates": 1
+          }
+        }
+      ],
+      "resources": [
+        {
+          "wall_s": 8.88,
+          "user_s": 8.79,
+          "system_s": 0.01,
+          "maxrss_kib": 143004.0,
+          "minor_faults": 1813.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 10.4,
+          "user_s": 9.58,
+          "system_s": 0.09,
+          "maxrss_kib": 143420.0,
+          "minor_faults": 2152.0,
+          "major_faults": 1744.0
+        },
+        {
+          "wall_s": 11.0,
+          "user_s": 9.52,
+          "system_s": 0.19,
+          "maxrss_kib": 142224.0,
+          "minor_faults": 2491.0,
+          "major_faults": 3245.0
+        },
+        {
+          "wall_s": 10.36,
+          "user_s": 9.55,
+          "system_s": 0.12,
+          "maxrss_kib": 142572.0,
+          "minor_faults": 3244.0,
+          "major_faults": 1485.0
+        },
+        {
+          "wall_s": 9.21,
+          "user_s": 8.89,
+          "system_s": 0.08,
+          "maxrss_kib": 142200.0,
+          "minor_faults": 3438.0,
+          "major_faults": 256.0
+        },
+        {
+          "wall_s": 9.29,
+          "user_s": 9.14,
+          "system_s": 0.03,
+          "maxrss_kib": 143096.0,
+          "minor_faults": 3854.0,
+          "major_faults": 5.0
+        },
+        {
+          "wall_s": 9.09,
+          "user_s": 8.95,
+          "system_s": 0.02,
+          "maxrss_kib": 142408.0,
+          "minor_faults": 3566.0,
+          "major_faults": 0.0
+        }
+      ]
+    },
+    "first_screen_0ms": {
+      "summary": {
+        "first_key": {
+          "count": {
+            "median": 200,
+            "min": 200,
+            "max": 200
+          },
+          "p50_ns": {
+            "median": 8346,
+            "min": 6232,
+            "max": 8667
+          },
+          "p95_ns": {
+            "median": 77566,
+            "min": 69981,
+            "max": 88737
+          },
+          "max_ns": {
+            "median": 126939,
+            "min": 116049,
+            "max": 170761
+          }
+        },
+        "first_page_key": {
+          "count": {
+            "median": 1202,
+            "min": 1202,
+            "max": 1202
+          },
+          "p50_ns": {
+            "median": 55254,
+            "min": 51758,
+            "max": 58430
+          },
+          "p95_ns": {
+            "median": 268165,
+            "min": 254899,
+            "max": 274957
+          },
+          "max_ns": {
+            "median": 1218302,
+            "min": 1128553,
+            "max": 1470797
+          }
+        },
+        "replay_page_key": {
+          "count": {
+            "median": 1202,
+            "min": 1202,
+            "max": 1202
+          },
+          "p50_ns": {
+            "median": 6602,
+            "min": 6282,
+            "max": 6813
+          },
+          "p95_ns": {
+            "median": 19106,
+            "min": 17934,
+            "max": 19467
+          },
+          "max_ns": {
+            "median": 109205,
+            "min": 87254,
+            "max": 160832
+          }
+        },
+        "quality": {
+          "cases": {
+            "median": 200,
+            "min": 200,
+            "max": 200
+          },
+          "top1": {
+            "median": 200,
+            "min": 200,
+            "max": 200
+          },
+          "idle_ms": {
+            "median": 0,
+            "min": 0,
+            "max": 0
+          }
+        }
+      },
+      "samples": [
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 8225,
+            "p95_ns": 79971,
+            "max_ns": 116049
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 53801,
+            "p95_ns": 258176,
+            "max_ns": 1153180
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 6412,
+            "p95_ns": 19106,
+            "max_ns": 117451
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 0
+          }
+        },
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 8506,
+            "p95_ns": 88737,
+            "max_ns": 126939
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 58430,
+            "p95_ns": 273284,
+            "max_ns": 1470797
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 6593,
+            "p95_ns": 19467,
+            "max_ns": 160832
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 0
+          }
+        },
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 8666,
+            "p95_ns": 77236,
+            "max_ns": 170761
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 57097,
+            "p95_ns": 271230,
+            "max_ns": 1306848
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 6763,
+            "p95_ns": 19277,
+            "max_ns": 109205
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 0
+          }
+        },
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 8667,
+            "p95_ns": 77566,
+            "max_ns": 129213
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 56226,
+            "p95_ns": 268165,
+            "max_ns": 1218302
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 6813,
+            "p95_ns": 18034,
+            "max_ns": 109917
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 0
+          }
+        },
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 7695,
+            "p95_ns": 77446,
+            "max_ns": 117081
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 55254,
+            "p95_ns": 274957,
+            "max_ns": 1378984
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 6632,
+            "p95_ns": 19126,
+            "max_ns": 94929
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 0
+          }
+        },
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 8346,
+            "p95_ns": 80191,
+            "max_ns": 124384
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 55144,
+            "p95_ns": 257273,
+            "max_ns": 1128553
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 6602,
+            "p95_ns": 18615,
+            "max_ns": 100719
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 0
+          }
+        },
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 6232,
+            "p95_ns": 69981,
+            "max_ns": 128381
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 51758,
+            "p95_ns": 254899,
+            "max_ns": 1162677
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 6282,
+            "p95_ns": 17934,
+            "max_ns": 87254
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 0
+          }
+        }
+      ],
+      "resources": [
+        {
+          "wall_s": 0.38,
+          "user_s": 0.43,
+          "system_s": 0.04,
+          "maxrss_kib": 143884.0,
+          "minor_faults": 4214.0,
+          "major_faults": 30.0
+        },
+        {
+          "wall_s": 0.33,
+          "user_s": 0.42,
+          "system_s": 0.03,
+          "maxrss_kib": 143656.0,
+          "minor_faults": 4038.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 0.37,
+          "user_s": 0.44,
+          "system_s": 0.05,
+          "maxrss_kib": 144872.0,
+          "minor_faults": 4166.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 0.35,
+          "user_s": 0.42,
+          "system_s": 0.04,
+          "maxrss_kib": 144332.0,
+          "minor_faults": 4102.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 0.37,
+          "user_s": 0.43,
+          "system_s": 0.04,
+          "maxrss_kib": 144844.0,
+          "minor_faults": 4184.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 0.35,
+          "user_s": 0.41,
+          "system_s": 0.04,
+          "maxrss_kib": 144372.0,
+          "minor_faults": 4077.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 0.38,
+          "user_s": 0.43,
+          "system_s": 0.04,
+          "maxrss_kib": 144320.0,
+          "minor_faults": 4171.0,
+          "major_faults": 0.0
+        }
+      ]
+    },
+    "first_screen_2ms": {
+      "summary": {
+        "first_key": {
+          "count": {
+            "median": 200,
+            "min": 200,
+            "max": 200
+          },
+          "p50_ns": {
+            "median": 11692,
+            "min": 10250,
+            "max": 13616
+          },
+          "p95_ns": {
+            "median": 17462,
+            "min": 15559,
+            "max": 19667
+          },
+          "max_ns": {
+            "median": 32922,
+            "min": 22934,
+            "max": 49603
+          }
+        },
+        "first_page_key": {
+          "count": {
+            "median": 1202,
+            "min": 1202,
+            "max": 1202
+          },
+          "p50_ns": {
+            "median": 4959,
+            "min": 3857,
+            "max": 6041
+          },
+          "p95_ns": {
+            "median": 16251,
+            "min": 15289,
+            "max": 23544
+          },
+          "max_ns": {
+            "median": 547200,
+            "min": 436732,
+            "max": 34898710
+          }
+        },
+        "replay_page_key": {
+          "count": {
+            "median": 1202,
+            "min": 1202,
+            "max": 1202
+          },
+          "p50_ns": {
+            "median": 4268,
+            "min": 3116,
+            "max": 5760
+          },
+          "p95_ns": {
+            "median": 12794,
+            "min": 11171,
+            "max": 14497
+          },
+          "max_ns": {
+            "median": 46418,
+            "min": 39434,
+            "max": 102814
+          }
+        },
+        "quality": {
+          "cases": {
+            "median": 200,
+            "min": 200,
+            "max": 200
+          },
+          "top1": {
+            "median": 200,
+            "min": 200,
+            "max": 200
+          },
+          "idle_ms": {
+            "median": 2,
+            "min": 2,
+            "max": 2
+          }
+        }
+      },
+      "samples": [
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 11692,
+            "p95_ns": 17864,
+            "max_ns": 32922
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 4648,
+            "p95_ns": 15729,
+            "max_ns": 550747
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 4268,
+            "p95_ns": 12794,
+            "max_ns": 102814
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 2
+          }
+        },
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 10250,
+            "p95_ns": 15559,
+            "max_ns": 22934
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 4148,
+            "p95_ns": 15289,
+            "max_ns": 436732
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 3276,
+            "p95_ns": 11171,
+            "max_ns": 48772
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 2
+          }
+        },
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 13214,
+            "p95_ns": 17462,
+            "max_ns": 43091
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 5921,
+            "p95_ns": 16511,
+            "max_ns": 482859
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 5590,
+            "p95_ns": 13816,
+            "max_ns": 42489
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 2
+          }
+        },
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 12694,
+            "p95_ns": 18084,
+            "max_ns": 23584
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 5620,
+            "p95_ns": 20369,
+            "max_ns": 34898710
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 5190,
+            "p95_ns": 13625,
+            "max_ns": 46418
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 2
+          }
+        },
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 10981,
+            "p95_ns": 16351,
+            "max_ns": 49603
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 4959,
+            "p95_ns": 16251,
+            "max_ns": 599618
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 4107,
+            "p95_ns": 12113,
+            "max_ns": 43893
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 2
+          }
+        },
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 10440,
+            "p95_ns": 17092,
+            "max_ns": 29415
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 3857,
+            "p95_ns": 15950,
+            "max_ns": 455747
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 3116,
+            "p95_ns": 11822,
+            "max_ns": 48171
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 2
+          }
+        },
+        {
+          "first_key": {
+            "count": 200,
+            "p50_ns": 13616,
+            "p95_ns": 19667,
+            "max_ns": 44233
+          },
+          "first_page_key": {
+            "count": 1202,
+            "p50_ns": 6041,
+            "p95_ns": 23544,
+            "max_ns": 547200
+          },
+          "replay_page_key": {
+            "count": 1202,
+            "p50_ns": 5760,
+            "p95_ns": 14497,
+            "max_ns": 39434
+          },
+          "quality": {
+            "cases": 200,
+            "top1": 200,
+            "idle_ms": 2
+          }
+        }
+      ],
+      "resources": [
+        {
+          "wall_s": 5.91,
+          "user_s": 4.65,
+          "system_s": 0.06,
+          "maxrss_kib": 144832.0,
+          "minor_faults": 5017.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 5.81,
+          "user_s": 4.65,
+          "system_s": 0.06,
+          "maxrss_kib": 145444.0,
+          "minor_faults": 6151.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 5.68,
+          "user_s": 4.58,
+          "system_s": 0.07,
+          "maxrss_kib": 144452.0,
+          "minor_faults": 7144.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 5.74,
+          "user_s": 4.52,
+          "system_s": 0.1,
+          "maxrss_kib": 143688.0,
+          "minor_faults": 7504.0,
+          "major_faults": 340.0
+        },
+        {
+          "wall_s": 5.86,
+          "user_s": 4.65,
+          "system_s": 0.05,
+          "maxrss_kib": 145016.0,
+          "minor_faults": 7204.0,
+          "major_faults": 2.0
+        },
+        {
+          "wall_s": 5.88,
+          "user_s": 4.64,
+          "system_s": 0.05,
+          "maxrss_kib": 144308.0,
+          "minor_faults": 6150.0,
+          "major_faults": 0.0
+        },
+        {
+          "wall_s": 5.7,
+          "user_s": 4.6,
+          "system_s": 0.08,
+          "maxrss_kib": 144736.0,
+          "minor_faults": 6611.0,
+          "major_faults": 0.0
+        }
+      ]
+    },
+    "startup_warm": {
+      "summary": {
+        "startup": {
+          "load_us": {
+            "median": 38944,
+            "min": 38671,
+            "max": 41992
+          },
+          "minor_faults": {
+            "median": 1955,
+            "min": 1954,
+            "max": 1955
+          },
+          "major_faults": {
+            "median": 0,
+            "min": 0,
+            "max": 0
+          }
+        }
+      },
+      "samples": [
+        {
+          "startup": {
+            "load_us": 39136,
+            "minor_faults": 1955,
+            "major_faults": 0
+          }
+        },
+        {
+          "startup": {
+            "load_us": 38817,
+            "minor_faults": 1955,
+            "major_faults": 0
+          }
+        },
+        {
+          "startup": {
+            "load_us": 39153,
+            "minor_faults": 1955,
+            "major_faults": 0
+          }
+        },
+        {
+          "startup": {
+            "load_us": 38944,
+            "minor_faults": 1954,
+            "major_faults": 0
+          }
+        },
+        {
+          "startup": {
+            "load_us": 38718,
+            "minor_faults": 1954,
+            "major_faults": 0
+          }
+        },
+        {
+          "startup": {
+            "load_us": 41992,
+            "minor_faults": 1955,
+            "major_faults": 0
+          }
+        },
+        {
+          "startup": {
+            "load_us": 38671,
+            "minor_faults": 1955,
+            "major_faults": 0
+          }
+        }
+      ]
+    },
+    "startup_cold": {
+      "summary": {
+        "startup": {
+          "load_us": {
+            "median": 146484,
+            "min": 139964,
+            "max": 150953
+          },
+          "minor_faults": {
+            "median": 2140,
+            "min": 2138,
+            "max": 2143
+          },
+          "major_faults": {
+            "median": 35,
+            "min": 35,
+            "max": 35
+          }
+        }
+      },
+      "samples": [
+        {
+          "startup": {
+            "load_us": 150326,
+            "minor_faults": 2141,
+            "major_faults": 35
+          }
+        },
+        {
+          "startup": {
+            "load_us": 150953,
+            "minor_faults": 2140,
+            "major_faults": 35
+          }
+        },
+        {
+          "startup": {
+            "load_us": 146690,
+            "minor_faults": 2141,
+            "major_faults": 35
+          }
+        },
+        {
+          "startup": {
+            "load_us": 141136,
+            "minor_faults": 2143,
+            "major_faults": 35
+          }
+        },
+        {
+          "startup": {
+            "load_us": 145519,
+            "minor_faults": 2138,
+            "major_faults": 35
+          }
+        },
+        {
+          "startup": {
+            "load_us": 146484,
+            "minor_faults": 2140,
+            "major_faults": 35
+          }
+        },
+        {
+          "startup": {
+            "load_us": 139964,
+            "minor_faults": 2138,
+            "major_faults": 35
+          }
+        }
+      ]
+    },
+    "imports_0": {
+      "summary": {
+        "input": {
+          "load_us": {
+            "median": 40601,
+            "min": 40151,
+            "max": 45888
+          },
+          "minor_faults": {
+            "median": 2170,
+            "min": 2169,
+            "max": 2172
+          },
+          "major_faults": {
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "compositions": {
+            "median": 1000,
+            "min": 1000,
+            "max": 1000
+          },
+          "p50_ns": {
+            "median": 3036,
+            "min": 3016,
+            "max": 3045
+          },
+          "p95_ns": {
+            "median": 3126,
+            "min": 3116,
+            "max": 4729
+          }
+        }
+      },
+      "samples": [
+        {
+          "input": {
+            "load_us": 40552,
+            "minor_faults": 2172,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 3026,
+            "p95_ns": 3126
+          }
+        },
+        {
+          "input": {
+            "load_us": 41241,
+            "minor_faults": 2169,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 3036,
+            "p95_ns": 3367
+          }
+        },
+        {
+          "input": {
+            "load_us": 40151,
+            "minor_faults": 2172,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 3036,
+            "p95_ns": 3116
+          }
+        },
+        {
+          "input": {
+            "load_us": 40403,
+            "minor_faults": 2172,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 3045,
+            "p95_ns": 3156
+          }
+        },
+        {
+          "input": {
+            "load_us": 41476,
+            "minor_faults": 2170,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 3036,
+            "p95_ns": 4729
+          }
+        },
+        {
+          "input": {
+            "load_us": 45888,
+            "minor_faults": 2169,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 3016,
+            "p95_ns": 3116
+          }
+        },
+        {
+          "input": {
+            "load_us": 40601,
+            "minor_faults": 2170,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 3016,
+            "p95_ns": 3116
+          }
+        }
+      ]
+    },
+    "imports_100": {
+      "summary": {
+        "input": {
+          "load_us": {
+            "median": 42205,
+            "min": 40155,
+            "max": 44628
+          },
+          "minor_faults": {
+            "median": 2171,
+            "min": 2170,
+            "max": 2172
+          },
+          "major_faults": {
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "compositions": {
+            "median": 1000,
+            "min": 1000,
+            "max": 1000
+          },
+          "p50_ns": {
+            "median": 104808,
+            "min": 103475,
+            "max": 106780
+          },
+          "p95_ns": {
+            "median": 114866,
+            "min": 112652,
+            "max": 132419
+          }
+        }
+      },
+      "samples": [
+        {
+          "input": {
+            "load_us": 42205,
+            "minor_faults": 2171,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 104667,
+            "p95_ns": 132419
+          }
+        },
+        {
+          "input": {
+            "load_us": 40299,
+            "minor_faults": 2172,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 104978,
+            "p95_ns": 114866
+          }
+        },
+        {
+          "input": {
+            "load_us": 43470,
+            "minor_faults": 2171,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 103475,
+            "p95_ns": 112652
+          }
+        },
+        {
+          "input": {
+            "load_us": 40155,
+            "minor_faults": 2170,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 104707,
+            "p95_ns": 114866
+          }
+        },
+        {
+          "input": {
+            "load_us": 44628,
+            "minor_faults": 2170,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 104808,
+            "p95_ns": 120507
+          }
+        },
+        {
+          "input": {
+            "load_us": 44170,
+            "minor_faults": 2171,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 106780,
+            "p95_ns": 117201
+          }
+        },
+        {
+          "input": {
+            "load_us": 40189,
+            "minor_faults": 2170,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 105037,
+            "p95_ns": 114495
+          }
+        }
+      ]
+    },
+    "imports_1000": {
+      "summary": {
+        "input": {
+          "load_us": {
+            "median": 41273,
+            "min": 39887,
+            "max": 44755
+          },
+          "minor_faults": {
+            "median": 2171,
+            "min": 2170,
+            "max": 2172
+          },
+          "major_faults": {
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "compositions": {
+            "median": 1000,
+            "min": 1000,
+            "max": 1000
+          },
+          "p50_ns": {
+            "median": 931623,
+            "min": 927474,
+            "max": 949366
+          },
+          "p95_ns": {
+            "median": 952462,
+            "min": 937033,
+            "max": 1073299
+          }
+        }
+      },
+      "samples": [
+        {
+          "input": {
+            "load_us": 44755,
+            "minor_faults": 2170,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 949366,
+            "p95_ns": 1071506
+          }
+        },
+        {
+          "input": {
+            "load_us": 41691,
+            "minor_faults": 2172,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 927474,
+            "p95_ns": 937033
+          }
+        },
+        {
+          "input": {
+            "load_us": 42280,
+            "minor_faults": 2171,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 933516,
+            "p95_ns": 988399
+          }
+        },
+        {
+          "input": {
+            "load_us": 40152,
+            "minor_faults": 2170,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 930070,
+            "p95_ns": 947662
+          }
+        },
+        {
+          "input": {
+            "load_us": 41112,
+            "minor_faults": 2171,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 929448,
+            "p95_ns": 952462
+          }
+        },
+        {
+          "input": {
+            "load_us": 39887,
+            "minor_faults": 2172,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 931623,
+            "p95_ns": 1073299
+          }
+        },
+        {
+          "input": {
+            "load_us": 41273,
+            "minor_faults": 2171,
+            "major_faults": 0,
+            "compositions": 1000,
+            "p50_ns": 934458,
+            "p95_ns": 942914
+          }
+        }
+      ]
+    },
+    "ibus_direct": {
+      "summary": {
+        "commit": {
+          "count": {
+            "median": 275,
+            "min": 275,
+            "max": 275
+          },
+          "p50_ns": {
+            "median": 380566,
+            "min": 369956,
+            "max": 408929
+          },
+          "p95_ns": {
+            "median": 520569,
+            "min": 495723,
+            "max": 714093
+          },
+          "p99_ns": {
+            "median": 634584,
+            "min": 560835,
+            "max": 1008266
+          },
+          "max_ns": {
+            "median": 1033735,
+            "min": 590711,
+            "max": 1392699
+          }
+        },
+        "edit": {
+          "count": {
+            "median": 1375,
+            "min": 1375,
+            "max": 1375
+          },
+          "p50_ns": {
+            "median": 268205,
+            "min": 259989,
+            "max": 296879
+          },
+          "p95_ns": {
+            "median": 468502,
+            "min": 442382,
+            "max": 579741
+          },
+          "p99_ns": {
+            "median": 666384,
+            "min": 548031,
+            "max": 1002315
+          },
+          "max_ns": {
+            "median": 1192984,
+            "min": 1115368,
+            "max": 1894083
+          }
+        },
+        "ignored": {
+          "count": {
+            "median": 550,
+            "min": 550,
+            "max": 550
+          },
+          "p50_ns": {
+            "median": 157466,
+            "min": 153288,
+            "max": 166713
+          },
+          "p95_ns": {
+            "median": 257675,
+            "min": 236685,
+            "max": 327907
+          },
+          "p99_ns": {
+            "median": 358154,
+            "min": 279185,
+            "max": 666794
+          },
+          "max_ns": {
+            "median": 953083,
+            "min": 593726,
+            "max": 1675131
+          }
+        },
+        "page": {
+          "count": {
+            "median": 550,
+            "min": 550,
+            "max": 550
+          },
+          "p50_ns": {
+            "median": 361631,
+            "min": 338868,
+            "max": 393050
+          },
+          "p95_ns": {
+            "median": 502294,
+            "min": 468822,
+            "max": 684087
+          },
+          "p99_ns": {
+            "median": 749279,
+            "min": 606261,
+            "max": 1098056
+          },
+          "max_ns": {
+            "median": 1179238,
+            "min": 921684,
+            "max": 1696932
+          }
+        },
+        "select": {
+          "count": {
+            "median": 550,
+            "min": 550,
+            "max": 550
+          },
+          "p50_ns": {
+            "median": 346222,
+            "min": 326434,
+            "max": 372551
+          },
+          "p95_ns": {
+            "median": 492697,
+            "min": 462700,
+            "max": 590841
+          },
+          "p99_ns": {
+            "median": 779807,
+            "min": 574791,
+            "max": 896406
+          },
+          "max_ns": {
+            "median": 1170311,
+            "min": 1022914,
+            "max": 1961029
+          }
+        },
+        "sentence": {
+          "count": {
+            "median": 1529,
+            "min": 1529,
+            "max": 1529
+          },
+          "p50_ns": {
+            "median": 717730,
+            "min": 696811,
+            "max": 746204
+          },
+          "p95_ns": {
+            "median": 3714307,
+            "min": 3619108,
+            "max": 3747620
+          },
+          "p99_ns": {
+            "median": 4325197,
+            "min": 4238753,
+            "max": 4477704
+          },
+          "max_ns": {
+            "median": 5095185,
+            "min": 4889097,
+            "max": 11665054
+          }
+        },
+        "short": {
+          "count": {
+            "median": 1202,
+            "min": 1202,
+            "max": 1202
+          },
+          "p50_ns": {
+            "median": 439978,
+            "min": 425580,
+            "max": 472809
+          },
+          "p95_ns": {
+            "median": 792631,
+            "min": 736605,
+            "max": 979242
+          },
+          "p99_ns": {
+            "median": 1315083,
+            "min": 1236326,
+            "max": 1756464
+          },
+          "max_ns": {
+            "median": 1643622,
+            "min": 1473733,
+            "max": 5541364
+          }
+        },
+        "wire_commit": {
+          "signals": {
+            "median": 825,
+            "min": 825,
+            "max": 825
+          },
+          "bytes": {
+            "median": 324412,
+            "min": 324412,
+            "max": 324412
+          }
+        },
+        "wire_edit": {
+          "signals": {
+            "median": 1638,
+            "min": 1638,
+            "max": 1638
+          },
+          "bytes": {
+            "median": 913624,
+            "min": 913624,
+            "max": 913624
+          }
+        },
+        "wire_ignored": {
+          "signals": {
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "bytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0
+          }
+        },
+        "wire_page": {
+          "signals": {
+            "median": 926,
+            "min": 926,
+            "max": 926
+          },
+          "bytes": {
+            "median": 726872,
+            "min": 726872,
+            "max": 726872
+          }
+        },
+        "wire_select": {
+          "signals": {
+            "median": 646,
+            "min": 646,
+            "max": 646
+          },
+          "bytes": {
+            "median": 656048,
+            "min": 656048,
+            "max": 656048
+          }
+        },
+        "wire_sentence": {
+          "signals": {
+            "median": 2979,
+            "min": 2979,
+            "max": 2979
+          },
+          "bytes": {
+            "median": 2135024,
+            "min": 2135024,
+            "max": 2135024
+          }
+        },
+        "wire_short": {
+          "signals": {
+            "median": 2385,
+            "min": 2385,
+            "max": 2385
+          },
+          "bytes": {
+            "median": 1644464,
+            "min": 1644464,
+            "max": 1644464
+          }
+        },
+        "wire": {
+          "signals": {
+            "median": 9401,
+            "min": 9401,
+            "max": 9401
+          },
+          "bytes": {
+            "median": 6401380,
+            "min": 6401380,
+            "max": 6401380
+          }
+        }
+      },
+      "samples": [
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 408929,
+            "p95_ns": 714093,
+            "p99_ns": 1008266,
+            "max_ns": 1033735
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 296879,
+            "p95_ns": 579741,
+            "p99_ns": 1002315,
+            "max_ns": 1894083
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 166713,
+            "p95_ns": 327907,
+            "p99_ns": 666794,
+            "max_ns": 1026982
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 393050,
+            "p95_ns": 684087,
+            "p99_ns": 1098056,
+            "max_ns": 1696932
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 372551,
+            "p95_ns": 590841,
+            "p99_ns": 896406,
+            "max_ns": 1961029
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 737147,
+            "p95_ns": 3697275,
+            "p99_ns": 4322632,
+            "max_ns": 5631002
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 472809,
+            "p95_ns": 979242,
+            "p99_ns": 1756464,
+            "max_ns": 5336970
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 324412
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 913624
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 726872
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 656048
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2135024
+          },
+          "wire_short": {
+            "signals": 2385,
+            "bytes": 1644464
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6401380
+          }
+        },
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 378171,
+            "p95_ns": 520569,
+            "p99_ns": 782262,
+            "max_ns": 1392699
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 266061,
+            "p95_ns": 469684,
+            "p99_ns": 662376,
+            "max_ns": 1337185
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 154100,
+            "p95_ns": 245682,
+            "p99_ns": 355358,
+            "max_ns": 593726
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 361631,
+            "p95_ns": 510731,
+            "p99_ns": 749279,
+            "max_ns": 1179238
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 343627,
+            "p95_ns": 523395,
+            "p99_ns": 848165,
+            "max_ns": 1299494
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 746204,
+            "p95_ns": 3736178,
+            "p99_ns": 4288728,
+            "max_ns": 5095185
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 434498,
+            "p95_ns": 815545,
+            "p99_ns": 1305806,
+            "max_ns": 1564182
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 324412
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 913624
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 726872
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 656048
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2135024
+          },
+          "wire_short": {
+            "signals": 2385,
+            "bytes": 1644464
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6401380
+          }
+        },
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 391797,
+            "p95_ns": 546698,
+            "p99_ns": 624755,
+            "max_ns": 1099288
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 271310,
+            "p95_ns": 468502,
+            "p99_ns": 666443,
+            "max_ns": 1115368
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 159030,
+            "p95_ns": 279856,
+            "p99_ns": 358154,
+            "max_ns": 953083
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 364786,
+            "p95_ns": 496384,
+            "p99_ns": 685529,
+            "max_ns": 1038874
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 346922,
+            "p95_ns": 492697,
+            "p99_ns": 779807,
+            "max_ns": 1185250
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 717730,
+            "p95_ns": 3725749,
+            "p99_ns": 4438289,
+            "max_ns": 4998513
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 439978,
+            "p95_ns": 792631,
+            "p99_ns": 1358034,
+            "max_ns": 1643622
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 324412
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 913624
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 726872
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 656048
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2135024
+          },
+          "wire_short": {
+            "signals": 2385,
+            "bytes": 1644464
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6401380
+          }
+        },
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 392879,
+            "p95_ns": 525589,
+            "p99_ns": 740713,
+            "max_ns": 975435
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 276160,
+            "p95_ns": 487597,
+            "p99_ns": 659541,
+            "max_ns": 1192984
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 165752,
+            "p95_ns": 283473,
+            "p99_ns": 359887,
+            "max_ns": 944446
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 370116,
+            "p95_ns": 528855,
+            "p99_ns": 785207,
+            "max_ns": 1063461
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 357282,
+            "p95_ns": 507835,
+            "p99_ns": 783954,
+            "max_ns": 1153059
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 696811,
+            "p95_ns": 3661528,
+            "p99_ns": 4325197,
+            "max_ns": 4938581
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 456840,
+            "p95_ns": 770940,
+            "p99_ns": 1268697,
+            "max_ns": 1628564
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 324412
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 913624
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 726872
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 656048
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2135024
+          },
+          "wire_short": {
+            "signals": 2385,
+            "bytes": 1644464
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6401380
+          }
+        },
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 369956,
+            "p95_ns": 511652,
+            "p99_ns": 634584,
+            "max_ns": 1157688
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 264678,
+            "p95_ns": 442382,
+            "p99_ns": 676763,
+            "max_ns": 1164180
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 153288,
+            "p95_ns": 257675,
+            "p99_ns": 458493,
+            "max_ns": 1022874
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 338868,
+            "p95_ns": 468822,
+            "p99_ns": 726797,
+            "max_ns": 1356051
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 326434,
+            "p95_ns": 462700,
+            "p99_ns": 610970,
+            "max_ns": 1022914
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 709364,
+            "p95_ns": 3619108,
+            "p99_ns": 4238753,
+            "max_ns": 4889097
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 425580,
+            "p95_ns": 736746,
+            "p99_ns": 1315083,
+            "max_ns": 1702332
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 324412
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 913624
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 726872
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 656048
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2135024
+          },
+          "wire_short": {
+            "signals": 2385,
+            "bytes": 1644464
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6401380
+          }
+        },
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 380566,
+            "p95_ns": 495723,
+            "p99_ns": 560835,
+            "max_ns": 590711
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 268205,
+            "p95_ns": 454435,
+            "p99_ns": 548031,
+            "max_ns": 1817128
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 157466,
+            "p95_ns": 236685,
+            "p99_ns": 279185,
+            "max_ns": 646396
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 359306,
+            "p95_ns": 472488,
+            "p99_ns": 606261,
+            "max_ns": 921684
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 340741,
+            "p95_ns": 474293,
+            "p99_ns": 636427,
+            "max_ns": 1084700
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 702341,
+            "p95_ns": 3747620,
+            "p99_ns": 4434402,
+            "max_ns": 11665054
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 448785,
+            "p95_ns": 965386,
+            "p99_ns": 1736446,
+            "max_ns": 5541364
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 324412
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 913624
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 726872
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 656048
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2135024
+          },
+          "wire_short": {
+            "signals": 2385,
+            "bytes": 1644464
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6401380
+          }
+        },
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 375266,
+            "p95_ns": 498678,
+            "p99_ns": 574591,
+            "max_ns": 750131
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 259989,
+            "p95_ns": 463903,
+            "p99_ns": 666384,
+            "max_ns": 1156546
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 155713,
+            "p95_ns": 250862,
+            "p99_ns": 336352,
+            "max_ns": 1675131
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 357122,
+            "p95_ns": 502294,
+            "p99_ns": 773405,
+            "max_ns": 1629726
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 346222,
+            "p95_ns": 466147,
+            "p99_ns": 574791,
+            "max_ns": 1170311
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 724002,
+            "p95_ns": 3714307,
+            "p99_ns": 4477704,
+            "max_ns": 6004115
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 437042,
+            "p95_ns": 736605,
+            "p99_ns": 1236326,
+            "max_ns": 1473733
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 324412
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 913624
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 726872
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 656048
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2135024
+          },
+          "wire_short": {
+            "signals": 2385,
+            "bytes": 1644464
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6401380
+          }
+        }
+      ],
+      "trace_lines": 6031,
+      "traces_equal": true
+    },
+    "ibus_routed": {
+      "summary": {
+        "commit": {
+          "count": {
+            "median": 275,
+            "min": 275,
+            "max": 275
+          },
+          "p50_ns": {
+            "median": 540507,
+            "min": 528814,
+            "max": 578368
+          },
+          "p95_ns": {
+            "median": 689807,
+            "min": 674589,
+            "max": 769448
+          },
+          "p99_ns": {
+            "median": 863264,
+            "min": 764969,
+            "max": 1141757
+          },
+          "max_ns": {
+            "median": 1353466,
+            "min": 917526,
+            "max": 1540819
+          }
+        },
+        "edit": {
+          "count": {
+            "median": 1375,
+            "min": 1375,
+            "max": 1375
+          },
+          "p50_ns": {
+            "median": 351502,
+            "min": 337074,
+            "max": 407747
+          },
+          "p95_ns": {
+            "median": 694837,
+            "min": 675811,
+            "max": 766903
+          },
+          "p99_ns": {
+            "median": 957791,
+            "min": 822928,
+            "max": 1065153
+          },
+          "max_ns": {
+            "median": 1433737,
+            "min": 1291119,
+            "max": 2334632
+          }
+        },
+        "ignored": {
+          "count": {
+            "median": 550,
+            "min": 550,
+            "max": 550
+          },
+          "p50_ns": {
+            "median": 215415,
+            "min": 209554,
+            "max": 237076
+          },
+          "p95_ns": {
+            "median": 314251,
+            "min": 297360,
+            "max": 416624
+          },
+          "p99_ns": {
+            "median": 461488,
+            "min": 387509,
+            "max": 694707
+          },
+          "max_ns": {
+            "median": 1047330,
+            "min": 584420,
+            "max": 1920423
+          }
+        },
+        "page": {
+          "count": {
+            "median": 550,
+            "min": 550,
+            "max": 550
+          },
+          "p50_ns": {
+            "median": 578268,
+            "min": 563340,
+            "max": 613975
+          },
+          "p95_ns": {
+            "median": 771221,
+            "min": 726227,
+            "max": 866089
+          },
+          "p99_ns": {
+            "median": 1114266,
+            "min": 898200,
+            "max": 1243029
+          },
+          "max_ns": {
+            "median": 1676614,
+            "min": 1330533,
+            "max": 2094521
+          }
+        },
+        "select": {
+          "count": {
+            "median": 550,
+            "min": 550,
+            "max": 550
+          },
+          "p50_ns": {
+            "median": 562428,
+            "min": 545616,
+            "max": 601031
+          },
+          "p95_ns": {
+            "median": 720476,
+            "min": 683015,
+            "max": 854918
+          },
+          "p99_ns": {
+            "median": 892699,
+            "min": 868584,
+            "max": 1255601
+          },
+          "max_ns": {
+            "median": 1527032,
+            "min": 977890,
+            "max": 2762106
+          }
+        },
+        "sentence": {
+          "count": {
+            "median": 1529,
+            "min": 1529,
+            "max": 1529
+          },
+          "p50_ns": {
+            "median": 921353,
+            "min": 885205,
+            "max": 966127
+          },
+          "p95_ns": {
+            "median": 3894856,
+            "min": 3829013,
+            "max": 3974095
+          },
+          "p99_ns": {
+            "median": 4512559,
+            "min": 4446474,
+            "max": 4832941
+          },
+          "max_ns": {
+            "median": 5606788,
+            "min": 5101076,
+            "max": 6060471
+          }
+        },
+        "short": {
+          "count": {
+            "median": 1202,
+            "min": 1202,
+            "max": 1202
+          },
+          "p50_ns": {
+            "median": 641727,
+            "min": 624895,
+            "max": 688034
+          },
+          "p95_ns": {
+            "median": 1020650,
+            "min": 929849,
+            "max": 1177465
+          },
+          "p99_ns": {
+            "median": 1503529,
+            "min": 1472230,
+            "max": 1713874
+          },
+          "max_ns": {
+            "median": 2283896,
+            "min": 1938737,
+            "max": 3807052
+          }
+        },
+        "wire_commit": {
+          "signals": {
+            "median": 825,
+            "min": 825,
+            "max": 825
+          },
+          "bytes": {
+            "median": 349712,
+            "min": 349712,
+            "max": 349712
+          }
+        },
+        "wire_edit": {
+          "signals": {
+            "median": 1638,
+            "min": 1638,
+            "max": 1638
+          },
+          "bytes": {
+            "median": 961640,
+            "min": 961640,
+            "max": 961640
+          }
+        },
+        "wire_ignored": {
+          "signals": {
+            "median": 0,
+            "min": 0,
+            "max": 0
+          },
+          "bytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0
+          }
+        },
+        "wire_page": {
+          "signals": {
+            "median": 926,
+            "min": 926,
+            "max": 926
+          },
+          "bytes": {
+            "median": 755000,
+            "min": 755000,
+            "max": 755000
+          }
+        },
+        "wire_select": {
+          "signals": {
+            "median": 646,
+            "min": 646,
+            "max": 646
+          },
+          "bytes": {
+            "median": 676336,
+            "min": 676336,
+            "max": 676336
+          }
+        },
+        "wire_sentence": {
+          "signals": {
+            "median": 2979,
+            "min": 2979,
+            "max": 2979
+          },
+          "bytes": {
+            "median": 2224236,
+            "min": 2224236,
+            "max": 2224236
+          }
+        },
+        "wire_short": {
+          "signals": {
+            "median": 2387,
+            "min": 2387,
+            "max": 2387
+          },
+          "bytes": {
+            "median": 1716972,
+            "min": 1716972,
+            "max": 1716972
+          }
+        },
+        "wire": {
+          "signals": {
+            "median": 9401,
+            "min": 9401,
+            "max": 9401
+          },
+          "bytes": {
+            "median": 6683896,
+            "min": 6683896,
+            "max": 6683896
+          }
+        }
+      },
+      "samples": [
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 528814,
+            "p95_ns": 684197,
+            "p99_ns": 969233,
+            "max_ns": 1470656
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 337074,
+            "p95_ns": 679809,
+            "p99_ns": 841253,
+            "max_ns": 1481316
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 209554,
+            "p95_ns": 306096,
+            "p99_ns": 461488,
+            "max_ns": 738970
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 563340,
+            "p95_ns": 726627,
+            "p99_ns": 971848,
+            "max_ns": 1581846
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 545616,
+            "p95_ns": 683015,
+            "p99_ns": 886848,
+            "max_ns": 1220176
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 885205,
+            "p95_ns": 3829013,
+            "p99_ns": 4481881,
+            "max_ns": 6044771
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 625296,
+            "p95_ns": 976988,
+            "p99_ns": 1472230,
+            "max_ns": 3807052
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 578368,
+            "p95_ns": 769448,
+            "p99_ns": 1141757,
+            "max_ns": 1250753
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 407747,
+            "p95_ns": 766903,
+            "p99_ns": 1037742,
+            "max_ns": 1706170
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 237076,
+            "p95_ns": 416624,
+            "p99_ns": 694707,
+            "max_ns": 1165623
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 613975,
+            "p95_ns": 866089,
+            "p99_ns": 1243029,
+            "max_ns": 1714345
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 601031,
+            "p95_ns": 854918,
+            "p99_ns": 1255601,
+            "max_ns": 2100101
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 966127,
+            "p95_ns": 3974095,
+            "p99_ns": 4832941,
+            "max_ns": 6060471
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 688034,
+            "p95_ns": 1177465,
+            "p99_ns": 1713874,
+            "max_ns": 2115940
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 533194,
+            "p95_ns": 674589,
+            "p99_ns": 812699,
+            "max_ns": 1338488
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 346382,
+            "p95_ns": 675811,
+            "p99_ns": 957791,
+            "max_ns": 1433737
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 214113,
+            "p95_ns": 297360,
+            "p99_ns": 387509,
+            "max_ns": 679829
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 570073,
+            "p95_ns": 726227,
+            "p99_ns": 974082,
+            "max_ns": 1676614
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 548992,
+            "p95_ns": 686251,
+            "p99_ns": 890565,
+            "max_ns": 1477770
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 921353,
+            "p95_ns": 3915365,
+            "p99_ns": 4587360,
+            "max_ns": 5207486
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 624895,
+            "p95_ns": 941761,
+            "p99_ns": 1503529,
+            "max_ns": 2283896
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 541569,
+            "p95_ns": 689807,
+            "p99_ns": 845771,
+            "max_ns": 1540819
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 349538,
+            "p95_ns": 694837,
+            "p99_ns": 858585,
+            "max_ns": 1309493
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 219843,
+            "p95_ns": 300145,
+            "p99_ns": 429658,
+            "max_ns": 584420
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 582276,
+            "p95_ns": 771221,
+            "p99_ns": 1114266,
+            "max_ns": 1522274
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 564993,
+            "p95_ns": 719854,
+            "p99_ns": 892699,
+            "max_ns": 1527032
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 921864,
+            "p95_ns": 3942125,
+            "p99_ns": 4446474,
+            "max_ns": 5603681
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 638892,
+            "p95_ns": 929849,
+            "p99_ns": 1474464,
+            "max_ns": 2167417
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 536880,
+            "p95_ns": 679368,
+            "p99_ns": 863264,
+            "max_ns": 917526
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 359215,
+            "p95_ns": 702060,
+            "p99_ns": 822928,
+            "max_ns": 1291119
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 221887,
+            "p95_ns": 314872,
+            "p99_ns": 437693,
+            "max_ns": 1281330
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 587405,
+            "p95_ns": 772924,
+            "p99_ns": 898200,
+            "max_ns": 1330533
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 565183,
+            "p95_ns": 720476,
+            "p99_ns": 868584,
+            "max_ns": 977890
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 914039,
+            "p95_ns": 3894856,
+            "p99_ns": 4512559,
+            "max_ns": 5606788
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 667926,
+            "p95_ns": 1020650,
+            "p99_ns": 1501234,
+            "max_ns": 1938737
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 540507,
+            "p95_ns": 699466,
+            "p99_ns": 764969,
+            "max_ns": 1353466
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 351502,
+            "p95_ns": 683536,
+            "p99_ns": 994621,
+            "max_ns": 1367362
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 214553,
+            "p95_ns": 314251,
+            "p99_ns": 523645,
+            "max_ns": 1047330
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 578268,
+            "p95_ns": 739210,
+            "p99_ns": 1233400,
+            "max_ns": 2094521
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 558871,
+            "p95_ns": 744210,
+            "p99_ns": 1075303,
+            "max_ns": 2395146
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 939217,
+            "p95_ns": 3889286,
+            "p99_ns": 4472373,
+            "max_ns": 5101076
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 641727,
+            "p95_ns": 1060785,
+            "p99_ns": 1510883,
+            "max_ns": 2668500
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        },
+        {
+          "commit": {
+            "count": 275,
+            "p50_ns": 546829,
+            "p95_ns": 733790,
+            "p99_ns": 974894,
+            "max_ns": 1358205
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 361120,
+            "p95_ns": 725083,
+            "p99_ns": 1065153,
+            "max_ns": 2334632
+          },
+          "ignored": {
+            "count": 550,
+            "p50_ns": 215415,
+            "p95_ns": 339909,
+            "p99_ns": 587445,
+            "max_ns": 1920423
+          },
+          "page": {
+            "count": 550,
+            "p50_ns": 577827,
+            "p95_ns": 825422,
+            "p99_ns": 1238029,
+            "max_ns": 1992558
+          },
+          "select": {
+            "count": 550,
+            "p50_ns": 562428,
+            "p95_ns": 797480,
+            "p99_ns": 1102574,
+            "max_ns": 2762106
+          },
+          "sentence": {
+            "count": 1529,
+            "p50_ns": 908559,
+            "p95_ns": 3858549,
+            "p99_ns": 4639377,
+            "max_ns": 5721873
+          },
+          "short": {
+            "count": 1202,
+            "p50_ns": 644963,
+            "p95_ns": 1095591,
+            "p99_ns": 1713874,
+            "max_ns": 2389766
+          },
+          "wire_commit": {
+            "signals": 825,
+            "bytes": 349712
+          },
+          "wire_edit": {
+            "signals": 1638,
+            "bytes": 961640
+          },
+          "wire_ignored": {
+            "signals": 0,
+            "bytes": 0
+          },
+          "wire_page": {
+            "signals": 926,
+            "bytes": 755000
+          },
+          "wire_select": {
+            "signals": 646,
+            "bytes": 676336
+          },
+          "wire_sentence": {
+            "signals": 2979,
+            "bytes": 2224236
+          },
+          "wire_short": {
+            "signals": 2387,
+            "bytes": 1716972
+          },
+          "wire": {
+            "signals": 9401,
+            "bytes": 6683896
+          }
+        }
+      ],
+      "trace_lines": 6031,
+      "traces_equal": true
+    }
+  },
+  "candidate_trace": {
+    "line_counts": [
+      7564,
+      7564,
+      7564
+    ],
+    "variant_lines": [
+      4435
+    ]
+  },
+  "ibus_verification": "independent signals, ignored keys, focus-loss commit and reset passed\n",
+  "ibus_lifecycle": "100 engine create/destroy cycles released their bus objects\nopen descriptors after lifecycle test: 10\n",
+  "handler_diagnostics": [
+    "waypinyin: latency stage=handle count=256 p50_ns=3557 p95_ns=176082 p99_ns=920171 max_ns=1126028",
+    "waypinyin: latency stage=present count=256 p50_ns=81413 p95_ns=128632 p99_ns=175781 max_ns=205156",
+    "waypinyin: latency stage=total count=256 p50_ns=88096 p95_ns=305835 p99_ns=1019678 max_ns=1155333",
+    "waypinyin: latency stage=handle count=256 p50_ns=4739 p95_ns=205437 p99_ns=412296 max_ns=998939",
+    "waypinyin: latency stage=present count=256 p50_ns=79039 p95_ns=117010 p99_ns=142158 max_ns=165612",
+    "waypinyin: latency stage=total count=256 p50_ns=86783 p95_ns=295216 p99_ns=505030 max_ns=1135325",
+    "waypinyin: latency stage=handle count=256 p50_ns=5440 p95_ns=161263 p99_ns=816376 max_ns=1019057",
+    "waypinyin: latency stage=present count=256 p50_ns=84018 p95_ns=135385 p99_ns=159480 max_ns=193364",
+    "waypinyin: latency stage=total count=256 p50_ns=92675 p95_ns=280508 p99_ns=928166 max_ns=1168338",
+    "waypinyin: latency stage=handle count=256 p50_ns=6272 p95_ns=137128 p99_ns=182804 max_ns=220895",
+    "waypinyin: latency stage=present count=256 p50_ns=81854 p95_ns=122671 p99_ns=145013 max_ns=158949",
+    "waypinyin: latency stage=total count=256 p50_ns=91563 p95_ns=243217 p99_ns=279786 max_ns=308730",
+    "waypinyin: latency stage=handle count=256 p50_ns=5560 p95_ns=159701 p99_ns=359677 max_ns=910443",
+    "waypinyin: latency stage=present count=256 p50_ns=80071 p95_ns=126047 p99_ns=146355 max_ns=169208",
+    "waypinyin: latency stage=total count=256 p50_ns=87805 p95_ns=265950 p99_ns=461338 max_ns=1020149",
+    "waypinyin: latency stage=handle count=256 p50_ns=4679 p95_ns=161113 p99_ns=406725 max_ns=899292",
+    "waypinyin: latency stage=present count=256 p50_ns=78808 p95_ns=115377 p99_ns=131938 max_ns=132920",
+    "waypinyin: latency stage=total count=256 p50_ns=85100 p95_ns=258948 p99_ns=519918 max_ns=949957",
+    "waypinyin: latency stage=handle count=256 p50_ns=6653 p95_ns=142388 p99_ns=486886 max_ns=880797",
+    "waypinyin: latency stage=present count=256 p50_ns=79920 p95_ns=122480 p99_ns=134523 max_ns=163557",
+    "waypinyin: latency stage=total count=256 p50_ns=89628 p95_ns=261192 p99_ns=578208 max_ns=976187",
+    "waypinyin: latency stage=handle count=256 p50_ns=8296 p95_ns=249550 p99_ns=885386 max_ns=949115",
+    "waypinyin: latency stage=present count=256 p50_ns=83517 p95_ns=135144 p99_ns=158107 max_ns=190379",
+    "waypinyin: latency stage=total count=256 p50_ns=97153 p95_ns=351882 p99_ns=927434 max_ns=1048552",
+    "waypinyin: latency stage=handle count=256 p50_ns=6121 p95_ns=131137 p99_ns=467209 max_ns=855109",
+    "waypinyin: latency stage=present count=256 p50_ns=76173 p95_ns=109526 p99_ns=138230 max_ns=152236",
+    "waypinyin: latency stage=total count=256 p50_ns=85370 p95_ns=223290 p99_ns=564061 max_ns=883963",
+    "waypinyin: latency stage=handle count=256 p50_ns=6732 p95_ns=264096 p99_ns=400203 max_ns=913328",
+    "waypinyin: latency stage=present count=256 p50_ns=78077 p95_ns=121428 p99_ns=136617 max_ns=141175",
+    "waypinyin: latency stage=total count=256 p50_ns=86222 p95_ns=359566 p99_ns=505341 max_ns=1011282",
+    "waypinyin: latency stage=handle count=256 p50_ns=7384 p95_ns=131317 p99_ns=297710 max_ns=864406",
+    "waypinyin: latency stage=present count=256 p50_ns=78809 p95_ns=128041 p99_ns=138591 max_ns=181231",
+    "waypinyin: latency stage=total count=256 p50_ns=91021 p95_ns=247956 p99_ns=386958 max_ns=957130",
+    "waypinyin: latency stage=handle count=256 p50_ns=7655 p95_ns=127330 p99_ns=262974 max_ns=791269",
+    "waypinyin: latency stage=present count=256 p50_ns=77246 p95_ns=115668 p99_ns=141165 max_ns=232909",
+    "waypinyin: latency stage=total count=256 p50_ns=86382 p95_ns=233519 p99_ns=368383 max_ns=818149",
+    "waypinyin: latency stage=handle count=256 p50_ns=8907 p95_ns=138501 p99_ns=251743 max_ns=846863",
+    "waypinyin: latency stage=present count=256 p50_ns=78057 p95_ns=112451 p99_ns=132288 max_ns=190629",
+    "waypinyin: latency stage=total count=256 p50_ns=89748 p95_ns=247255 p99_ns=337124 max_ns=946871",
+    "waypinyin: latency stage=handle count=256 p50_ns=8406 p95_ns=124334 p99_ns=160111 max_ns=489280",
+    "waypinyin: latency stage=present count=256 p50_ns=79379 p95_ns=127790 p99_ns=152116 max_ns=171673",
+    "waypinyin: latency stage=total count=256 p50_ns=92915 p95_ns=216828 p99_ns=273043 max_ns=644793",
+    "waypinyin: latency stage=handle count=256 p50_ns=30889 p95_ns=1570054 p99_ns=2217231 max_ns=2229253",
+    "waypinyin: latency stage=present count=256 p50_ns=85080 p95_ns=131166 p99_ns=155573 max_ns=181491",
+    "waypinyin: latency stage=total count=256 p50_ns=126447 p95_ns=1689418 p99_ns=2313502 max_ns=2322730",
+    "waypinyin: latency stage=handle count=256 p50_ns=26380 p95_ns=1177886 p99_ns=1638904 max_ns=1654463",
+    "waypinyin: latency stage=present count=256 p50_ns=85892 p95_ns=128942 p99_ns=156164 max_ns=192853",
+    "waypinyin: latency stage=total count=256 p50_ns=124043 p95_ns=1268977 p99_ns=1730576 max_ns=1752106",
+    "waypinyin: latency stage=handle count=256 p50_ns=25027 p95_ns=1516964 p99_ns=1937685 max_ns=2242569",
+    "waypinyin: latency stage=present count=256 p50_ns=82105 p95_ns=113543 p99_ns=145955 max_ns=177163",
+    "waypinyin: latency stage=total count=256 p50_ns=112131 p95_ns=1622913 p99_ns=1977120 max_ns=2367334",
+    "waypinyin: latency stage=handle count=256 p50_ns=33313 p95_ns=1952864 p99_ns=3015131 max_ns=3274169",
+    "waypinyin: latency stage=present count=256 p50_ns=86202 p95_ns=127861 p99_ns=142609 max_ns=146716",
+    "waypinyin: latency stage=total count=256 p50_ns=130956 p95_ns=2042733 p99_ns=3107094 max_ns=3393383",
+    "waypinyin: latency stage=handle count=256 p50_ns=35026 p95_ns=1663850 p99_ns=2063893 max_ns=2140366",
+    "waypinyin: latency stage=present count=256 p50_ns=92995 p95_ns=130144 p99_ns=164780 max_ns=167415",
+    "waypinyin: latency stage=total count=256 p50_ns=143089 p95_ns=1762806 p99_ns=2168309 max_ns=2246716",
+    "waypinyin: latency stage=handle count=256 p50_ns=53440 p95_ns=2266133 p99_ns=2579332 max_ns=2632833",
+    "waypinyin: latency stage=present count=256 p50_ns=89138 p95_ns=125837 p99_ns=163488 max_ns=186661",
+    "waypinyin: latency stage=total count=256 p50_ns=145233 p95_ns=2380248 p99_ns=2678319 max_ns=2760272",
+    "waypinyin: latency stage=handle count=256 p50_ns=117040 p95_ns=2987390 p99_ns=3627664 max_ns=3803074",
+    "waypinyin: latency stage=present count=256 p50_ns=88065 p95_ns=131237 p99_ns=149812 max_ns=157356",
+    "waypinyin: latency stage=total count=256 p50_ns=206539 p95_ns=3105021 p99_ns=3726801 max_ns=3917009",
+    "waypinyin: latency stage=handle count=256 p50_ns=251583 p95_ns=3508631 p99_ns=3830586 max_ns=3834313",
+    "waypinyin: latency stage=present count=256 p50_ns=87985 p95_ns=114606 p99_ns=134714 max_ns=153218",
+    "waypinyin: latency stage=total count=256 p50_ns=341362 p95_ns=3645498 p99_ns=3926206 max_ns=3937968",
+    "waypinyin: latency stage=handle count=256 p50_ns=491956 p95_ns=3697104 p99_ns=4033247 max_ns=4597499",
+    "waypinyin: latency stage=present count=256 p50_ns=92033 p95_ns=113003 p99_ns=143861 max_ns=168166",
+    "waypinyin: latency stage=total count=256 p50_ns=592434 p95_ns=3799437 p99_ns=4130650 max_ns=4696645"
+  ],
+  "finished_utc": "2026-11-17T15:33:57.155185+00:00",
+  "load_end": [
+    3.349609375,
+    3.19384765625,
+    2.98583984375
+  ]
+}

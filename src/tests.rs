@@ -940,6 +940,59 @@ fn daily_sentence_composition_keeps_common_words_together() {
 }
 
 #[test]
+fn sentence_tail_completion_uses_context_and_keeps_commit_readings() {
+    let lex = Arc::new(Lexicon::load());
+    for (raw, expected, reading) in [
+        ("wozaixiechengx", "我在写程序", "wo'zai'xie'cheng'xu"),
+        (
+            "qingbangwodakaiwenji",
+            "请帮我打开文件",
+            "qing'bang'wo'da'kai'wen'jian",
+        ),
+        (
+            "qingbangwodakaiwenjia",
+            "请帮我打开文件",
+            "qing'bang'wo'da'kai'wen'jian",
+        ),
+        (
+            "womenmingtianyiqichif",
+            "我们明天一起吃饭",
+            "wo'men'ming'tian'yi'qi'chi'fan",
+        ),
+        (
+            "womenmingtianyiqichifa",
+            "我们明天一起吃饭",
+            "wo'men'ming'tian'yi'qi'chi'fan",
+        ),
+        (
+            "wmmtyqchifa",
+            "我们明天一起吃饭",
+            "wo'men'ming'tian'yi'qi'chi'fan",
+        ),
+        (
+            "qing'bang'wo'da'kai'wen'jia",
+            "请帮我打开文件",
+            "qing'bang'wo'da'kai'wen'jian",
+        ),
+    ] {
+        let rows = choices(raw, &lex);
+        assert_eq!(rows[0].word, expected, "{raw}");
+        assert_eq!(rows[0].reading, reading, "{raw}");
+        assert_eq!(rows[0].span, raw.len());
+        let mut session = Session::with_user(Arc::clone(&lex), UserDict::default());
+        type_in(&mut session, raw);
+        assert_eq!(session.view().candidates[0], expected, "{raw}");
+        assert_eq!(committed(session.handle(0x20, 0)), expected);
+        assert!(session.view().preedit.is_empty());
+        // The completed pronunciation remains usable after the prediction
+        // has been committed.
+        session.clear();
+        type_in(&mut session, &reading.replace('\'', ""));
+        assert_eq!(session.view().candidates[0], expected, "full {raw}");
+    }
+}
+
+#[test]
 fn exact_imported_phrase_beats_generated_forms_but_not_common_homophones() {
     let mut session = Session::new(Arc::new(Lexicon::load()));
     type_in(&mut session, "h");

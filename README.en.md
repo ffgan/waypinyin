@@ -87,6 +87,28 @@ Contributing: [CONTRIBUTING.md](CONTRIBUTING.md). Packaging:
 [docs/PACKAGING.md](docs/PACKAGING.md). Security: [SECURITY.md](SECURITY.md).
 
 
+## Optional offline context model
+
+Optional offline contextual ranking uses a versioned `lexicon.lm` sidecar bound
+to the dictionary fingerprint. It combines word unigram/backoff statistics with
+character context; well-supported readings retain the fallback search. The
+enhanced beam retains four parents and up to five sentence alternatives.
+Settings keys `contextual` and `surrounding` control ranking and optional IBus
+text before the cursor. Both default to true; without a valid explicit model,
+the dictionary engine remains available.
+
+At most 64 preceding Unicode characters are kept in memory. Application text
+is never journaled, used for training or sent to speculative preload workers;
+focus loss, reset and private inputs clear it. Personal choices retain decay
+and can outweigh the limited contextual word boost.
+
+Train with `scripts/train_context.py --corpus` pointing to a detailed Mandarin
+Tatoeba snapshot and `--output` naming the model body. Pass that absolute path
+as `WAYPINYIN_MODEL_BODY` to `make build`. Downloads are explicit; Cargo never
+fetches training data. The local CC BY 2.0 FR trial model is separate from the
+MIT demo fixtures; retain installed attribution and provenance metadata.
+See [the model notice](LICENSES/Tatoeba-model-NOTICE.txt).
+
 ## Linux performance
 
 The read-only lexicon mapping uses sequential readahead during validation and

@@ -46,6 +46,9 @@ impl StrTable {
 #[derive(Clone)]
 pub struct Lexicon {
     pub(crate) preferences: crate::preferences::InputPreferences,
+    model: Option<Arc<crate::language_model::LanguageModel>>,
+    ranking_context: Arc<str>,
+    context_history: ([u64; 2], [u64; 2]),
     texts: StrTable,
     syls: StrTable,
     nodes: &'static [NodeRec],
@@ -81,6 +84,62 @@ impl std::fmt::Debug for Lexicon {
 }
 
 impl Lexicon {
+    #[cfg(test)]
+    pub(crate) fn with_test_model(&self) -> Self {
+        use crate::language_model::{fingerprint, LanguageModel};
+        let body = format!(
+            "W\t0\t{}\t{}\t8\nW\t0\t{}\t{}\t8\n",
+            LanguageModel::token("去"),
+            LanguageModel::token("北京"),
+            LanguageModel::token("看"),
+            LanguageModel::token("背景")
+        );
+        let bytes = format!(
+            "WAYPINYIN-LM\t1\t42\t{}\n{body}",
+            fingerprint(body.as_bytes())
+        );
+        let mut lex = self.clone();
+        lex.model = Some(Arc::new(
+            LanguageModel::parse(bytes.as_bytes(), 42).unwrap(),
+        ));
+        lex
+    }
+    pub(crate) fn with_context(&self, context: &str) -> Self {
+        let mut lex = self.clone();
+        lex.ranking_context = Arc::from(context);
+        lex.context_history = lex
+            .model
+            .as_ref()
+            .map_or(([0; 2], [0; 2]), |model| model.history(context));
+        lex
+    }
+
+    pub(crate) fn ranking_context(&self) -> &str {
+        &self.ranking_context
+    }
+
+    pub(crate) fn context_enabled(&self) -> bool {
+        self.preferences.contextual && self.model.is_some()
+    }
+
+    fn contextual_score(&self, score: i64, word: &str) -> i64 {
+        if !self.context_enabled() || self.ranking_context.is_empty() {
+            return score;
+        }
+        let model = self.model.as_ref().unwrap();
+        let (chars, tokens) = self.context_history;
+        if self.ranking_context.ends_with(word) {
+            return score;
+        }
+        let extra = (model.bonus(chars, tokens, word) - model.bonus([0; 2], [0; 2], word)).max(0.0);
+        let multiplier = (model.weight * extra).exp().min(2.0);
+        ((score.max(1) as f64 * multiplier).min(i64::MAX as f64 / 2.0)) as i64
+    }
+
+    pub fn model_available(&self) -> bool {
+        self.model.is_some()
+    }
+
     /// Shares the mapped dictionary data while selecting independent matching preferences.
     pub fn with_preferences(&self, preferences: crate::preferences::InputPreferences) -> Self {
         let mut lex = self.clone();
@@ -89,6 +148,7 @@ impl Lexicon {
     }
     pub fn load() -> Self {
         static MAPPED: OnceLock<crate::image::Mapped<'static>> = OnceLock::new();
+        static MODEL: OnceLock<Option<Arc<crate::language_model::LanguageModel>>> = OnceLock::new();
         let mapped = MAPPED.get_or_init(|| {
             let bytes = image_bytes();
             let mapped = open(bytes);
@@ -99,6 +159,19 @@ impl Lexicon {
         });
         Self {
             preferences: Default::default(),
+            model: MODEL.get_or_init(|| {
+                let path = std::env::var_os("WAYPINYIN_MODEL").map(PathBuf::from)
+                    .unwrap_or_else(|| lexicon_path().with_extension("lm"));
+                match crate::language_model::LanguageModel::load(&path, crate::language_model::fingerprint(image_bytes())) {
+                    Ok(model) => Some(Arc::new(model)),
+                    Err(err) => {
+                        eprintln!("waypinyin: context model unavailable ({}): {err}; using dictionary ranking", path.display());
+                        None
+                    }
+                }
+            }).clone(),
+            ranking_context: Arc::from(""),
+            context_history: ([0;2],[0;2]),
             texts: StrTable {
                 off: mapped.texts_off,
                 bytes: mapped.text_bytes,
@@ -446,10 +519,12 @@ fn segmentations(input: &str, lex: &Lexicon, allow_split: bool) -> Vec<(Vec<u16>
         allow_split: bool,
         path: &mut Vec<u16>,
         out: &mut Vec<(Vec<u16>, i64)>,
+        budget: &mut usize,
     ) {
-        if out.len() >= 48 {
+        if out.len() >= 48 || *budget == 0 {
             return;
         }
+        *budget -= 1;
         if input.is_empty() {
             out.push((path.clone(), 1));
             return;
@@ -472,7 +547,7 @@ fn segmentations(input: &str, lex: &Lexicon, allow_split: bool) -> Vec<(Vec<u16>
             for syl in &cont {
                 let n = lex.syl(*syl).len();
                 path.push(*syl);
-                walk(&input[n..], lex, allow_split, path, out);
+                walk(&input[n..], lex, allow_split, path, out, budget);
                 path.pop();
             }
         }
@@ -499,7 +574,14 @@ fn segmentations(input: &str, lex: &Lexicon, allow_split: bool) -> Vec<(Vec<u16>
     }
 
     let mut out = Vec::new();
-    walk(input, lex, allow_split, &mut Vec::new(), &mut out);
+    walk(
+        input,
+        lex,
+        allow_split,
+        &mut Vec::new(),
+        &mut out,
+        &mut 8192,
+    );
     out
 }
 
@@ -1123,6 +1205,13 @@ fn prefix_head(syls: &[u16], lex: &Lexicon) -> Option<(String, i64)> {
             return Some((lex.text(best.text).to_owned(), best.score));
         }
     }
+    // Grammar synthesis operates on a short head, not an entire clause.
+    // Cropping the last syllable of a sentence before greedy composition
+    // turns e.g. 可以完成 into 可以玩 + 成 and suppresses sentence decoding.
+    // Long heads remain eligible when they are actual dictionary words above.
+    if syls.len() > 4 {
+        return None;
+    }
     let sentence = compose(syls, lex)?;
     let head = lex.walk_id(0, syls[0])?;
     let score = lex
@@ -1200,9 +1289,9 @@ fn compose(syls: &[u16], lex: &Lexicon) -> Option<String> {
 
 /// A small conversational character-pair prior, applied only during sentence
 /// composition; stored exact words retain their corpus ranking.
-fn sentence_bonus(previous: Option<char>, word: &str) -> f64 {
+fn sentence_pairs() -> &'static FxHashMap<u64, f64> {
     static PAIRS: OnceLock<FxHashMap<u64, f64>> = OnceLock::new();
-    let pairs = PAIRS.get_or_init(|| {
+    PAIRS.get_or_init(|| {
         let mut pairs = FxHashMap::default();
         for line in include_str!("../data/sentences.txt")
             .lines()
@@ -1217,7 +1306,11 @@ fn sentence_bonus(previous: Option<char>, word: &str) -> f64 {
             .into_iter()
             .map(|(key, count)| (key, 2.0 * f64::from(count).ln_1p().min(3.0)))
             .collect()
-    });
+    })
+}
+
+fn sentence_bonus(previous: Option<char>, word: &str) -> f64 {
+    let pairs = sentence_pairs();
     let mut prev = previous;
     let mut bonus = 0.0;
     for ch in word.chars() {
@@ -1244,13 +1337,55 @@ struct SentencePath {
     reading: Vec<u16>,
     words: usize,
     last: Option<char>,
+    chars: [u64; 2],
+    tokens: [u64; 2],
+    edited: bool,
 }
 
 fn compose_sentences(
     input: &str,
     lex: &Lexicon,
     fully_spelled: bool,
-) -> Vec<(String, Vec<String>)> {
+) -> Vec<(String, Vec<String>, f64)> {
+    // Short word prefixes already have dictionary correction and completion.
+    // Do not spend a sentence-model search budget on an unfinished word.
+    if lex.context_enabled() && lex.ranking_context.is_empty() && input.len() < 8 {
+        let mut fallback = lex.clone();
+        fallback.preferences.contextual = false;
+        return compose_sentence_search(input, &fallback, fully_spelled, false);
+    }
+    if lex.context_enabled() && lex.ranking_context.is_empty() {
+        let mut fallback = lex.clone();
+        fallback.preferences.contextual = false;
+        let anchored = compose_sentence_search(input, &fallback, fully_spelled, false);
+        if let Some((text, _, _)) = anchored.first() {
+            let chars: Vec<_> = text.chars().collect();
+            let known = chars
+                .windows(2)
+                .filter(|p| sentence_pairs().contains_key(&pair_key(p[0], p[1])))
+                .count();
+            // Keep a well-supported existing reading stable. Sparse-model
+            // extrapolation is useful where the conversational prior is weak,
+            // not where almost every boundary is already supported.
+            if chars.len() >= 3 && known * 4 >= (chars.len() - 1) * 3 {
+                return anchored;
+            }
+        }
+    }
+    let ordinary = compose_sentence_search(input, lex, fully_spelled, false);
+    if ordinary.is_empty() && lex.context_enabled() && input.len() >= 16 {
+        compose_sentence_search(input, lex, fully_spelled, true)
+    } else {
+        ordinary
+    }
+}
+
+fn compose_sentence_search(
+    input: &str,
+    lex: &Lexicon,
+    fully_spelled: bool,
+    repair: bool,
+) -> Vec<(String, Vec<String>, f64)> {
     if input.len() < 4
         || input.len() > 128
         || !input.bytes().all(|c| c.is_ascii_lowercase() || c == b'\'')
@@ -1258,6 +1393,14 @@ fn compose_sentences(
         return Vec::new();
     }
     let n = input.len();
+    let model = lex.model.as_deref().filter(|_| lex.preferences.contextual);
+    let beam_width = if model.is_some() { 4 } else { 8 };
+    let target_limit = beam_width * 2;
+    let (context_chars, context_tokens) = if model.is_some() {
+        lex.context_history
+    } else {
+        ([0; 2], [0; 2])
+    };
     let mut paths: Vec<Vec<SentencePath>> = vec![Vec::new(); n + 1];
     // For a full destination beam, keep the original max_by tie winner. Most
     // proposed paths can then be rejected before comparing any strings.
@@ -1267,13 +1410,20 @@ fn compose_sentences(
         text: String::new(),
         reading: Vec::new(),
         words: 0,
-        last: None,
+        last: (context_chars[1] != 0)
+            .then(|| char::from_u32(context_chars[1] as u32))
+            .flatten(),
+        chars: context_chars,
+        tokens: context_tokens,
+        edited: false,
     });
     // Bound memoization independently of the search budget. A full cache only
     // stops inserting: it never prunes a path or changes score arithmetic.
     // Only packed dictionary IDs/characters enter these numeric maps. The
     // fixed traversal/cache caps remain in force; user-text maps keep SipHash.
     let mut bonuses: FxHashMap<u64, f64> = FxHashMap::default();
+    let mut model_bonuses: FxHashMap<[u64; 5], f64> = FxHashMap::default();
+    let mut features: FxHashMap<u32, crate::language_model::WordFeatures> = FxHashMap::default();
     // Reuse traversal storage across word boundaries. Clearing retains capacity
     // without changing the stack order or any visited-state decisions.
     let mut stack = Vec::new();
@@ -1287,18 +1437,18 @@ fn compose_sentences(
             continue;
         }
         paths[start].sort_by(|a, b| a.cost.total_cmp(&b.cost).then(a.text.cmp(&b.text)));
-        paths[start].truncate(8);
+        paths[start].truncate(beam_width);
         let parents = std::mem::take(&mut paths[start]);
         let begin = skip_sep(input, start);
         if begin == n {
             continue;
         }
         stack.clear();
-        stack.push((0u32, begin, 0.0));
+        stack.push((0u32, begin, 0.0, false));
         seen.clear();
         let mut visited = 0;
-        while let Some((node, pos, penalty)) = stack.pop() {
-            let state_key = (u64::from(node) << 32) | pos as u64;
+        while let Some((node, pos, penalty, edited)) = stack.pop() {
+            let state_key = (u64::from(node) << 32) | ((pos as u64) << 1) | u64::from(edited);
             match seen.entry(state_key) {
                 std::collections::hash_map::Entry::Occupied(mut entry) => {
                     if *entry.get() <= penalty {
@@ -1321,11 +1471,80 @@ fn compose_sentences(
             if node != 0 {
                 let end = skip_sep(input, pos);
                 let mut node_reading = None;
-                for word in lex.node_words(node).iter().take(4) {
+                let words = lex.node_words(node);
+                let mut model_bonus = |parent: &SentencePath, index: usize| {
+                    let Some(model) = model else {
+                        return 0.0;
+                    };
+                    let word = &words[index];
+                    let key = [
+                        parent.chars[0],
+                        parent.chars[1],
+                        parent.tokens[0],
+                        parent.tokens[1],
+                        u64::from(word.text),
+                    ];
+                    if let Some(value) = model_bonuses.get(&key) {
+                        return *value;
+                    }
+                    let feature = if let Some(feature) = features.get(&word.text) {
+                        *feature
+                    } else {
+                        let feature = model.features(lex.text(word.text));
+                        if features.len() < 4096 {
+                            features.insert(word.text, feature);
+                        }
+                        feature
+                    };
+                    let value =
+                        model.weight * model.bonus_features(parent.chars, parent.tokens, feature);
+                    if model_bonuses.len() < 4096 {
+                        model_bonuses.insert(key, value);
+                    }
+                    value
+                };
+                // Compare 32 homophones against the leading context, retaining
+                // four frequency leaders plus two context leaders. All parent
+                // histories still score these surviving words independently.
+                let mut selected: Vec<usize> = (0..words.len().min(4)).collect();
+                if let Some(selected_model) = model.filter(|_| words.len() > 4) {
+                    for parent in parents.iter().take(1) {
+                        let mut ranked: Vec<_> = words
+                            .iter()
+                            .take(32)
+                            .enumerate()
+                            .map(|(i, w)| {
+                                let original =
+                                    (lex.ln_corpus - (w.score.max(1) as f64).ln()).max(0.0);
+                                let cost = selected_model.word_cost(original, lex.text(w.text))
+                                    - model_bonus(parent, i);
+                                (i, cost)
+                            })
+                            .collect();
+                        ranked.sort_by(|a, b| a.1.total_cmp(&b.1).then(a.0.cmp(&b.0)));
+                        for (index, _) in ranked.into_iter().take(2) {
+                            if !selected.contains(&index) {
+                                selected.push(index);
+                            }
+                        }
+                    }
+                }
+                for index in selected {
+                    let word = &words[index];
                     let text = lex.text(word.text);
-                    let base = (lex.ln_corpus - (word.score.max(1) as f64).ln()).max(0.0) + penalty;
+                    let dictionary_cost =
+                        (lex.ln_corpus - (word.score.max(1) as f64).ln()).max(0.0);
+                    let base = if let Some(model) = model {
+                        model.word_cost(dictionary_cost, text)
+                    } else {
+                        dictionary_cost
+                    } + penalty;
                     let last = text.chars().last();
+                    let token = crate::language_model::LanguageModel::token(text);
                     for parent in &parents {
+                        if parent.edited && edited {
+                            continue;
+                        }
                         let key = (u64::from(parent.last.map_or(u32::MAX, u32::from)) << 32)
                             | u64::from(word.text);
                         let bonus = if let Some(bonus) = bonuses.get(&key) {
@@ -1337,16 +1556,54 @@ fn compose_sentences(
                             }
                             bonus
                         };
-                        let cost = parent.cost + base - bonus;
+                        let contextual = model_bonus(parent, index);
+                        let cost = parent.cost + base
+                            - bonus * model.map_or(1.0, |m| m.prior_weight)
+                            - contextual;
                         let target = &mut paths[end];
                         // A duplicate in a full beam cannot cost more than its
                         // worst path. This rejection is also safe before dedup.
-                        if target.len() == 16 && cost >= target[worst[end]].cost {
+                        if target.len() == target_limit && cost >= target[worst[end]].cost {
                             continue;
+                        }
+                        let mut next_chars = parent.chars;
+                        for ch in text.chars() {
+                            next_chars = [next_chars[1], ch as u64];
+                        }
+                        let next_tokens = [parent.tokens[1], token];
+                        // Before the final boundary, paths with the same LM
+                        // history have identical future costs. Keep only the
+                        // cheapest state instead of filling the beam with
+                        // alternate prefixes that can never overtake it.
+                        // Final alternatives retain their distinct visible text.
+                        if model.is_some() && end < n {
+                            let same_state = |p: &SentencePath| {
+                                p.chars == next_chars
+                                    && p.tokens == next_tokens
+                                    && p.edited == (parent.edited || edited)
+                                    && p.words.min(2) == (parent.words + 1).min(2)
+                            };
+                            let mut count = 0;
+                            let mut worst_state: Option<(usize, f64)> = None;
+                            for (i, p) in target.iter().enumerate().filter(|(_, p)| same_state(p)) {
+                                count += 1;
+                                if worst_state.is_none_or(|(_, cost)| p.cost >= cost) {
+                                    worst_state = Some((i, p.cost));
+                                }
+                            }
+                            if count >= 2 {
+                                let (i, worst_cost) = worst_state.unwrap();
+                                if worst_cost <= cost {
+                                    continue;
+                                }
+                                target.swap_remove(i);
+                            }
                         }
                         // Compare concatenations before allocating the new path.
                         let same_text = |p: &SentencePath| {
-                            p.text.len() == parent.text.len() + text.len()
+                            (model.is_none() || end == n)
+                                && p.edited == (parent.edited || edited)
+                                && p.text.len() == parent.text.len() + text.len()
                                 && p.text.starts_with(&parent.text)
                                 && &p.text[parent.text.len()..] == text
                         };
@@ -1356,7 +1613,7 @@ fn compose_sentences(
                             }
                             target.swap_remove(index);
                         }
-                        if target.len() == 16 {
+                        if target.len() == target_limit {
                             target.swap_remove(worst[end]);
                         }
                         // Keep the original replacement and tie-breaking order,
@@ -1365,12 +1622,15 @@ fn compose_sentences(
                         next.cost = cost;
                         next.text.push_str(text);
                         next.last = last.or(parent.last);
+                        next.chars = next_chars;
+                        next.tokens = next_tokens;
                         next.reading.extend_from_slice(
                             node_reading.get_or_insert_with(|| path_ids(lex, node)),
                         );
                         next.words += 1;
+                        next.edited |= edited;
                         target.push(next);
-                        if target.len() == 16 {
+                        if target.len() == target_limit {
                             worst[end] = target
                                 .iter()
                                 .enumerate()
@@ -1385,12 +1645,70 @@ fn compose_sentences(
                 continue;
             }
             let rest = &input[pos..];
-            for edge in lex.edges_for(node, input.as_bytes()[pos]) {
+            let edges = if repair {
+                lex.edges_all(node)
+            } else {
+                lex.edges_for(node, input.as_bytes()[pos])
+            };
+            for edge in edges {
                 let syl = lex.syl(edge.syl);
-                let mut lengths = [(0usize, 0.0); 3];
+                if repair {
+                    for len in 1..=rest.len().min(syl.len() + 1) {
+                        let typed = &rest[..len];
+                        if !typed.bytes().all(|b| b.is_ascii_lowercase()) {
+                            break;
+                        }
+                        if matches!(piece_match(lex.preferences, typed, syl), Some(Kind::Fuzzy)) {
+                            stack.push((
+                                edge.node,
+                                skip_sep(input, pos + len),
+                                penalty + 4.0,
+                                edited,
+                            ));
+                        }
+                    }
+                    if !edited {
+                        if let Some(len) = one_edit_full(rest, syl) {
+                            if len > 0 && rest[..len].bytes().all(|b| b.is_ascii_lowercase()) {
+                                stack.push((
+                                    edge.node,
+                                    skip_sep(input, pos + len),
+                                    penalty + 8.0,
+                                    true,
+                                ));
+                            }
+                        }
+                    }
+                }
+                let mut lengths = [(0usize, 0.0); 5];
                 let mut count = 0;
+                if syl.as_bytes().get(1) != rest.as_bytes().get(1)
+                    && rest
+                        .as_bytes()
+                        .get(1)
+                        .is_some_and(|b| matches!(b, b'u' | b'v'))
+                {
+                    if let Some(alias) = umlaut_alias(syl) {
+                        if rest.starts_with(&alias) {
+                            lengths[count] = (alias.len(), 0.0);
+                            count += 1;
+                        }
+                    }
+                }
                 if rest.starts_with(syl) {
                     lengths[count] = (syl.len(), 0.0);
+                    count += 1;
+                }
+                if syl.len() > rest.len() && syl.starts_with(rest) {
+                    // Complete only the final, open syllable. Stretching an
+                    // already complete spelling costs tenfold frequency per
+                    // added letter, as in dictionary prefix matching.
+                    let tail_scale = if lex.syllable_id(rest).is_some() {
+                        std::f64::consts::LN_10
+                    } else {
+                        0.25
+                    };
+                    lengths[count] = (rest.len(), tail_scale * (syl.len() - rest.len()) as f64);
                     count += 1;
                 }
                 if !fully_spelled && !matches!(syl.as_bytes()[0], b'a' | b'e' | b'o') {
@@ -1405,7 +1723,12 @@ fn compose_sentences(
                 }
                 for &(len, extra) in &lengths[..count] {
                     if pos + len <= n {
-                        stack.push((edge.node, skip_sep(input, pos + len), penalty + extra));
+                        stack.push((
+                            edge.node,
+                            skip_sep(input, pos + len),
+                            penalty + extra,
+                            edited,
+                        ));
                     }
                 }
             }
@@ -1416,8 +1739,8 @@ fn compose_sentences(
     paths[n]
         .iter()
         .filter(|p| p.words >= 2 && seen.insert(p.text.clone()))
-        .take(3)
-        .map(|p| (p.text.clone(), syl_text(lex, &p.reading)))
+        .take(if model.is_some() { 5 } else { 3 })
+        .map(|p| (p.text.clone(), syl_text(lex, &p.reading), p.cost))
         .collect()
 }
 
@@ -1628,6 +1951,9 @@ pub(crate) fn plan(raw: &str, lex: &Lexicon) -> Plan {
         }
     }
 
+    // Hash-map discovery order must not decide which equally ranked reading
+    // survives deduplication or supplies a partial candidate.
+    nodes.sort_by_key(|src| (src.tier, src.node, src.divisor));
     let mut forms = if lexicon_full {
         Vec::new()
     } else {
@@ -1652,11 +1978,15 @@ pub(crate) fn plan(raw: &str, lex: &Lexicon) -> Plan {
     {
         let composed = compose_sentences(raw, lex, syllables.is_some());
         if !composed.is_empty() {
-            for (index, (text, syls)) in composed.into_iter().enumerate() {
+            let length = composed[0].1.len().max(1) as f64;
+            for (index, (text, syls, cost)) in composed.into_iter().enumerate() {
+                let score = (lex.ln_corpus - cost / length)
+                    .clamp(0.0, lex.ln_corpus)
+                    .exp() as i64;
                 extras.push(extra_word(
                     text.clone(),
                     syls.join("'"),
-                    i64::MAX / 8 - index as i64,
+                    score.saturating_sub(index as i64).max(1),
                 ));
                 if index == 0 {
                     sentence = Some((text, syls));
@@ -1664,7 +1994,11 @@ pub(crate) fn plan(raw: &str, lex: &Lexicon) -> Plan {
             }
         } else if let Some(syls) = syllables.as_deref() {
             if let Some(text) = compose(syls, lex) {
-                extras.push(extra_word(text.clone(), String::new(), i64::MAX / 8));
+                extras.push(extra_word(
+                    text.clone(),
+                    String::new(),
+                    lex.ln_corpus.exp() as i64,
+                ));
                 sentence = Some((text, syl_text(lex, syls)));
             }
         }
@@ -2443,6 +2777,7 @@ impl Pool {
             if let Some(tier) = stored_tier(&plan, lex, &choice.word) {
                 choice.tier = tier;
             }
+            choice.score = lex.contextual_score(choice.score, &choice.word);
         }
         users.sort_by(|left, right| {
             left.tier
@@ -2580,7 +2915,9 @@ impl Pool {
         let mut merge = RawMerge::start(&self.plan, lex);
         let mut first = Vec::new();
         let mut held = None;
-        while first.len() < 3 {
+        let contextual =
+            lex.context_enabled() && !lex.ranking_context.is_empty() && !self.plan.has_char;
+        while first.len() < if contextual { 32 } else { 3 } {
             let Some(item) = merge.pop_tier(lex, 0) else {
                 break;
             };
@@ -2592,6 +2929,14 @@ impl Pool {
                 continue;
             }
             first.push(item);
+        }
+        if contextual {
+            for item in &mut first {
+                item.score = lex.contextual_score(item.score, &item.word);
+            }
+            // Stable ties retain subtitle counts and the dictionary's existing
+            // homophone order, including after personal weights decay.
+            first.sort_by_key(|a| std::cmp::Reverse(a.score));
         }
         if held.is_none() {
             if let Some(word) = &self.plan.ambiguous {
@@ -3022,7 +3367,13 @@ fn best_fresh_word(
             if score <= 0 {
                 continue;
             }
-            let replace = best.map(|(old, _, _)| score > old).unwrap_or(true);
+            let replace = best
+                .map(|(old, old_text, old_node)| {
+                    score > old
+                        || (score == old
+                            && (lex.text(word.text), node) < (lex.text(old_text), old_node))
+                })
+                .unwrap_or(true);
             if replace {
                 best = Some((score, word.text, node));
             }
@@ -3946,6 +4297,101 @@ fn local_clock_offset(days: i64) -> Option<Clock> {
 }
 
 #[cfg(test)]
+mod sentence_completion_tests {
+    use super::*;
+
+    #[test]
+    #[cfg(waypinyin_full_lexicon)]
+    fn long_clauses_do_not_become_a_single_grammar_head() {
+        let lex = Lexicon::load().with_preferences(crate::InputPreferences {
+            contextual: false,
+            ..Default::default()
+        });
+        assert_eq!(
+            suggest("woxiangzhidaozhegewentishenmeshihoukeyiwancheng", &lex)
+                .first()
+                .map(String::as_str),
+            Some("我想知道这个问题什么时候可以完成")
+        );
+    }
+
+    #[test]
+    fn equal_text_keeps_token_histories_with_different_future_scores() {
+        use crate::language_model::{fingerprint, LanguageModel};
+        let token = LanguageModel::token;
+        let base = format!(
+            "U\t0\t0\t{}\t2\nU\t0\t0\t{}\t2\nU\t0\t0\t{}\t0.1\n",
+            token("你"),
+            token("好"),
+            token("你好")
+        );
+        let score = |body: &str| {
+            let data = format!(
+                "WAYPINYIN-LM\t1\t42\t{}\n{body}",
+                fingerprint(body.as_bytes())
+            );
+            let mut model = LanguageModel::parse(data.as_bytes(), 42).unwrap();
+            model.weight = 0.9;
+            model.prior_weight = 1.0;
+            let mut lex = Lexicon::load();
+            lex.model = Some(Arc::new(model));
+            let rows = compose_sentence_search("nihaozhongguo", &lex, true, false);
+            assert_eq!(rows[0].0, "你好中国");
+            rows[0].2
+        };
+        let without = score(&base);
+        let with = score(&format!(
+            "{base}W\t{}\t{}\t{}\t8\n",
+            token("你"),
+            token("好"),
+            token("中国")
+        ));
+        assert!(
+            with < without - 1.0,
+            "different token histories were merged: {with}/{without}"
+        );
+    }
+
+    #[test]
+    #[cfg(waypinyin_full_lexicon)]
+    fn sentence_repair_keeps_one_edit_across_word_boundaries() {
+        let lex = Lexicon::load().with_test_model();
+        let repaired = compose_sentence_search("nihaozhngguoren", &lex, true, true);
+        assert!(
+            repaired
+                .iter()
+                .any(|(text, reading, _)| text == "你好中国人"
+                    && reading.join("'") == "ni'hao'zhong'guo'ren"),
+            "{repaired:?}"
+        );
+        let twice = compose_sentence_search("nihaozhngguren", &lex, true, true);
+        assert!(twice
+            .iter()
+            .all(|(_, reading, _)| reading.join("'") != "ni'hao'zhong'guo'ren"));
+    }
+
+    #[test]
+    fn only_the_open_tail_can_complete_a_syllable() {
+        // Exercise spelling/boundary mechanics independently of optional
+        // language-model preferences for this artificial greeting.
+        let lex = Lexicon::load().with_preferences(crate::InputPreferences {
+            contextual: false,
+            ..Default::default()
+        });
+        for raw in ["nihaozhongg", "nihaozhonggu", "nihaozhongguo"] {
+            let rows = compose_sentences(raw, &lex, true);
+            assert_eq!(rows[0].0, "你好中国", "{raw}");
+            assert_eq!(rows[0].1.join("'"), "ni'hao'zhong'guo", "{raw}");
+        }
+        assert!(compose_sentences("nihaozhongg'", &lex, true).is_empty());
+        // `gu` is valid in the middle, but must not be stretched to `guo`.
+        assert!(compose_sentences("nihaozhongguren", &lex, true)
+            .iter()
+            .all(|(_, reading, _)| reading.join("'") != "ni'hao'zhong'guo'ren"));
+    }
+}
+
+#[cfg(test)]
 mod preference_tests {
     use super::*;
     #[test]
@@ -3964,6 +4410,7 @@ mod preference_tests {
             let mut prefs = crate::InputPreferences {
                 enabled: true,
                 groups: [false; 10],
+                ..Default::default()
             };
             prefs.groups[i] = true;
             for (typed, reading) in [(a, b), (b, a)] {

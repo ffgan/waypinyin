@@ -60,6 +60,33 @@ fn main() {
     let image_path = out_dir.join("lexicon.bin");
     let len = bytes.len();
     fs::write(&image_path, &bytes).expect("write lexicon image");
+    // The optional sidecar leaves the dictionary ABI unchanged. Its header
+    // binds both the dictionary and the entire model payload.
+    println!("cargo:rerun-if-changed=data/context-model.txt");
+    let model_path = out_dir.join("lexicon.lm");
+    println!("cargo:rerun-if-env-changed=WAYPINYIN_MODEL_BODY");
+    let model_source = env::var_os("WAYPINYIN_MODEL_BODY").map(PathBuf::from);
+    if let Some(path) = &model_source {
+        println!("cargo:rerun-if-changed={}", path.display());
+    }
+    if let Some(model_source) = model_source {
+        let body = fs::read(&model_source).expect("read explicit WAYPINYIN_MODEL_BODY");
+        let fingerprint = |bytes: &[u8]| {
+            bytes.iter().fold(0xcbf29ce484222325u64, |h, b| {
+                (h ^ u64::from(*b)).wrapping_mul(0x100000001b3)
+            })
+        };
+        let header = format!(
+            "WAYPINYIN-LM\t1\t{}\t{}\n",
+            fingerprint(&bytes),
+            fingerprint(&body)
+        );
+        let mut model = header.into_bytes();
+        model.extend_from_slice(&body);
+        fs::write(&model_path, model).expect("write language model");
+    } else {
+        let _ = fs::remove_file(&model_path);
+    }
     drop(bytes);
     println!("cargo:rustc-env=WAYPINYIN_LEXICON={}", image_path.display());
     eprintln!(

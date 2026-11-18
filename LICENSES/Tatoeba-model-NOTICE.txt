@@ -1,0 +1,20 @@
+Optional local Tatoeba language model
+
+Sentence text: Tatoeba contributors, licensed CC BY 2.0 FR.
+https://tatoeba.org/en/downloads
+https://creativecommons.org/licenses/by/2.0/fr/
+
+The local trial uses the detailed Mandarin snapshot dated 2026-11-14.
+The model is derived using simplified-character mapping, clause filtering,
+dictionary segmentation, unigram counts and interpolated n-gram statistics.
+It also incorporates original Waypinyin conversational/office examples (MIT).
+
+The installed language-model.json records the source URL, exact source hash,
+training transformations and derived model hash. language-model-attribution.tsv
+records each retained source sentence ID and the username supplied by Tatoeba.
+Original sentences and their contributors can be found at
+https://tatoeba.org/en/sentences/show/<sentence_id> .
+
+Neither this optional model nor the downloaded source is part of the public
+MIT demo corpus. Retain this notice and the installed attribution metadata
+with any local copy of the optional model. No endorsement is implied.

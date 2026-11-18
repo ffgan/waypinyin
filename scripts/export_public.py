@@ -19,6 +19,8 @@ subprocess.run(['python3',str(root / 'scripts/check_sources.py')],check=True)
 inventory = json.loads((root / 'data/sources.json').read_text())
 cleared = {s['path'] for s in inventory['files'] if s['license_status'] in ('verified-local', 'verified-upstream')}
 excluded = [s for s in inventory['files'] if s['path'] not in cleared]
+# This frequency sample includes readings selected from the local complete lexicon.
+local_only = {root / 'tests/quality_words.tsv'}
 files = [root / name for name in ['Cargo.toml','Cargo.lock','build.rs','Makefile','LICENSE',
          'README.md','README.en.md','CHANGELOG.md','CONTRIBUTING.md','SECURITY.md','.gitignore','.gitattributes']]
 for directory in ['src','share','scripts','docs','packaging','tests','examples','.github','LICENSES']:
@@ -27,6 +29,8 @@ for directory in ['src','share','scripts','docs','packaging','tests','examples',
 files += [root / p for p in cleared] + [root / 'data/NOTICE']
 output.mkdir(parents=True,exist_ok=True)
 for source in sorted(files):
+    if source in local_only:
+        continue
     if source.is_symlink(): raise SystemExit(f'refusing symlink: {source}')
     target = output / source.relative_to(root)
     target.parent.mkdir(parents=True,exist_ok=True)

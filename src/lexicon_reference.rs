@@ -1,4 +1,5 @@
-//! Frozen pre-optimization beam search: a differential oracle, not runtime code.
+//! Pre-optimization beam bookkeeping: a differential oracle, not runtime code.
+//! Matching rules include final-syllable completion and equivalent ü spellings.
 use super::*;
 
 #[derive(Clone)]
@@ -105,8 +106,28 @@ fn compose_sentences(input: &str, lex: &Lexicon) -> Vec<(String, Vec<String>)> {
             for edge in lex.edges_for(node, input.as_bytes()[pos]) {
                 let syl = lex.syl(edge.syl);
                 let mut lengths = Vec::new();
+                if syl.as_bytes().get(1) != rest.as_bytes().get(1)
+                    && rest
+                        .as_bytes()
+                        .get(1)
+                        .is_some_and(|b| matches!(b, b'u' | b'v'))
+                {
+                    if let Some(alias) = umlaut_alias(syl) {
+                        if rest.starts_with(&alias) {
+                            lengths.push((alias.len(), 0.0));
+                        }
+                    }
+                }
                 if rest.starts_with(syl) {
                     lengths.push((syl.len(), 0.0));
+                }
+                if syl.len() > rest.len() && syl.starts_with(rest) {
+                    let scale = if lex.syllable_id(rest).is_some() {
+                        std::f64::consts::LN_10
+                    } else {
+                        0.25
+                    };
+                    lengths.push((rest.len(), scale * (syl.len() - rest.len()) as f64));
                 }
                 if !fully_spelled && !matches!(syl.as_bytes()[0], b'a' | b'e' | b'o') {
                     lengths.push((1, 0.25 * (syl.len().saturating_sub(1)) as f64));
@@ -136,7 +157,12 @@ fn compose_sentences(input: &str, lex: &Lexicon) -> Vec<(String, Vec<String>)> {
 
 #[test]
 fn optimized_beam_matches_reference() {
-    let lex = Lexicon::load();
+    // The frozen oracle verifies the fallback search. Enhanced model scoring
+    // intentionally changes candidates and is covered by quality fixtures.
+    let lex = Lexicon::load().with_preferences(crate::InputPreferences {
+        contextual: false,
+        ..Default::default()
+    });
     let mut inputs = std::collections::BTreeSet::new();
     for line in include_str!("../tests/sentences.tsv")
         .lines()
@@ -148,14 +174,26 @@ fn optimized_beam_matches_reference() {
             }
         }
     }
-    for raw in ["ni'hao", "xuexiwan", "sou", "lue", "zan", "x'x'x'x'x'x'x'x"] {
+    for raw in [
+        "ni'hao",
+        "xuexiwan",
+        "sou",
+        "lue",
+        "luezhongguo",
+        "qvzhongguo",
+        "zan",
+        "x'x'x'x'x'x'x'x",
+    ] {
         inputs.insert(raw.into());
     }
     inputs.insert("x".repeat(96));
     inputs.insert("x".repeat(129));
     for raw in inputs {
         assert_eq!(
-            super::compose_sentences(&raw, &lex, exact_syls(&raw, &lex).is_some()),
+            super::compose_sentences(&raw, &lex, exact_syls(&raw, &lex).is_some())
+                .into_iter()
+                .map(|(text, reading, _)| (text, reading))
+                .collect::<Vec<_>>(),
             compose_sentences(&raw, &lex),
             "{raw}"
         );

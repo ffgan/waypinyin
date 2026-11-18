@@ -4,6 +4,8 @@ use std::path::PathBuf;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct InputPreferences {
     pub enabled: bool,
+    pub contextual: bool,
+    pub surrounding: bool,
     /// z/zh, c/ch, s/sh, an/ang, en/eng, in/ing, n/l, f/h, r/l, ou/uo.
     pub groups: [bool; 10],
 }
@@ -11,6 +13,8 @@ impl Default for InputPreferences {
     fn default() -> Self {
         Self {
             enabled: true,
+            contextual: true,
+            surrounding: true,
             groups: [
                 true, true, true, true, true, true, false, false, false, true,
             ],
@@ -62,6 +66,10 @@ impl InputPreferences {
             };
             if key.trim() == "enabled" {
                 out.enabled = value;
+            } else if key.trim() == "contextual" {
+                out.contextual = value;
+            } else if key.trim() == "surrounding" {
+                out.surrounding = value;
             } else if let Some(i) = Self::KEYS.iter().position(|k| *k == key.trim()) {
                 out.groups[i] = value;
             } else {
@@ -77,6 +85,10 @@ impl InputPreferences {
         let parent = path.parent().unwrap();
         std::fs::create_dir_all(parent).map_err(|e| e.to_string())?;
         let mut text = format!("enabled = {}\n", self.enabled);
+        text.push_str(&format!(
+            "contextual = {}\nsurrounding = {}\n",
+            self.contextual, self.surrounding
+        ));
         for (key, value) in Self::KEYS.iter().zip(self.groups) {
             text.push_str(&format!("{key} = {value}\n"));
         }

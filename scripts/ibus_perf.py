@@ -40,7 +40,7 @@ def process(command, group=False, **kwargs):
             child.wait(timeout=5)
 
 
-def run(engine, probe, image, mode, diagnostic=False, routed=False):
+def run(engine, probe, image, mode, diagnostic=False, routed=False, observe=None):
     with tempfile.TemporaryDirectory(prefix="waypinyin-ibus-") as temporary:
         root = Path(temporary)
         env = dict(os.environ, WAYPINYIN_LEXICON=str(image),
@@ -112,6 +112,10 @@ def run(engine, probe, image, mode, diagnostic=False, routed=False):
                         raise RuntimeError(f"probe failed; engine log:\n{log.read()}") from None
                     if child.poll() is not None:
                         raise RuntimeError(f"engine exited unexpectedly: {child.returncode}")
+                    if observe is not None:
+                        if routed:
+                            raise ValueError("process observation requires the directly launched engine")
+                        observe(child.pid)
                     if mode == "lifecycle":
                         # Every destroyed session owned a journal and two watches.
                         # A live process with 100 leaked sessions would exceed this.

@@ -1,0 +1,24 @@
+{
+  "command": [
+    "valgrind",
+    "--tool=callgrind",
+    "--collect-atstart=no",
+    "--toggle-collect=waypinyin_profile_key",
+    "--callgrind-out-file=/home/emt/src/waypinyin/build/benchmark-current-2026-11-17/full-pinyin-255.callgrind",
+    "target/release/examples/search_hotspot",
+    "jintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugon"
+  ],
+  "prefix": 255,
+  "pattern": "jintianwomenyiqiqugongyuan",
+  "probe_sha256": "8f2489d78a9cb4445c068649939fec381c82d3c55cf329ddbd25f64d62206a09",
+  "total_instructions": 3377397683,
+  "segmentation_entry_inclusive_instructions": 3376766458,
+  "segmentation_recursive_self_instructions": 2051885900,
+  "valgrind": "valgrind-3.28.0",
+  "image_sha256": "58d36908ff619f807bcaae1ce1316d819904c808ce0ce081fb15b97d9bd75b24",
+  "source_sha256": "07e8da2f043bd8e2ca262ed75094bca47aeb2275ab057941b81139d663752ed9",
+  "raw_sha256": "3e55d3c8efaa8d47fa3131aaf5c6cd041751825abe6a388011276efb7429df83",
+  "raw_file": "comprehensive-profile-2026-11-17.callgrind",
+  "annotation": "--------------------------------------------------------------------------------\nProfile data file 'build/benchmark-current-2026-11-17/full-pinyin-255.callgrind' (creator: callgrind-3.28.0)\n--------------------------------------------------------------------------------\nI1 cache: \nD1 cache: \nLL cache: \nTimerange: Basic block 0 - 1194977283\nTrigger: Program termination\nProfiled target:  target/release/examples/search_hotspot jintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugon (PID 216232, part 1)\nEvents recorded:  Ir\nEvents shown:     Ir\nEvent sort order: Ir\nThresholds:       95\nInclude dirs:     \nUser annotated:   \nAuto-annotation:  on\n\n--------------------------------------------------------------------------------\nIr                     \n--------------------------------------------------------------------------------\n3,377,397,683 (100.0%)  PROGRAM TOTALS\n\n--------------------------------------------------------------------------------\nIr                      file:function\n--------------------------------------------------------------------------------\n2,051,885,900 (60.75%)  ???:waypinyin::lexicon::segmentations::walk'2 [/home/emt/src/waypinyin/target/release/examples/search_hotspot]\n  202,725,240 ( 6.00%)  ???:<alloc::raw_vec::RawVecInner>::finish_grow [/home/emt/src/waypinyin/target/release/examples/search_hotspot]\n  182,925,058 ( 5.42%)  /usr/src/debug/glibc-2.44-2.fc45.x86_64/malloc/malloc.c:free [/usr/lib64/libc.so.6]\n  138,997,930 ( 4.12%)  /usr/src/debug/glibc-2.44-2.fc45.x86_64/malloc/malloc.c:_int_malloc [/usr/lib64/libc.so.6]\n  133,760,010 ( 3.96%)  /usr/src/debug/glibc-2.44-2.fc45.x86_64/malloc/malloc.c:malloc [/usr/lib64/libc.so.6]\n  121,634,808 ( 3.60%)  ???:<alloc::raw_vec::RawVec<u16>>::grow_one [/home/emt/src/waypinyin/target/release/examples/search_hotspot]\n  119,537,493 ( 3.54%)  ???:<[u16]>::sort_by::<waypinyin::lexicon::segmentations::walk::{closure#0}>::{closure#0} [/home/emt/src/waypinyin/target/release/examples/search_hotspot]\n   96,468,854 ( 2.86%)  ???:core::slice::sort::shared::smallsort::insertion_sort_shift_left::<u16, <[u16]>::sort_by<waypinyin::lexicon::segmentations::walk::{closure#0}>::{closure#0}> [/home/emt/src/waypinyin/target/release/examples/search_hotspot]\n   73,600,503 ( 2.18%)  /usr/src/debug/glibc-2.44-2.fc45.x86_64/malloc/malloc.c:_int_free_merge_chunk [/usr/lib64/libc.so.6]\n   59,826,281 ( 1.77%)  /usr/src/debug/glibc-2.44-2.fc45.x86_64/malloc/malloc.c:_int_free_create_chunk [/usr/lib64/libc.so.6]\n   50,331,735 ( 1.49%)  ???:__rustc::__rdl_alloc [/home/emt/src/waypinyin/target/release/examples/search_hotspot]\n\n--------------------------------------------------------------------------------\nThe following files chosen for auto-annotation could not be found:\n--------------------------------------------------------------------------------\n  /usr/src/debug/glibc-2.44-2.fc45.x86_64/malloc/malloc.c\n\n",
+  "probe_output": "Some(\"jintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugongyuanjintianwomenyiqiqugon\")\n"
+}

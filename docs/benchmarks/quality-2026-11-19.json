@@ -1,0 +1,2220 @@
+{
+  "date": "2026-11-19",
+  "scope": "Local offline trial; original template-grouped synthetic regression, not a natural-input accuracy estimate. No public distribution.",
+  "holdout": {
+    "split": "test",
+    "fixture_sha256": "ea7192aff86bc896b9a2d544d50b23e87e6a75340fed3bd920a1b7fe5feaeeef",
+    "baseline_trace_sha256": "e1f323bc1c713036f23ae9ca2b9a29c8bafb7cd3400e02747619f0003b86ebbd",
+    "image_sha256": "deaff883a0cf39fe454f408ef53919c581d843b0541599cb894003d3ae33781c",
+    "model_sha256": "d59f0ffbb89b6ea7f80650a395bf1802090ff9cf00e529533e288c6b6811754d",
+    "suite_sha256": "6f77560280b0497acbd933c5941c175ab482e85e7f996532ba1e6cfb50a44b47",
+    "metrics": {
+      "full": {
+        "cases": 300,
+        "baseline_top1": 137,
+        "top1": 228,
+        "baseline_top5": 213,
+        "top5": 268
+      },
+      "initials": {
+        "cases": 300,
+        "baseline_top1": 10,
+        "top1": 39,
+        "baseline_top5": 13,
+        "top5": 55
+      },
+      "mixed": {
+        "cases": 300,
+        "baseline_top1": 10,
+        "top1": 69,
+        "baseline_top5": 13,
+        "top5": 140
+      }
+    },
+    "relative_top1_error_reduction": 0.24091520861372817,
+    "acceptance": {
+      "error_reduction_at_least_20_percent": true,
+      "no_category_top5_regression": true
+    },
+    "limitations": "Original template-grouped synthetic samples; exact answers; not a natural-input accuracy estimate. No user dictionaries or surrounding text used.",
+    "stderr": ""
+  },
+  "development": {
+    "split": "dev",
+    "fixture_sha256": "ea7192aff86bc896b9a2d544d50b23e87e6a75340fed3bd920a1b7fe5feaeeef",
+    "baseline_trace_sha256": "e1f323bc1c713036f23ae9ca2b9a29c8bafb7cd3400e02747619f0003b86ebbd",
+    "image_sha256": "deaff883a0cf39fe454f408ef53919c581d843b0541599cb894003d3ae33781c",
+    "model_sha256": "d59f0ffbb89b6ea7f80650a395bf1802090ff9cf00e529533e288c6b6811754d",
+    "suite_sha256": "3b2cf93df28ac82f10907727bf5fbca76bd30995e7e46e7312efdf0b614478f1",
+    "metrics": {
+      "full": {
+        "cases": 300,
+        "baseline_top1": 217,
+        "top1": 248,
+        "baseline_top5": 281,
+        "top5": 293
+      },
+      "initials": {
+        "cases": 300,
+        "baseline_top1": 9,
+        "top1": 50,
+        "baseline_top5": 48,
+        "top5": 118
+      },
+      "mixed": {
+        "cases": 300,
+        "baseline_top1": 65,
+        "top1": 104,
+        "baseline_top5": 112,
+        "top5": 186
+      }
+    },
+    "relative_top1_error_reduction": 0.18226600985221675,
+    "acceptance": {
+      "error_reduction_at_least_20_percent": false,
+      "no_category_top5_regression": true
+    },
+    "limitations": "Original template-grouped synthetic samples; exact answers; not a natural-input accuracy estimate. No user dictionaries or surrounding text used.",
+    "stderr": ""
+  },
+  "evaluation_caveat": "First frozen holdout error reduction was 16.55%; generic long-clause grammar and search-state retention fixes were subsequently regression-tested on the same holdout. Training, model weights and gold labels were unchanged. Final result is not a one-shot blind generalization estimate. Development probe predates only the disabled-context personal-link guard, which does not affect these no-context fixtures.",
+  "legacy_and_extra_words": {
+    "extra_words": {
+      "cases": 300,
+      "baseline_top1": 289,
+      "baseline_top5": 299,
+      "top1": 289,
+      "top5": 299
+    },
+    "quality": "cases=200 top1=200 top7=200 p95_us=539",
+    "sentence_quality": "cases=75 first=74 top7=74 key_p95_us=3993 key_max_us=11074"
+  },
+  "performance": {
+    "runs": 7,
+    "sha256": {
+      "image": "deaff883a0cf39fe454f408ef53919c581d843b0541599cb894003d3ae33781c",
+      "model": "d59f0ffbb89b6ea7f80650a395bf1802090ff9cf00e529533e288c6b6811754d",
+      "engine": "8ebf376586b148d04c0dc934b682e3a92d8fbd97af41bdbde7e54e89964d44a7",
+      "before_probe": "b42cb2ca730b8531996bb8b534c334df93f298798c8cb66d297d42b27e27d3eb",
+      "after_probe": "24dcb5c2c0f5bbfd8eea2e872d63ee9ad48c011f19b61248def3378fae97e78d",
+      "baseline_image": "58d36908ff619f807bcaae1ce1316d819904c808ce0ce081fb15b97d9bd75b24",
+      "installed_baseline_engine": "c48c271ca837fc0a955385f92dbe0ccead016f54934c228e4ef598202bbd0818"
+    },
+    "samples": {
+      "before": [
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 3216,
+            "p95_ns": 25679,
+            "max_ns": 3202872
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1703,
+            "p95_ns": 1555103,
+            "max_ns": 4353284
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4448,
+            "p95_ns": 13406,
+            "max_ns": 24145
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 281490,
+            "p95_ns": 3197581,
+            "max_ns": 4461347
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 52559,
+            "p95_ns": 255741,
+            "max_ns": 1068528
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 271060,
+            "p95_ns": 562086,
+            "max_ns": 2292069
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 331,
+            "p95_ns": 461,
+            "max_ns": 21671
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 2796,
+            "p95_ns": 26270,
+            "max_ns": 3375316
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1753,
+            "p95_ns": 1600068,
+            "max_ns": 4223581
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4489,
+            "p95_ns": 12723,
+            "max_ns": 33624
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 283763,
+            "p95_ns": 3102373,
+            "max_ns": 4473681
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 50665,
+            "p95_ns": 256282,
+            "max_ns": 979322
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 265229,
+            "p95_ns": 601541,
+            "max_ns": 2536589
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 361,
+            "p95_ns": 511,
+            "max_ns": 15058
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 3587,
+            "p95_ns": 27762,
+            "max_ns": 2228370
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1794,
+            "p95_ns": 2220996,
+            "max_ns": 46391969
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4579,
+            "p95_ns": 11592,
+            "max_ns": 529857
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 285927,
+            "p95_ns": 3298461,
+            "max_ns": 11236786
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 55314,
+            "p95_ns": 810293,
+            "max_ns": 19310084
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 434357,
+            "p95_ns": 7365958,
+            "max_ns": 56459988
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 351,
+            "p95_ns": 451,
+            "max_ns": 571
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 3567,
+            "p95_ns": 29556,
+            "max_ns": 3757614
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1733,
+            "p95_ns": 1579660,
+            "max_ns": 4428355
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4518,
+            "p95_ns": 11812,
+            "max_ns": 24006
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 289575,
+            "p95_ns": 3162276,
+            "max_ns": 4738368
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 52128,
+            "p95_ns": 268134,
+            "max_ns": 1019387
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 274726,
+            "p95_ns": 624825,
+            "max_ns": 3023394
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 351,
+            "p95_ns": 461,
+            "max_ns": 591
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 3036,
+            "p95_ns": 24747,
+            "max_ns": 2552339
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1683,
+            "p95_ns": 1551467,
+            "max_ns": 4236174
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4489,
+            "p95_ns": 12443,
+            "max_ns": 32071
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 279355,
+            "p95_ns": 3116058,
+            "max_ns": 4496373
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 51196,
+            "p95_ns": 254298,
+            "max_ns": 1041508
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 269016,
+            "p95_ns": 564381,
+            "max_ns": 2432343
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 331,
+            "p95_ns": 431,
+            "max_ns": 631
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 3256,
+            "p95_ns": 27101,
+            "max_ns": 3252494
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1804,
+            "p95_ns": 1611078,
+            "max_ns": 4228650
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4659,
+            "p95_ns": 11933,
+            "max_ns": 25067
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 277662,
+            "p95_ns": 3152547,
+            "max_ns": 4924438
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 54993,
+            "p95_ns": 280747,
+            "max_ns": 1107822
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 278384,
+            "p95_ns": 664198,
+            "max_ns": 2356571
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 351,
+            "p95_ns": 471,
+            "max_ns": 22913
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 2996,
+            "p95_ns": 26710,
+            "max_ns": 3187042
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1714,
+            "p95_ns": 1571685,
+            "max_ns": 4226075
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4348,
+            "p95_ns": 9978,
+            "max_ns": 24626
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 285727,
+            "p95_ns": 3137489,
+            "max_ns": 4499460
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 50655,
+            "p95_ns": 250180,
+            "max_ns": 1102262
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 265530,
+            "p95_ns": 556877,
+            "max_ns": 2325792
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 320,
+            "p95_ns": 450,
+            "max_ns": 2114
+          }
+        }
+      ],
+      "after": [
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 5932,
+            "p95_ns": 42340,
+            "max_ns": 10456008
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1734,
+            "p95_ns": 2470064,
+            "max_ns": 57141319
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4579,
+            "p95_ns": 11863,
+            "max_ns": 25508
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 330181,
+            "p95_ns": 3910332,
+            "max_ns": 10806637
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 53610,
+            "p95_ns": 254869,
+            "max_ns": 805434
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 272653,
+            "p95_ns": 561526,
+            "max_ns": 2205306
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 341,
+            "p95_ns": 461,
+            "max_ns": 2114
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 5070,
+            "p95_ns": 27542,
+            "max_ns": 4556126
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1784,
+            "p95_ns": 2512454,
+            "max_ns": 57387282
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4589,
+            "p95_ns": 12183,
+            "max_ns": 25458
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 326744,
+            "p95_ns": 3916263,
+            "max_ns": 11713151
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 53510,
+            "p95_ns": 264968,
+            "max_ns": 798552
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 281159,
+            "p95_ns": 599267,
+            "max_ns": 2230583
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 351,
+            "p95_ns": 501,
+            "max_ns": 4028
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 5761,
+            "p95_ns": 52899,
+            "max_ns": 10193304
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1774,
+            "p95_ns": 2465445,
+            "max_ns": 56740456
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4589,
+            "p95_ns": 13045,
+            "max_ns": 25538
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 334650,
+            "p95_ns": 3940187,
+            "max_ns": 10849679
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 54182,
+            "p95_ns": 265670,
+            "max_ns": 821294
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 270909,
+            "p95_ns": 565132,
+            "max_ns": 2042470
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 360,
+            "p95_ns": 481,
+            "max_ns": 1593
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 5069,
+            "p95_ns": 28874,
+            "max_ns": 10566545
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1744,
+            "p95_ns": 2456238,
+            "max_ns": 56401057
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4478,
+            "p95_ns": 11862,
+            "max_ns": 24987
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 338947,
+            "p95_ns": 3927894,
+            "max_ns": 11282511
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 52920,
+            "p95_ns": 262463,
+            "max_ns": 783423
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 270068,
+            "p95_ns": 555745,
+            "max_ns": 2025358
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 331,
+            "p95_ns": 461,
+            "max_ns": 1533
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 5019,
+            "p95_ns": 26580,
+            "max_ns": 10187483
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1763,
+            "p95_ns": 2456127,
+            "max_ns": 59389216
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4528,
+            "p95_ns": 12985,
+            "max_ns": 27572
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 337775,
+            "p95_ns": 3922725,
+            "max_ns": 11021270
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 52599,
+            "p95_ns": 260981,
+            "max_ns": 780246
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 269677,
+            "p95_ns": 566585,
+            "max_ns": 2113413
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 341,
+            "p95_ns": 471,
+            "max_ns": 571
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 4879,
+            "p95_ns": 24977,
+            "max_ns": 4514938
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1703,
+            "p95_ns": 2460626,
+            "max_ns": 57113246
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4518,
+            "p95_ns": 11842,
+            "max_ns": 24606
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 336262,
+            "p95_ns": 3932985,
+            "max_ns": 10902116
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 51908,
+            "p95_ns": 248978,
+            "max_ns": 778133
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 270519,
+            "p95_ns": 557098,
+            "max_ns": 2076243
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 341,
+            "p95_ns": 441,
+            "max_ns": 511
+          }
+        },
+        {
+          "cached_key": {
+            "count": 2731,
+            "p50_ns": 4939,
+            "p95_ns": 54643,
+            "max_ns": 10927985
+          },
+          "edit": {
+            "count": 1375,
+            "p50_ns": 1754,
+            "p95_ns": 2550595,
+            "max_ns": 57753129
+          },
+          "page": {
+            "count": 275,
+            "p50_ns": 4418,
+            "p95_ns": 13696,
+            "max_ns": 25017
+          },
+          "sentence_key": {
+            "count": 1529,
+            "p50_ns": 364164,
+            "p95_ns": 4560333,
+            "max_ns": 44021152
+          },
+          "short_key": {
+            "count": 1202,
+            "p50_ns": 52930,
+            "p95_ns": 255891,
+            "max_ns": 757604
+          },
+          "suggest": {
+            "count": 200,
+            "p50_ns": 271050,
+            "p95_ns": 564261,
+            "max_ns": 2076604
+          },
+          "view": {
+            "count": 275,
+            "p50_ns": 341,
+            "p95_ns": 461,
+            "max_ns": 3086
+          }
+        }
+      ]
+    },
+    "routed_ibus": [
+      {
+        "commit": {
+          "count": 275,
+          "p50_ns": 567026,
+          "p95_ns": 762794,
+          "p99_ns": 864145,
+          "max_ns": 1073819
+        },
+        "edit": {
+          "count": 1375,
+          "p50_ns": 384303,
+          "p95_ns": 764367,
+          "p99_ns": 1200697,
+          "max_ns": 7447422
+        },
+        "ignored": {
+          "count": 550,
+          "p50_ns": 227187,
+          "p95_ns": 351721,
+          "p99_ns": 633642,
+          "max_ns": 1325172
+        },
+        "page": {
+          "count": 550,
+          "p50_ns": 613403,
+          "p95_ns": 863734,
+          "p99_ns": 1071685,
+          "max_ns": 2039735
+        },
+        "select": {
+          "count": 550,
+          "p50_ns": 596822,
+          "p95_ns": 835962,
+          "p99_ns": 1115076,
+          "max_ns": 1707250
+        },
+        "sentence": {
+          "count": 1529,
+          "p50_ns": 1042390,
+          "p95_ns": 4778043,
+          "p99_ns": 6279456,
+          "max_ns": 11798201
+        },
+        "short": {
+          "count": 1202,
+          "p50_ns": 694305,
+          "p95_ns": 1097414,
+          "p99_ns": 1473851,
+          "max_ns": 2278884
+        },
+        "wire_commit": {
+          "signals": 825,
+          "bytes": 349712
+        },
+        "wire_edit": {
+          "signals": 1620,
+          "bytes": 939768
+        },
+        "wire_ignored": {
+          "signals": 0,
+          "bytes": 0
+        },
+        "wire_page": {
+          "signals": 926,
+          "bytes": 755240
+        },
+        "wire_select": {
+          "signals": 650,
+          "bytes": 677992
+        },
+        "wire_sentence": {
+          "signals": 2907,
+          "bytes": 2144140
+        },
+        "wire_short": {
+          "signals": 2387,
+          "bytes": 1716972
+        },
+        "wire": {
+          "signals": 9316,
+          "bytes": 6584000
+        }
+      },
+      {
+        "commit": {
+          "count": 275,
+          "p50_ns": 562427,
+          "p95_ns": 758386,
+          "p99_ns": 1053360,
+          "max_ns": 1585871
+        },
+        "edit": {
+          "count": 1375,
+          "p50_ns": 382499,
+          "p95_ns": 746433,
+          "p99_ns": 992887,
+          "max_ns": 1693233
+        },
+        "ignored": {
+          "count": 550,
+          "p50_ns": 227698,
+          "p95_ns": 388831,
+          "p99_ns": 735934,
+          "max_ns": 1676101
+        },
+        "page": {
+          "count": 550,
+          "p50_ns": 609465,
+          "p95_ns": 757114,
+          "p99_ns": 908678,
+          "max_ns": 1378993
+        },
+        "select": {
+          "count": 550,
+          "p50_ns": 596071,
+          "p95_ns": 783884,
+          "p99_ns": 1196280,
+          "max_ns": 2326554
+        },
+        "sentence": {
+          "count": 1529,
+          "p50_ns": 1021932,
+          "p95_ns": 4772994,
+          "p99_ns": 6258105,
+          "max_ns": 12872231
+        },
+        "short": {
+          "count": 1202,
+          "p50_ns": 689496,
+          "p95_ns": 1085110,
+          "p99_ns": 1445648,
+          "max_ns": 3174588
+        },
+        "wire_commit": {
+          "signals": 825,
+          "bytes": 349712
+        },
+        "wire_edit": {
+          "signals": 1620,
+          "bytes": 939768
+        },
+        "wire_ignored": {
+          "signals": 0,
+          "bytes": 0
+        },
+        "wire_page": {
+          "signals": 926,
+          "bytes": 755240
+        },
+        "wire_select": {
+          "signals": 650,
+          "bytes": 677992
+        },
+        "wire_sentence": {
+          "signals": 2907,
+          "bytes": 2144140
+        },
+        "wire_short": {
+          "signals": 2387,
+          "bytes": 1716972
+        },
+        "wire": {
+          "signals": 9315,
+          "bytes": 6583824
+        }
+      },
+      {
+        "commit": {
+          "count": 275,
+          "p50_ns": 564562,
+          "p95_ns": 774105,
+          "p99_ns": 1126688,
+          "max_ns": 1478018
+        },
+        "edit": {
+          "count": 1375,
+          "p50_ns": 377339,
+          "p95_ns": 757604,
+          "p99_ns": 1105618,
+          "max_ns": 1618243
+        },
+        "ignored": {
+          "count": 550,
+          "p50_ns": 224963,
+          "p95_ns": 360508,
+          "p99_ns": 505290,
+          "max_ns": 1055054
+        },
+        "page": {
+          "count": 550,
+          "p50_ns": 601320,
+          "p95_ns": 842053,
+          "p99_ns": 1095169,
+          "max_ns": 1860087
+        },
+        "select": {
+          "count": 550,
+          "p50_ns": 585430,
+          "p95_ns": 832214,
+          "p99_ns": 1268204,
+          "max_ns": 1682272
+        },
+        "sentence": {
+          "count": 1529,
+          "p50_ns": 1105949,
+          "p95_ns": 4946840,
+          "p99_ns": 6340611,
+          "max_ns": 12494951
+        },
+        "short": {
+          "count": 1202,
+          "p50_ns": 663878,
+          "p95_ns": 1100830,
+          "p99_ns": 1525588,
+          "max_ns": 2635335
+        },
+        "wire_commit": {
+          "signals": 825,
+          "bytes": 349712
+        },
+        "wire_edit": {
+          "signals": 1620,
+          "bytes": 939768
+        },
+        "wire_ignored": {
+          "signals": 0,
+          "bytes": 0
+        },
+        "wire_page": {
+          "signals": 926,
+          "bytes": 755240
+        },
+        "wire_select": {
+          "signals": 650,
+          "bytes": 677992
+        },
+        "wire_sentence": {
+          "signals": 2907,
+          "bytes": 2144140
+        },
+        "wire_short": {
+          "signals": 2387,
+          "bytes": 1716972
+        },
+        "wire": {
+          "signals": 9315,
+          "bytes": 6583824
+        }
+      },
+      {
+        "commit": {
+          "count": 275,
+          "p50_ns": 550464,
+          "p95_ns": 759407,
+          "p99_ns": 1077777,
+          "max_ns": 1328829
+        },
+        "edit": {
+          "count": 1375,
+          "p50_ns": 357632,
+          "p95_ns": 721136,
+          "p99_ns": 1025738,
+          "max_ns": 2780988
+        },
+        "ignored": {
+          "count": 550,
+          "p50_ns": 219552,
+          "p95_ns": 336823,
+          "p99_ns": 452751,
+          "max_ns": 853235
+        },
+        "page": {
+          "count": 550,
+          "p50_ns": 588266,
+          "p95_ns": 751994,
+          "p99_ns": 910382,
+          "max_ns": 1436901
+        },
+        "select": {
+          "count": 550,
+          "p50_ns": 562257,
+          "p95_ns": 729481,
+          "p99_ns": 1238638,
+          "max_ns": 1820363
+        },
+        "sentence": {
+          "count": 1529,
+          "p50_ns": 1047029,
+          "p95_ns": 4852864,
+          "p99_ns": 6312488,
+          "max_ns": 13844058
+        },
+        "short": {
+          "count": 1202,
+          "p50_ns": 655713,
+          "p95_ns": 1034705,
+          "p99_ns": 1578958,
+          "max_ns": 2611550
+        },
+        "wire_commit": {
+          "signals": 825,
+          "bytes": 349712
+        },
+        "wire_edit": {
+          "signals": 1620,
+          "bytes": 939768
+        },
+        "wire_ignored": {
+          "signals": 0,
+          "bytes": 0
+        },
+        "wire_page": {
+          "signals": 926,
+          "bytes": 755240
+        },
+        "wire_select": {
+          "signals": 650,
+          "bytes": 677992
+        },
+        "wire_sentence": {
+          "signals": 2907,
+          "bytes": 2144140
+        },
+        "wire_short": {
+          "signals": 2387,
+          "bytes": 1716972
+        },
+        "wire": {
+          "signals": 9315,
+          "bytes": 6583824
+        }
+      },
+      {
+        "commit": {
+          "count": 275,
+          "p50_ns": 567447,
+          "p95_ns": 806216,
+          "p99_ns": 1017634,
+          "max_ns": 1455116
+        },
+        "edit": {
+          "count": 1375,
+          "p50_ns": 383381,
+          "p95_ns": 749189,
+          "p99_ns": 1035256,
+          "max_ns": 5898870
+        },
+        "ignored": {
+          "count": 550,
+          "p50_ns": 223571,
+          "p95_ns": 389653,
+          "p99_ns": 591122,
+          "max_ns": 1293652
+        },
+        "page": {
+          "count": 550,
+          "p50_ns": 612211,
+          "p95_ns": 788933,
+          "p99_ns": 1036829,
+          "max_ns": 2102763
+        },
+        "select": {
+          "count": 550,
+          "p50_ns": 587234,
+          "p95_ns": 803591,
+          "p99_ns": 1086923,
+          "max_ns": 1675450
+        },
+        "sentence": {
+          "count": 1529,
+          "p50_ns": 1024185,
+          "p95_ns": 4787451,
+          "p99_ns": 6674629,
+          "max_ns": 11577136
+        },
+        "short": {
+          "count": 1202,
+          "p50_ns": 674989,
+          "p95_ns": 1022723,
+          "p99_ns": 1486595,
+          "max_ns": 2213662
+        },
+        "wire_commit": {
+          "signals": 825,
+          "bytes": 349712
+        },
+        "wire_edit": {
+          "signals": 1620,
+          "bytes": 939768
+        },
+        "wire_ignored": {
+          "signals": 0,
+          "bytes": 0
+        },
+        "wire_page": {
+          "signals": 926,
+          "bytes": 755240
+        },
+        "wire_select": {
+          "signals": 650,
+          "bytes": 677992
+        },
+        "wire_sentence": {
+          "signals": 2907,
+          "bytes": 2144140
+        },
+        "wire_short": {
+          "signals": 2387,
+          "bytes": 1716972
+        },
+        "wire": {
+          "signals": 9315,
+          "bytes": 6583824
+        }
+      },
+      {
+        "commit": {
+          "count": 275,
+          "p50_ns": 582766,
+          "p95_ns": 737276,
+          "p99_ns": 1261813,
+          "max_ns": 1546487
+        },
+        "edit": {
+          "count": 1375,
+          "p50_ns": 390965,
+          "p95_ns": 760069,
+          "p99_ns": 992046,
+          "max_ns": 1758496
+        },
+        "ignored": {
+          "count": 550,
+          "p50_ns": 236184,
+          "p95_ns": 389492,
+          "p99_ns": 665672,
+          "max_ns": 1460286
+        },
+        "page": {
+          "count": 550,
+          "p50_ns": 618453,
+          "p95_ns": 802488,
+          "p99_ns": 919599,
+          "max_ns": 1412826
+        },
+        "select": {
+          "count": 550,
+          "p50_ns": 603675,
+          "p95_ns": 838036,
+          "p99_ns": 1160462,
+          "max_ns": 1547269
+        },
+        "sentence": {
+          "count": 1529,
+          "p50_ns": 1031850,
+          "p95_ns": 4847864,
+          "p99_ns": 6103034,
+          "max_ns": 13309943
+        },
+        "short": {
+          "count": 1202,
+          "p50_ns": 696269,
+          "p95_ns": 1157486,
+          "p99_ns": 1730303,
+          "max_ns": 2543251
+        },
+        "wire_commit": {
+          "signals": 825,
+          "bytes": 349712
+        },
+        "wire_edit": {
+          "signals": 1620,
+          "bytes": 939768
+        },
+        "wire_ignored": {
+          "signals": 0,
+          "bytes": 0
+        },
+        "wire_page": {
+          "signals": 926,
+          "bytes": 755240
+        },
+        "wire_select": {
+          "signals": 650,
+          "bytes": 677992
+        },
+        "wire_sentence": {
+          "signals": 2907,
+          "bytes": 2144140
+        },
+        "wire_short": {
+          "signals": 2387,
+          "bytes": 1716972
+        },
+        "wire": {
+          "signals": 9315,
+          "bytes": 6583824
+        }
+      },
+      {
+        "commit": {
+          "count": 275,
+          "p50_ns": 566556,
+          "p95_ns": 721587,
+          "p99_ns": 1014838,
+          "max_ns": 1418707
+        },
+        "edit": {
+          "count": 1375,
+          "p50_ns": 381186,
+          "p95_ns": 760870,
+          "p99_ns": 1292670,
+          "max_ns": 6087385
+        },
+        "ignored": {
+          "count": 550,
+          "p50_ns": 229662,
+          "p95_ns": 337524,
+          "p99_ns": 467879,
+          "max_ns": 750241
+        },
+        "page": {
+          "count": 550,
+          "p50_ns": 619795,
+          "p95_ns": 810464,
+          "p99_ns": 1265409,
+          "max_ns": 2947732
+        },
+        "select": {
+          "count": 550,
+          "p50_ns": 591822,
+          "p95_ns": 814121,
+          "p99_ns": 1249028,
+          "max_ns": 1679939
+        },
+        "sentence": {
+          "count": 1529,
+          "p50_ns": 1074240,
+          "p95_ns": 4950176,
+          "p99_ns": 6303390,
+          "max_ns": 14253808
+        },
+        "short": {
+          "count": 1202,
+          "p50_ns": 683615,
+          "p95_ns": 1120597,
+          "p99_ns": 1458502,
+          "max_ns": 1689015
+        },
+        "wire_commit": {
+          "signals": 825,
+          "bytes": 349712
+        },
+        "wire_edit": {
+          "signals": 1620,
+          "bytes": 939768
+        },
+        "wire_ignored": {
+          "signals": 0,
+          "bytes": 0
+        },
+        "wire_page": {
+          "signals": 926,
+          "bytes": 755240
+        },
+        "wire_select": {
+          "signals": 650,
+          "bytes": 677992
+        },
+        "wire_sentence": {
+          "signals": 2907,
+          "bytes": 2144140
+        },
+        "wire_short": {
+          "signals": 2387,
+          "bytes": 1716972
+        },
+        "wire": {
+          "signals": 9315,
+          "bytes": 6583824
+        }
+      }
+    ],
+    "engine_memory": [
+      {
+        "VmRSS_kib": 168280,
+        "VmHWM_kib": 168280,
+        "RssAnon_kib": 21904,
+        "RssFile_kib": 146376,
+        "Pss_kib": 165624,
+        "Pss_Anon_kib": 21904,
+        "Pss_File_kib": 143720,
+        "Private_Clean_kib": 143696,
+        "Private_Dirty_kib": 21904,
+        "threads": 3,
+        "fds": 13
+      },
+      {
+        "VmRSS_kib": 168532,
+        "VmHWM_kib": 168532,
+        "RssAnon_kib": 22004,
+        "RssFile_kib": 146528,
+        "Pss_kib": 165789,
+        "Pss_Anon_kib": 22004,
+        "Pss_File_kib": 143785,
+        "Private_Clean_kib": 143760,
+        "Private_Dirty_kib": 22004,
+        "threads": 3,
+        "fds": 13
+      },
+      {
+        "VmRSS_kib": 168192,
+        "VmHWM_kib": 168192,
+        "RssAnon_kib": 21996,
+        "RssFile_kib": 146196,
+        "Pss_kib": 165710,
+        "Pss_Anon_kib": 21996,
+        "Pss_File_kib": 143714,
+        "Private_Clean_kib": 143692,
+        "Private_Dirty_kib": 21996,
+        "threads": 3,
+        "fds": 13
+      }
+    ],
+    "determinism": {
+      "line_counts": [
+        7564,
+        7564,
+        7564
+      ],
+      "variant_lines": []
+    },
+    "context_samples": [
+      {
+        "context_0_short": {
+          "count": 1202,
+          "p50_ns": 53130,
+          "p95_ns": 259548,
+          "max_ns": 782411
+        },
+        "context_0_sentence": {
+          "count": 1529,
+          "p50_ns": 336442,
+          "p95_ns": 3971276,
+          "max_ns": 11869084
+        },
+        "context_16_short": {
+          "count": 1202,
+          "p50_ns": 54493,
+          "p95_ns": 269968,
+          "max_ns": 738569
+        },
+        "context_16_sentence": {
+          "count": 1529,
+          "p50_ns": 433546,
+          "p95_ns": 8661535,
+          "max_ns": 13061677
+        },
+        "context_64_short": {
+          "count": 1202,
+          "p50_ns": 57638,
+          "p95_ns": 278454,
+          "max_ns": 941871
+        },
+        "context_64_sentence": {
+          "count": 1529,
+          "p50_ns": 433175,
+          "p95_ns": 8431422,
+          "max_ns": 13092795
+        }
+      },
+      {
+        "context_0_short": {
+          "count": 1202,
+          "p50_ns": 54673,
+          "p95_ns": 275197,
+          "max_ns": 767513
+        },
+        "context_0_sentence": {
+          "count": 1529,
+          "p50_ns": 335341,
+          "p95_ns": 3927875,
+          "max_ns": 11583798
+        },
+        "context_16_short": {
+          "count": 1202,
+          "p50_ns": 57228,
+          "p95_ns": 273514,
+          "max_ns": 767553
+        },
+        "context_16_sentence": {
+          "count": 1529,
+          "p50_ns": 431451,
+          "p95_ns": 8455247,
+          "max_ns": 12710777
+        },
+        "context_64_short": {
+          "count": 1202,
+          "p50_ns": 52669,
+          "p95_ns": 267232,
+          "max_ns": 752545
+        },
+        "context_64_sentence": {
+          "count": 1529,
+          "p50_ns": 423396,
+          "p95_ns": 8399562,
+          "max_ns": 12404461
+        }
+      },
+      {
+        "context_0_short": {
+          "count": 1202,
+          "p50_ns": 56857,
+          "p95_ns": 290997,
+          "max_ns": 779164
+        },
+        "context_0_sentence": {
+          "count": 1529,
+          "p50_ns": 334479,
+          "p95_ns": 3963462,
+          "max_ns": 11403118
+        },
+        "context_16_short": {
+          "count": 1202,
+          "p50_ns": 54673,
+          "p95_ns": 287450,
+          "max_ns": 731325
+        },
+        "context_16_sentence": {
+          "count": 1529,
+          "p50_ns": 452070,
+          "p95_ns": 8749520,
+          "max_ns": 13249620
+        },
+        "context_64_short": {
+          "count": 1202,
+          "p50_ns": 58450,
+          "p95_ns": 284926,
+          "max_ns": 981175
+        },
+        "context_64_sentence": {
+          "count": 1529,
+          "p50_ns": 434026,
+          "p95_ns": 8794013,
+          "max_ns": 13070023
+        }
+      },
+      {
+        "context_0_short": {
+          "count": 1202,
+          "p50_ns": 52229,
+          "p95_ns": 261031,
+          "max_ns": 787190
+        },
+        "context_0_sentence": {
+          "count": 1529,
+          "p50_ns": 325662,
+          "p95_ns": 3904741,
+          "max_ns": 11075052
+        },
+        "context_16_short": {
+          "count": 1202,
+          "p50_ns": 55103,
+          "p95_ns": 273284,
+          "max_ns": 1065043
+        },
+        "context_16_sentence": {
+          "count": 1529,
+          "p50_ns": 441560,
+          "p95_ns": 8531330,
+          "max_ns": 13623212
+        },
+        "context_64_short": {
+          "count": 1202,
+          "p50_ns": 55134,
+          "p95_ns": 276159,
+          "max_ns": 750381
+        },
+        "context_64_sentence": {
+          "count": 1529,
+          "p50_ns": 438324,
+          "p95_ns": 9289485,
+          "max_ns": 15021251
+        }
+      },
+      {
+        "context_0_short": {
+          "count": 1202,
+          "p50_ns": 52920,
+          "p95_ns": 266601,
+          "max_ns": 857552
+        },
+        "context_0_sentence": {
+          "count": 1529,
+          "p50_ns": 335150,
+          "p95_ns": 4105809,
+          "max_ns": 11830602
+        },
+        "context_16_short": {
+          "count": 1202,
+          "p50_ns": 54442,
+          "p95_ns": 274997,
+          "max_ns": 753156
+        },
+        "context_16_sentence": {
+          "count": 1529,
+          "p50_ns": 450877,
+          "p95_ns": 9006192,
+          "max_ns": 14817258
+        },
+        "context_64_short": {
+          "count": 1202,
+          "p50_ns": 57287,
+          "p95_ns": 276480,
+          "max_ns": 903128
+        },
+        "context_64_sentence": {
+          "count": 1529,
+          "p50_ns": 444506,
+          "p95_ns": 8810424,
+          "max_ns": 13952833
+        }
+      },
+      {
+        "context_0_short": {
+          "count": 1202,
+          "p50_ns": 56096,
+          "p95_ns": 277201,
+          "max_ns": 813970
+        },
+        "context_0_sentence": {
+          "count": 1529,
+          "p50_ns": 338296,
+          "p95_ns": 4288503,
+          "max_ns": 14606531
+        },
+        "context_16_short": {
+          "count": 1202,
+          "p50_ns": 67687,
+          "p95_ns": 311165,
+          "max_ns": 1051397
+        },
+        "context_16_sentence": {
+          "count": 1529,
+          "p50_ns": 444396,
+          "p95_ns": 8899372,
+          "max_ns": 16392970
+        },
+        "context_64_short": {
+          "count": 1202,
+          "p50_ns": 65353,
+          "p95_ns": 301236,
+          "max_ns": 1463993
+        },
+        "context_64_sentence": {
+          "count": 1529,
+          "p50_ns": 442362,
+          "p95_ns": 8521691,
+          "max_ns": 12732779
+        }
+      },
+      {
+        "context_0_short": {
+          "count": 1202,
+          "p50_ns": 60814,
+          "p95_ns": 285627,
+          "max_ns": 985533
+        },
+        "context_0_sentence": {
+          "count": 1529,
+          "p50_ns": 349978,
+          "p95_ns": 4123011,
+          "max_ns": 12696120
+        },
+        "context_16_short": {
+          "count": 1202,
+          "p50_ns": 62187,
+          "p95_ns": 304472,
+          "max_ns": 965225
+        },
+        "context_16_sentence": {
+          "count": 1529,
+          "p50_ns": 458031,
+          "p95_ns": 9813881,
+          "max_ns": 13906916
+        },
+        "context_64_short": {
+          "count": 1202,
+          "p50_ns": 64802,
+          "p95_ns": 289524,
+          "max_ns": 1243207
+        },
+        "context_64_sentence": {
+          "count": 1529,
+          "p50_ns": 439246,
+          "p95_ns": 9306837,
+          "max_ns": 17103425
+        }
+      }
+    ],
+    "context_median": {
+      "context_0_short": {
+        "count": 1202,
+        "p50_ns": 54673,
+        "p95_ns": 275197,
+        "max_ns": 787190
+      },
+      "context_0_sentence": {
+        "count": 1529,
+        "p50_ns": 335341,
+        "p95_ns": 3971276,
+        "max_ns": 11830602
+      },
+      "context_16_short": {
+        "count": 1202,
+        "p50_ns": 55103,
+        "p95_ns": 274997,
+        "max_ns": 767553
+      },
+      "context_16_sentence": {
+        "count": 1529,
+        "p50_ns": 444396,
+        "p95_ns": 8749520,
+        "max_ns": 13623212
+      },
+      "context_64_short": {
+        "count": 1202,
+        "p50_ns": 57638,
+        "p95_ns": 278454,
+        "max_ns": 941871
+      },
+      "context_64_sentence": {
+        "count": 1529,
+        "p50_ns": 438324,
+        "p95_ns": 8794013,
+        "max_ns": 13092795
+      }
+    },
+    "installed_baseline_memory": [
+      {
+        "VmRSS_kib": 149924,
+        "VmHWM_kib": 149924,
+        "RssAnon_kib": 3968,
+        "RssFile_kib": 145956,
+        "Pss_kib": 147370,
+        "Pss_Anon_kib": 3968,
+        "Pss_File_kib": 143402,
+        "Private_Clean_kib": 143380,
+        "Private_Dirty_kib": 3968,
+        "threads": 3,
+        "fds": 13
+      },
+      {
+        "VmRSS_kib": 149828,
+        "VmHWM_kib": 149828,
+        "RssAnon_kib": 3972,
+        "RssFile_kib": 145856,
+        "Pss_kib": 147275,
+        "Pss_Anon_kib": 3972,
+        "Pss_File_kib": 143303,
+        "Private_Clean_kib": 143280,
+        "Private_Dirty_kib": 3972,
+        "threads": 3,
+        "fds": 13
+      },
+      {
+        "VmRSS_kib": 149948,
+        "VmHWM_kib": 149948,
+        "RssAnon_kib": 3968,
+        "RssFile_kib": 145980,
+        "Pss_kib": 147334,
+        "Pss_Anon_kib": 3968,
+        "Pss_File_kib": 143366,
+        "Private_Clean_kib": 143344,
+        "Private_Dirty_kib": 3968,
+        "threads": 3,
+        "fds": 13
+      }
+    ],
+    "lifecycle": "100 engine create/destroy cycles released their bus objects\nopen descriptors after lifecycle test: 10",
+    "median": {
+      "before": {
+        "cached_key": {
+          "count": 2731,
+          "p50_ns": 3216,
+          "p95_ns": 26710,
+          "max_ns": 3202872
+        },
+        "edit": {
+          "count": 1375,
+          "p50_ns": 1733,
+          "p95_ns": 1579660,
+          "max_ns": 4236174
+        },
+        "page": {
+          "count": 275,
+          "p50_ns": 4489,
+          "p95_ns": 11933,
+          "max_ns": 25067
+        },
+        "sentence_key": {
+          "count": 1529,
+          "p50_ns": 283763,
+          "p95_ns": 3152547,
+          "max_ns": 4499460
+        },
+        "short_key": {
+          "count": 1202,
+          "p50_ns": 52128,
+          "p95_ns": 256282,
+          "max_ns": 1068528
+        },
+        "suggest": {
+          "count": 200,
+          "p50_ns": 271060,
+          "p95_ns": 601541,
+          "max_ns": 2432343
+        },
+        "view": {
+          "count": 275,
+          "p50_ns": 351,
+          "p95_ns": 461,
+          "max_ns": 2114
+        }
+      },
+      "after": {
+        "cached_key": {
+          "count": 2731,
+          "p50_ns": 5069,
+          "p95_ns": 28874,
+          "max_ns": 10193304
+        },
+        "edit": {
+          "count": 1375,
+          "p50_ns": 1754,
+          "p95_ns": 2465445,
+          "max_ns": 57141319
+        },
+        "page": {
+          "count": 275,
+          "p50_ns": 4528,
+          "p95_ns": 12183,
+          "max_ns": 25458
+        },
+        "sentence_key": {
+          "count": 1529,
+          "p50_ns": 336262,
+          "p95_ns": 3927894,
+          "max_ns": 11021270
+        },
+        "short_key": {
+          "count": 1202,
+          "p50_ns": 52930,
+          "p95_ns": 260981,
+          "max_ns": 783423
+        },
+        "suggest": {
+          "count": 200,
+          "p50_ns": 270909,
+          "p95_ns": 564261,
+          "max_ns": 2076604
+        },
+        "view": {
+          "count": 275,
+          "p50_ns": 341,
+          "p95_ns": 461,
+          "max_ns": 1593
+        }
+      }
+    },
+    "ibus_median": {
+      "commit": {
+        "count": 275,
+        "p50_ns": 566556,
+        "p95_ns": 759407,
+        "p99_ns": 1053360,
+        "max_ns": 1455116
+      },
+      "edit": {
+        "count": 1375,
+        "p50_ns": 382499,
+        "p95_ns": 757604,
+        "p99_ns": 1035256,
+        "max_ns": 2780988
+      },
+      "ignored": {
+        "count": 550,
+        "p50_ns": 227187,
+        "p95_ns": 360508,
+        "p99_ns": 591122,
+        "max_ns": 1293652
+      },
+      "page": {
+        "count": 550,
+        "p50_ns": 612211,
+        "p95_ns": 802488,
+        "p99_ns": 1036829,
+        "max_ns": 1860087
+      },
+      "select": {
+        "count": 550,
+        "p50_ns": 591822,
+        "p95_ns": 814121,
+        "p99_ns": 1196280,
+        "max_ns": 1682272
+      },
+      "sentence": {
+        "count": 1529,
+        "p50_ns": 1042390,
+        "p95_ns": 4847864,
+        "p99_ns": 6303390,
+        "max_ns": 12872231
+      },
+      "short": {
+        "count": 1202,
+        "p50_ns": 683615,
+        "p95_ns": 1097414,
+        "p99_ns": 1486595,
+        "max_ns": 2543251
+      },
+      "wire_commit": {
+        "signals": 825,
+        "bytes": 349712
+      },
+      "wire_edit": {
+        "signals": 1620,
+        "bytes": 939768
+      },
+      "wire_ignored": {
+        "signals": 0,
+        "bytes": 0
+      },
+      "wire_page": {
+        "signals": 926,
+        "bytes": 755240
+      },
+      "wire_select": {
+        "signals": 650,
+        "bytes": 677992
+      },
+      "wire_sentence": {
+        "signals": 2907,
+        "bytes": 2144140
+      },
+      "wire_short": {
+        "signals": 2387,
+        "bytes": 1716972
+      },
+      "wire": {
+        "signals": 9315,
+        "bytes": 6583824
+      }
+    },
+    "acceptance": {
+      "ordinary_sentence_key_p95_le_10ms": true,
+      "short_key_p95_regression_le_20_percent": true,
+      "surrounding_context_sentence_p95_le_10ms": true,
+      "deterministic_traces": true,
+      "whole_engine_high_water_le_256MiB": true,
+      "model_file_le_128MiB": true
+    }
+  },
+  "stress": {
+    "scope": "Robustness run concurrent with holdout evaluation; not part of serial latency acceptance.",
+    "samples": [
+      {
+        "case": "ambiguous_8",
+        "count": 8,
+        "total_ns": 17448264,
+        "p50_ns": 2976876,
+        "p95_ns": 3217680,
+        "max_ns": 3217680,
+        "candidates": 5
+      },
+      {
+        "case": "ambiguous_16",
+        "count": 16,
+        "total_ns": 220045709,
+        "p50_ns": 18000583,
+        "p95_ns": 33178778,
+        "max_ns": 33178778,
+        "candidates": 5
+      },
+      {
+        "case": "ambiguous_32",
+        "count": 32,
+        "total_ns": 982302429,
+        "p50_ns": 32749642,
+        "p95_ns": 61494914,
+        "max_ns": 63614700,
+        "candidates": 5
+      },
+      {
+        "case": "ambiguous_64",
+        "count": 64,
+        "total_ns": 4169146861,
+        "p50_ns": 65293505,
+        "p95_ns": 116862559,
+        "max_ns": 117099143,
+        "candidates": 1
+      },
+      {
+        "case": "ambiguous_128",
+        "count": 128,
+        "total_ns": 11391556853,
+        "p50_ns": 111801614,
+        "p95_ns": 116423814,
+        "max_ns": 119905089,
+        "candidates": 1
+      },
+      {
+        "case": "ambiguous_256",
+        "count": 256,
+        "total_ns": 11547005014,
+        "p50_ns": 781169,
+        "p95_ns": 118133809,
+        "max_ns": 125586811,
+        "candidates": 1
+      },
+      {
+        "case": "abbreviation_8",
+        "count": 8,
+        "total_ns": 7960907,
+        "p50_ns": 1466487,
+        "p95_ns": 1967860,
+        "max_ns": 1967860,
+        "candidates": 5
+      },
+      {
+        "case": "abbreviation_16",
+        "count": 16,
+        "total_ns": 52016905,
+        "p50_ns": 2161785,
+        "p95_ns": 11078268,
+        "max_ns": 11078268,
+        "candidates": 5
+      },
+      {
+        "case": "abbreviation_32",
+        "count": 32,
+        "total_ns": 163024086,
+        "p50_ns": 4269397,
+        "p95_ns": 18697101,
+        "max_ns": 20360209,
+        "candidates": 5
+      },
+      {
+        "case": "abbreviation_64",
+        "count": 64,
+        "total_ns": 806849957,
+        "p50_ns": 9590481,
+        "p95_ns": 46644153,
+        "max_ns": 51413971,
+        "candidates": 5
+      },
+      {
+        "case": "abbreviation_128",
+        "count": 128,
+        "total_ns": 4394080139,
+        "p50_ns": 19226728,
+        "p95_ns": 95267629,
+        "max_ns": 103132716,
+        "candidates": 5
+      },
+      {
+        "case": "abbreviation_256",
+        "count": 256,
+        "total_ns": 4809222182,
+        "p50_ns": 109015,
+        "p95_ns": 97057393,
+        "max_ns": 115123569,
+        "candidates": 1
+      },
+      {
+        "case": "full_pinyin_8",
+        "count": 8,
+        "total_ns": 906114,
+        "p50_ns": 94208,
+        "p95_ns": 290466,
+        "max_ns": 290466,
+        "candidates": 5
+      },
+      {
+        "case": "full_pinyin_16",
+        "count": 16,
+        "total_ns": 4382329,
+        "p50_ns": 96712,
+        "p95_ns": 996864,
+        "max_ns": 996864,
+        "candidates": 5
+      },
+      {
+        "case": "full_pinyin_32",
+        "count": 32,
+        "total_ns": 12947562,
+        "p50_ns": 263024,
+        "p95_ns": 871328,
+        "max_ns": 3888511,
+        "candidates": 5
+      },
+      {
+        "case": "full_pinyin_64",
+        "count": 64,
+        "total_ns": 30587696,
+        "p50_ns": 391045,
+        "p95_ns": 812418,
+        "max_ns": 3703723,
+        "candidates": 5
+      },
+      {
+        "case": "full_pinyin_128",
+        "count": 128,
+        "total_ns": 104013793,
+        "p50_ns": 692172,
+        "p95_ns": 1243638,
+        "max_ns": 7230604,
+        "candidates": 5
+      },
+      {
+        "case": "full_pinyin_256",
+        "count": 256,
+        "total_ns": 124046004,
+        "p50_ns": 161654,
+        "p95_ns": 1167986,
+        "max_ns": 7193013,
+        "candidates": 5
+      },
+      {
+        "case": "invalid_8",
+        "count": 8,
+        "total_ns": 63479,
+        "p50_ns": 8787,
+        "p95_ns": 15990,
+        "max_ns": 15990,
+        "candidates": 1
+      },
+      {
+        "case": "invalid_16",
+        "count": 16,
+        "total_ns": 48830314,
+        "p50_ns": 8667,
+        "p95_ns": 48715999,
+        "max_ns": 48715999,
+        "candidates": 3
+      },
+      {
+        "case": "invalid_32",
+        "count": 32,
+        "total_ns": 796976635,
+        "p50_ns": 44837076,
+        "p95_ns": 49703876,
+        "max_ns": 50071898,
+        "candidates": 1
+      },
+      {
+        "case": "invalid_64",
+        "count": 64,
+        "total_ns": 2332213203,
+        "p50_ns": 46946382,
+        "p95_ns": 50405125,
+        "max_ns": 54205930,
+        "candidates": 1
+      },
+      {
+        "case": "invalid_128",
+        "count": 128,
+        "total_ns": 5162901730,
+        "p50_ns": 44889104,
+        "p95_ns": 49448046,
+        "max_ns": 54090113,
+        "candidates": 1
+      },
+      {
+        "case": "invalid_256",
+        "count": 256,
+        "total_ns": 5081501283,
+        "p50_ns": 6623,
+        "p95_ns": 47584371,
+        "max_ns": 49471279,
+        "candidates": 1
+      }
+    ]
+  },
+  "baseline_manifest": {
+    "git_head": "49b69323cd2b89e2cc436843fbd4b8c914b8664c",
+    "dirty": true,
+    "image_source": "target/release/build/waypinyin-d2caeecf6eba569d/out/lexicon.bin",
+    "sha256": {
+      "quality": "4db090860061c1636d93f7e9b41a997ab342774c19a80c4d60eddfab9c750dbb",
+      "sentence_quality": "ff198f5c7f608fbfa559964391b3828dfaf673d83b668f748f088474c4042f4c",
+      "check_candidates": "2182deb5dc1eb11f59e1f5d6bd677a8199d06900bfac41972e43e4a2cae7db54",
+      "input_latency": "b42cb2ca730b8531996bb8b534c334df93f298798c8cb66d297d42b27e27d3eb",
+      "stress_latency": "160f40d2cfc28912ce2c899a3c9baa22649040cb312335d2dfb6d7622393fa92",
+      "lexicon.bin": "58d36908ff619f807bcaae1ce1316d819904c808ce0ce081fb15b97d9bd75b24"
+    }
+  },
+  "model_provenance": {
+    "source": "https://downloads.tatoeba.org/exports/per_language/cmn/cmn_sentences_detailed.tsv.bz2",
+    "source_information": "https://tatoeba.org/en/downloads",
+    "license": "CC-BY-2.0-FR",
+    "license_url": "https://creativecommons.org/licenses/by/2.0/fr/",
+    "snapshot": "2026-11-14",
+    "source_sha256": "d7dc7791eba00014a742fe0aff0d790affd54d49d9786fdfeabf0e8b98755a34",
+    "transformation": "Traditional character mapping, Chinese clause filtering, greedy dictionary segmentation, word unigram costs and interpolated word/character backoff log-ratios with context backoff penalties; count>=2 pruning, at most 199999 records retained by frequency. Original office examples weighted fourfold.",
+    "authors": "Tatoeba contributors; per-sentence IDs and supplied usernames in tatoeba-model.attribution.tsv",
+    "attribution_sha256": "89b611005a3915252efdf6ef34f918d82e76e31ef68123633277fd548d11ea8d",
+    "model_body_sha256": "dab3e2679002bdec26cb1f2874f3d5b1a8af9765daba5a4a8235b8ec6fbe96d9",
+    "records": 199999,
+    "external_clauses": 97929,
+    "original_sentences": 2000,
+    "removed_holdout_matches": 86,
+    "training_sentence_sha256": "779f7d1a3bbcb83ef843c1a4a02096094ff10241d97c95bb4a98445100ba096e",
+    "pipeline_sha256": {
+      "scripts/train_context.py": "170b8108c53875249d0ed4e4da2897ae15802aaade494c58a547074fcad96049",
+      "scripts/quality_corpus.py": "70e2a966bbdcc1505f3259dc3d9d82a7650f2db1167a5bbb84f3af1ed5008f74",
+      "data/freq.txt": "25599e00347b893e55c3058a748819b3fe19403291cd12f7c03af128e7f3fe45",
+      "data/ts-characters.txt": "9ff46a7d30e5765375eb13d33f2b03a34d298913caf2b120380679f33ae1642d",
+      "data/office-training.txt": "9d8ae6738784036a7a11e46cc5cc66d0b170bc170edffd718570a595a0517aa6",
+      "tests/quality_sentences.tsv": "ea7192aff86bc896b9a2d544d50b23e87e6a75340fed3bd920a1b7fe5feaeeef",
+      "tests/sentences.tsv": "09ca5329779525a5d81b5bf5e2219e2e0f66ac377a574d52f80daa31897be1bb"
+    },
+    "distribution": "local trial only; do not export with the MIT source fixture",
+    "dictionary_sha256": "deaff883a0cf39fe454f408ef53919c581d843b0541599cb894003d3ae33781c",
+    "model_sha256": "d59f0ffbb89b6ea7f80650a395bf1802090ff9cf00e529533e288c6b6811754d"
+  },
+  "model_reproducibility": {
+    "byte_identical": true,
+    "sha256": "dab3e2679002bdec26cb1f2874f3d5b1a8af9765daba5a4a8235b8ec6fbe96d9",
+    "bytes": 7331785,
+    "source_sha256": "d7dc7791eba00014a742fe0aff0d790affd54d49d9786fdfeabf0e8b98755a34",
+    "records": 199999
+  },
+  "installation": {
+    "status": "installed_and_verified",
+    "prefix": "/home/emt/.local",
+    "installed_files": 454,
+    "backup": "/home/emt/.local/share/waypinyin/backups/quality-2026-11-19-8ebf376586b1",
+    "rollback_command": "python3 /home/emt/.local/share/waypinyin/backups/quality-2026-11-19-8ebf376586b1/trial_install.py --rollback /home/emt/.local/share/waypinyin/backups/quality-2026-11-19-8ebf376586b1",
+    "reload": {
+      "current_engine": "waypinyin",
+      "initial_selection_reported_failure": true,
+      "recovery": "IBus completed asynchronous component startup; current engine and new process verified. Reload helper now checks selection with bounded retries."
+    },
+    "running_processes": [
+      {
+        "pid": 433177,
+        "executable_sha256": "8ebf376586b148d04c0dc934b682e3a92d8fbd97af41bdbde7e54e89964d44a7",
+        "dictionary_inode_matches": true
+      }
+    ],
+    "preserved_import_and_config_files": 9,
+    "installed_model_provenance_and_attribution_verified": true,
+    "installed_private_ibus_test": "private IBus: 北京/背景 context reranking, immediate repaint and commit passed\nprivate IBus: discovery, candidates, commits, Unicode surrounding text and private input passed",
+    "installed_check_data": "waypinyin: context model validated\nwaypinyin: external lexicon validated"
+  },
+  "checks": {
+    "cargo_fmt": "passed",
+    "clippy_all_targets_deny_warnings": "passed",
+    "release_library_tests": 104,
+    "release_cli_tests": 4,
+    "ignored_external_native_fixture_tests": 1,
+    "python_install_rollback_tests": 3,
+    "prior_demo_library_tests": 47,
+    "source_inventory": "13 data files and 9 demo files verified; 7 historical full-corpus provenance issues remain unresolved",
+    "ibus_context_and_commit": "passed against staged and installed binaries",
+    "user_import_and_config_hashes": "9 files unchanged"
+  },
+  "raw_evidence_directory": "/home/emt/src/waypinyin/build/quality-2026-11-18",
+  "source_sha256": {
+    "src/ibus.rs": "d709d45b8c9b94ad15bd373010937b5029b79225138adeacc1006568dee93ec2",
+    "src/image.rs": "54623662bc43cf619deebbde32781104b4aa3245e8b5009a7f883f86b203f54a",
+    "src/imports.rs": "0f5f2d5d2bce40c5a065a7d945537db647b39ae1943a1048717a07b25a9e177a",
+    "src/language_model.rs": "47249eefa0bece58e3927b1107193eecc3069e5392253b250953a4b403d21d62",
+    "src/latency.rs": "f48470c4503d6a8321de8b80abfd3d22d7d3e9bbd225d66855947d7452b28809",
+    "src/lexicon.rs": "54098439613dddf8c0f709ba17ab9faaa0801e9359cf2cac4fa4ca161313e255",
+    "src/lexicon_build.rs": "54963b2b66aca0c3ca6c70efce2c06d75082febe0184516413cb401974180c94",
+    "src/lexicon_reference.rs": "2dbd57e283c7a53b97ebb07e8a46036f76248ac06ecac5349edf6b4ca640c3c5",
+    "src/lib.rs": "0cf8232ad9947929ea4e9fb198eee640c55816a97b92417c4e115dddea987b30",
+    "src/main.rs": "2cb8ae36f7d3103f05a545b28fb9e7284bd60e743eff49755b2fcb1eb1f0d120",
+    "src/paths.rs": "c687c2450e5b81adcb1dad17dc7914b543c07647f95516ae40ca3dcba1522042",
+    "src/preferences.rs": "98d9919bda40fef6496a57971f042e46a60c913e8bbe3347b9b3129d774ce1b3",
+    "src/preload.rs": "55c58110f72f0840d44b120df0cac34366498a61ac85cf7e13183a853be2c188",
+    "src/session.rs": "8e808ba2e06f76bef184ae0739115ba5671f9ca64070d8ba315a318fcef63ec8",
+    "src/settings.rs": "91a2069f4f91ddaa7df1e30c87c33dc8970ddade485673f951044fdcf633188a",
+    "src/tests.rs": "761bd9145d794567ca586155effe44b97e04ac1db5494b5cdae352422fd1d664",
+    "src/watch.rs": "048c6714da48b2e10c57b3b199bb976f3f4445c8fa6eea064036e37ab2a49f51",
+    "build.rs": "90b6b64bca55ab64ba2b6137619586a4dd533705fac945bda49a6ff633d42fa9",
+    "scripts/train_context.py": "170b8108c53875249d0ed4e4da2897ae15802aaade494c58a547074fcad96049",
+    "scripts/quality_corpus.py": "70e2a966bbdcc1505f3259dc3d9d82a7650f2db1167a5bbb84f3af1ed5008f74",
+    "scripts/quality_acceptance.py": "ab892cd0846f16dadb2836d6b3b71a94b0a40c1ee18f0ea5d7286583132d4a62",
+    "scripts/evaluate_quality.py": "3581b155c82e225a86d72aa99959164f6428ff285aa97ed63c65fb381dc91620",
+    "scripts/trial_install.py": "9f48bc9e407baf60fe389ba8406f6185f262c09b5059034e087e5829ff2bb189",
+    "scripts/build.py": "6a0c7a2221b953cb25fc2efb4ede3ecafc66caf3a53b3a8902bbb393a0e1c439",
+    "scripts/install.py": "9e5630390ecd44cbe6818a760d2e3dec0de4b4a50eec4701a424b6f1f3dc085b"
+  }
+}

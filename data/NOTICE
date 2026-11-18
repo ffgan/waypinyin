@@ -96,3 +96,10 @@ data/cedict.txt
 data/sentences.txt
     Locally authored everyday-language examples for the lightweight sentence
     decoder's character-pair prior. No external corpus or user typing history.
+
+data/office-training.txt, data/conversation-training.txt, data/context-model.txt
+    Original synthetic conversational/office examples and their statistical
+    fixture, MIT. No user typing history. Expanded test templates are separate
+    from training templates. The optional local Tatoeba trial model is NOT this
+    fixture; its CC BY 2.0 FR notice and per-sentence attribution are installed
+    separately. See LICENSES/Tatoeba-model-NOTICE.txt.

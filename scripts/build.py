@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build with Cargo and explicitly export the generated dictionary."""
 import json
+import hashlib
 import os
 from pathlib import Path
 import shlex
@@ -36,6 +37,26 @@ if image is None or binary is None:
 # A failed export or notice collection must not leave an installable mixed build.
 (root / 'build/paths.json').unlink(missing_ok=True)
 shutil.copyfile(image, root / 'build/lexicon.bin')
+model = image.with_suffix('.lm')
+if model.is_file():
+    shutil.copyfile(model, root / 'build/lexicon.lm')
+    model_source = os.environ.get('WAYPINYIN_MODEL_BODY')
+    metadata = Path(model_source).with_suffix('.json') if model_source else None
+    attribution = Path(model_source).with_suffix('.attribution.tsv') if model_source else None
+    for name in ('language-model.json', 'language-model-attribution.tsv'):
+        (root / 'build' / name).unlink(missing_ok=True)
+    if metadata and metadata.is_file():
+        details = json.loads(metadata.read_text())
+        assert details['model_body_sha256'] == hashlib.sha256(Path(model_source).read_bytes()).hexdigest(), 'model provenance does not match trained payload'
+        details['dictionary_sha256'] = hashlib.sha256(image.read_bytes()).hexdigest()
+        details['model_sha256'] = hashlib.sha256(model.read_bytes()).hexdigest()
+        (root / 'build/language-model.json').write_text(json.dumps(details, ensure_ascii=False, indent=2) + '\n')
+    if attribution and attribution.is_file():
+        shutil.copyfile(attribution, root / 'build/language-model-attribution.tsv')
+else:
+    (root / 'build/lexicon.lm').unlink(missing_ok=True)
+    for name in ('language-model.json', 'language-model-attribution.tsv'):
+        (root / 'build' / name).unlink(missing_ok=True)
 shutil.copy2(binary, root / 'build/waypinyin')
 
 artifact_file = root / 'build/dependency-packages.json'

@@ -28,6 +28,13 @@ impl eframe::App for Settings {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading("Waypinyin 设置");
             ui.heading("输入体验");
+            ui.checkbox(&mut self.preferences.contextual, "上下文增强（离线）");
+            ui.add_enabled_ui(self.preferences.contextual, |ui| {
+                ui.checkbox(
+                    &mut self.preferences.surrounding,
+                    "使用光标前文本（仅在内存中评分）",
+                );
+            });
             ui.checkbox(&mut self.preferences.enabled, "启用模糊拼音");
             ui.add_enabled_ui(self.preferences.enabled, |ui| {
                 for (i, label) in crate::InputPreferences::LABELS.iter().enumerate() {
