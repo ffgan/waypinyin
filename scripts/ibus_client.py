@@ -75,6 +75,27 @@ if os.environ.get('WAYPINYIN_TEST_CONTEXT_RANKING')=='1':
     pump()
     assert committed[-1]=='背景',committed
     print('private IBus: 北京/背景 context reranking, immediate repaint and commit passed')
+if os.environ.get('WAYPINYIN_TEST_PERSONAL_RANKING') == '1':
+    raw = 'wogangxiaditieshiwufenzhonghoudao'
+    wanted = '我刚下地铁十五分钟后到'
+    context.set_surrounding_text(IBus.Text.new_from_string(''), 0, 0)
+    pump()
+    for attempt in range(3):
+        assert context.process_key_event(ord('.'), 0, 0)
+        pump()
+        for key in raw:
+            assert context.process_key_event(ord(key), 0, 0)
+            pump()
+        words = lookup_words[-1]
+        index = words.index(wanted)
+        if attempt == 0:
+            assert index > 0, words
+        if attempt == 2:
+            assert index == 0, words
+        assert context.process_key_event(ord('1') + index, 0, 0)
+        pump()
+        assert committed[-1] == wanted, committed[-1]
+    print('private IBus: repeated sentence correction became the first candidate')
 context.set_content_type(int(IBus.InputPurpose.PASSWORD), 0)
 context.set_surrounding_text(IBus.Text.new_from_string('不应保留的私密内容'), 9, 9)
 pump()

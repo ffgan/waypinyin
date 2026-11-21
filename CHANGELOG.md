@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Learn repeated candidate corrections and assembled phrases for the exact
+  spelling used, including initials and mixed Pinyin. Remember confirmed
+  preferences across restarts, with expiration and Ctrl-number removal.
+
 - Add optional fingerprint-bound offline word/character backoff models, bounded
   contextual sentence search, source-frequency shrinkage, one-edit repair on
   search failure, and 300-word/600-sentence template-grouped quality fixtures.

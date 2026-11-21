@@ -2740,6 +2740,13 @@ fn stored_tier(plan: &Plan, lex: &Lexicon, word: &str) -> Option<u8> {
 }
 
 impl Pool {
+    pub(crate) fn prefer(&mut self, choice: Choice) {
+        self.soon.retain(|other| other.word != choice.word);
+        self.remember(&choice.word);
+        self.emitted_full = true;
+        self.soon.push(choice);
+    }
+
     pub(crate) fn open(
         plan: Arc<Plan>,
         lex: &Lexicon,
@@ -2958,6 +2965,9 @@ impl Pool {
             .iter()
             .map(|item| self.plan.choice(lex, item, 0))
             .collect();
+        merge
+            .seen
+            .extend(self.shown.iter().cloned().map(Cow::Owned));
         self.merge = Some(MergeState {
             at: merge.at,
             heap: merge.heap,

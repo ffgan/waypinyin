@@ -130,6 +130,13 @@ notes for the cache policy and measurements.
 
 ## Frequent-input learning
 
+A lower-ranked choice or a phrase confirmed in pieces can start learning for
+the exact letters you typed, including initials and mixed Pinyin. Two
+consecutive confirmations of the same result bring it to the first position.
+Choosing a different result starts a new count. Preferences survive restarts,
+expire when unused, and can be removed with Ctrl plus the candidate number.
+Learning takes effect as you type, with no rebuild needed.
+
 Confirmed candidate commits now count the actual Pinyin or abbreviation used
 (e.g. `nihao` and `nh` separately). Canceled drafts and unconverted Return commits
 are excluded. Up to 128 active patterns share the local `user.txt` learning log;

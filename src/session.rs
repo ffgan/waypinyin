@@ -36,6 +36,8 @@ const LISTING_CACHE: usize = 32;
 const MAX_FREQUENT_INPUTS: usize = 128;
 const PRELOAD_FAVORITES: usize = 16;
 const INPUT_HALF_LIFE: u32 = 512;
+const MAX_TYPING_CHOICES: usize = 512;
+const TYPING_CHOICE_LIFETIME: u32 = INPUT_HALF_LIFE * 4;
 
 #[derive(Debug, Clone)]
 struct InputCount {
@@ -107,14 +109,25 @@ struct Link {
 
 #[derive(Debug)]
 struct Piece {
+    raw: String,
     reading: String,
     word: String,
+}
+
+#[derive(Debug)]
+struct TypingChoice {
+    word: String,
+    reading: String,
+    tick: u32,
+    confirmations: u32,
 }
 
 #[derive(Debug, Default)]
 pub struct UserDict {
     tick: u32,
     inputs: HashMap<String, InputCount>,
+    /// Repeated confirmations for the exact spelling, including mixed and abbreviated input.
+    typing_choices: HashMap<String, TypingChoice>,
     /// Reading `ni'hao` → word → decayed-at-`tick` count.
     words: HashMap<String, HashMap<String, Entry>>,
     /// Old logs keyed by the exact letters the user typed.
@@ -217,6 +230,27 @@ impl UserDict {
             ["R", raw] => {
                 self.inputs.remove(*raw);
             }
+            ["S", tick, raw, reading, word, confirmations] => {
+                let (Ok(tick), Ok(confirmations)) =
+                    (tick.parse::<u32>(), confirmations.parse::<u32>())
+                else {
+                    return;
+                };
+                if valid_typing_choice(raw, reading, word) && (1..=2).contains(&confirmations) {
+                    self.store_typing_choice(
+                        raw,
+                        TypingChoice {
+                            word: (*word).into(),
+                            reading: (*reading).into(),
+                            tick,
+                            confirmations,
+                        },
+                    );
+                }
+            }
+            ["T", raw] => {
+                self.typing_choices.remove(*raw);
+            }
             ["U", tick, reading, word, count, coined] => {
                 let (Ok(tick), Ok(count)) = (tick.parse::<u32>(), count.parse::<u32>()) else {
                     return;
@@ -269,6 +303,66 @@ impl UserDict {
         } else {
             entry.count = entry.count.saturating_add(count);
         }
+    }
+
+    fn store_typing_choice(&mut self, raw: &str, choice: TypingChoice) {
+        self.tick = self.tick.max(choice.tick);
+        self.typing_choices.insert(raw.into(), choice);
+        if self.typing_choices.len() > MAX_TYPING_CHOICES {
+            let oldest = self
+                .typing_choices
+                .iter()
+                .min_by(|(a, left), (b, right)| left.tick.cmp(&right.tick).then(a.cmp(b)))
+                .unwrap()
+                .0
+                .clone();
+            self.typing_choices.remove(&oldest);
+        }
+    }
+
+    fn remember_typing_choice(&mut self, raw: &str, reading: &str, word: &str, deliberate: bool) {
+        if !valid_typing_choice(raw, reading, word) {
+            return;
+        }
+        let previous = self
+            .typing_choices
+            .get(raw)
+            .filter(|choice| self.tick.saturating_sub(choice.tick) < TYPING_CHOICE_LIFETIME);
+        if previous.is_none() && !deliberate {
+            return;
+        }
+        let confirmations = if previous.is_some_and(|choice| choice.word == word) {
+            2
+        } else {
+            1
+        };
+        let tick = self.tick;
+        self.store_typing_choice(
+            raw,
+            TypingChoice {
+                word: word.into(),
+                reading: reading.into(),
+                tick,
+                confirmations,
+            },
+        );
+        self.append(&format!(
+            "S\t{tick}\t{raw}\t{reading}\t{word}\t{confirmations}"
+        ));
+    }
+
+    fn preferred_typing_choice(&self, raw: &str) -> Option<Choice> {
+        let choice = self.typing_choices.get(raw)?;
+        (choice.confirmations == 2
+            && self.tick.saturating_sub(choice.tick) < TYPING_CHOICE_LIFETIME)
+            .then(|| Choice {
+                word: choice.word.clone(),
+                reading: choice.reading.clone(),
+                span: raw.len(),
+                tier: 0,
+                score: 1,
+                user_weight: 1,
+            })
     }
 
     fn record_input(&mut self, raw: &str) {
@@ -516,6 +610,18 @@ impl UserDict {
     }
 
     fn forget_word(&mut self, raw: &str, reading: &str, word: &str) {
+        let removed: Vec<_> = self
+            .typing_choices
+            .iter()
+            .filter(|(spelling, choice)| {
+                choice.word == word && (spelling.as_str() == raw || choice.reading == reading)
+            })
+            .map(|(spelling, _)| spelling.clone())
+            .collect();
+        for spelling in removed {
+            self.typing_choices.remove(&spelling);
+            self.append(&format!("T\t{spelling}"));
+        }
         if self.remove_word(reading, word) || self.remove_legacy(reading, word) {
             self.append(&format!("D\t{reading}\t{word}"));
         }
@@ -714,6 +820,7 @@ impl UserDict {
             + self.legacy.values().map(HashMap::len).sum::<usize>()
             + self.links.values().map(HashMap::len).sum::<usize>()
             + self.inputs.len()
+            + self.typing_choices.len()
     }
 
     fn evict(&mut self, persist: bool) {
@@ -749,6 +856,16 @@ impl UserDict {
         inputs.sort_by(|a, b| a.0.cmp(b.0));
         for (raw, entry) in inputs {
             lines.push(format!("P\t{}\t{raw}\t{}", entry.tick, entry.count));
+        }
+        let mut typing: Vec<_> = self.typing_choices.iter().collect();
+        typing.sort_by_key(|(raw, _)| *raw);
+        for (raw, choice) in typing {
+            if self.tick.saturating_sub(choice.tick) < TYPING_CHOICE_LIFETIME {
+                lines.push(format!(
+                    "S\t{}\t{raw}\t{}\t{}\t{}",
+                    choice.tick, choice.reading, choice.word, choice.confirmations
+                ));
+            }
         }
         let mut words = Vec::new();
         for (reading, map) in &self.words {
@@ -857,6 +974,17 @@ fn han_word(text: &str) -> bool {
         }
     }
     count >= 1
+}
+
+fn valid_typing_choice(raw: &str, reading: &str, word: &str) -> bool {
+    raw.len() >= 2
+        && valid_input_pattern(raw)
+        && reading.len() <= 255
+        && valid_reading(reading)
+        && !word.is_empty()
+        && word.len() <= 64 * 4
+        && word.chars().count() <= 64
+        && word.chars().all(is_han)
 }
 
 fn is_han(ch: char) -> bool {
@@ -1187,6 +1315,10 @@ impl Session {
             return;
         }
         let raw = self.raw.clone();
+        let preferred = self
+            .can_learn()
+            .then(|| self.user.preferred_typing_choice(&raw))
+            .flatten();
         let prepared = self
             .preloader
             .as_ref()
@@ -1214,7 +1346,7 @@ impl Session {
                 self.plans.insert(raw.clone(), ready.plan());
             }
         }
-        if users.is_empty() && partials.is_empty() {
+        if preferred.is_none() && users.is_empty() && partials.is_empty() {
             if let Some(prepared) = prepared {
                 self.board = Some(Board::prepared(prepared));
                 return;
@@ -1223,7 +1355,10 @@ impl Session {
         let planned = prepared
             .as_ref()
             .map_or_else(|| self.recall(&raw), |p| p.plan());
-        let pool = Pool::open(planned, &self.lexicon, users, partials);
+        let mut pool = Pool::open(planned, &self.lexicon, users, partials);
+        if let Some(choice) = preferred {
+            pool.prefer(choice);
+        }
         self.board = Some(Board::paged(pool));
     }
 
@@ -1669,7 +1804,7 @@ impl Session {
         }
         let word = choice.word.clone();
         let done = span >= self.raw.len();
-        self.note(&choice, done);
+        self.note(&choice, span, done, index > 0);
         if choice.score > 0 {
             let input = self.raw[..span].trim_end_matches('\'').to_string();
             self.record_input(&input);
@@ -1724,20 +1859,36 @@ impl Session {
             })
             .cloned()
             .collect();
+        if let [choice] = pieces.as_slice() {
+            if learnable.is_empty() && choice.span == self.raw.len() {
+                self.note(choice, choice.span, true, index > 0);
+            }
+        }
         if learnable.is_empty() {
             self.pending.clear();
             self.associating = false;
         } else {
             let now = self.user.advance();
+            let all_learnable = learnable.len() == pieces.len()
+                && learnable.iter().map(|choice| choice.span).sum::<usize>() == self.raw.len();
+            let mut offset = 0;
             for choice in &learnable {
                 self.user.bump(now, &choice.reading, &choice.word, false);
+                let raw = if all_learnable {
+                    let start = offset;
+                    offset += choice.span;
+                    self.raw[start..offset].to_owned()
+                } else {
+                    String::new()
+                };
                 self.pending.push(Piece {
+                    raw,
                     reading: choice.reading.clone(),
                     word: choice.word.clone(),
                 });
                 self.tie(now, choice);
             }
-            self.seal(now);
+            self.seal(now, index > 0);
             self.associating = false;
             if punct.is_some_and(ends_sentence) {
                 self.close_sentence();
@@ -1750,10 +1901,13 @@ impl Session {
         self.finish(text)
     }
 
-    fn note(&mut self, choice: &Choice, done: bool) {
-        if !self.can_learn() || choice.reading.is_empty() || !han_word(&choice.word) {
+    fn note(&mut self, choice: &Choice, span: usize, done: bool, deliberate: bool) {
+        let raw = &self.raw[..span];
+        let word_learning = !choice.reading.is_empty() && han_word(&choice.word);
+        let can_learn_phrase = valid_typing_choice(raw, &choice.reading, &choice.word);
+        if !self.can_learn() || (!word_learning && !can_learn_phrase) {
+            self.pending.clear();
             if done {
-                self.pending.clear();
                 self.context = None;
                 self.context_reading = None;
                 self.associating = false;
@@ -1761,14 +1915,19 @@ impl Session {
             return;
         }
         let now = self.user.advance();
-        self.user.bump(now, &choice.reading, &choice.word, false);
         self.pending.push(Piece {
+            raw: raw.to_owned(),
             reading: choice.reading.clone(),
             word: choice.word.clone(),
         });
-        self.tie(now, choice);
+        if word_learning {
+            self.user.bump(now, &choice.reading, &choice.word, false);
+            self.tie(now, choice);
+        } else {
+            self.clear_ranking_context();
+        }
         if done {
-            self.seal(now);
+            self.seal(now, deliberate);
             self.associating = false;
         }
     }
@@ -1794,21 +1953,33 @@ impl Session {
         self.refresh_ranking_context();
     }
 
-    fn seal(&mut self, now: u32) {
-        if self.pending.len() >= 2 {
+    fn seal(&mut self, now: u32, deliberate: bool) {
+        if let [piece] = self.pending.as_slice() {
+            self.user
+                .remember_typing_choice(&piece.raw, &piece.reading, &piece.word, deliberate);
+        } else if self.pending.len() >= 2 {
             let word: String = self
                 .pending
                 .iter()
                 .map(|piece| piece.word.as_str())
                 .collect();
-            if han_word(&word) && word.chars().count() >= 2 {
-                let reading = self
+            let reading = self
+                .pending
+                .iter()
+                .map(|piece| piece.reading.as_str())
+                .collect::<Vec<_>>()
+                .join("'");
+            if han_word(&word) {
+                self.user.bump(now, &reading, &word, true);
+            }
+            if self.pending.iter().all(|piece| !piece.raw.is_empty()) {
+                let raw: String = self
                     .pending
                     .iter()
-                    .map(|piece| piece.reading.as_str())
-                    .collect::<Vec<_>>()
-                    .join("'");
-                self.user.bump(now, &reading, &word, true);
+                    .map(|piece| piece.raw.as_str())
+                    .collect();
+                self.user
+                    .remember_typing_choice(&raw, &reading, &word, true);
             }
         }
         self.pending.clear();
@@ -2254,6 +2425,95 @@ mod input_history_tests {
         for c in raw.chars() {
             s.handle(c as u32, 0);
         }
+    }
+
+    #[test]
+    fn repeated_exact_choice_survives_restart_and_can_be_forgotten() {
+        let mut user = UserDict::default();
+        let sentence = "我先核对数据再回复客户";
+        let reading = "wo'xian'he'dui'shu'ju'zai'hui'fu'ke'hu";
+        let raw = "wxhdsjzhfkh";
+        user.remember_typing_choice(raw, reading, sentence, false);
+        assert!(user.typing_choices.is_empty());
+        user.remember_typing_choice(raw, reading, sentence, true);
+        assert!(user.preferred_typing_choice(raw).is_none());
+        user.remember_typing_choice(raw, reading, sentence, true);
+        let restored = UserDict::from_log(&user.snapshot());
+        assert!(restored
+            .preferred_typing_choice(&raw[..raw.len() - 1])
+            .is_none());
+        let mut session =
+            Session::with_preferences(Arc::new(Lexicon::load()), restored, Default::default());
+        type_in(&mut session, raw);
+        let view = session.view();
+        assert_eq!(view.candidates[0], sentence);
+        assert_eq!(view.spans[0], raw.len());
+        assert_eq!(view.reading, reading);
+        assert_eq!(
+            view.candidates
+                .iter()
+                .filter(|word| *word == sentence)
+                .count(),
+            1
+        );
+        session.handle('1' as u32, CONTROL_MASK);
+        assert!(session.user.preferred_typing_choice(raw).is_none());
+        assert_ne!(session.view().candidates[0], sentence);
+    }
+
+    #[test]
+    fn repeated_piecewise_selection_learns_the_actual_abbreviation() {
+        let mut session = Session::with_preferences(
+            Arc::new(Lexicon::load()),
+            UserDict::default(),
+            Default::default(),
+        );
+        let raw = "ni'h";
+        let mut sentence = String::new();
+        for round in 0..2 {
+            type_in(&mut session, raw);
+            session.ensure_through(100);
+            let head = session
+                .board
+                .as_ref()
+                .unwrap()
+                .out
+                .iter()
+                .position(|choice| choice.word == "你" && choice.span == 3)
+                .unwrap();
+            let Effect::Commit { text: first, .. } = session.commit_at(head) else {
+                panic!("partial commit")
+            };
+            session.fill();
+            session.ensure_through(100);
+            let tail = session
+                .board
+                .as_ref()
+                .unwrap()
+                .out
+                .iter()
+                .position(|choice| choice.word == "好")
+                .unwrap();
+            let Effect::Commit { text: second, .. } = session.commit_at(tail) else {
+                panic!("final commit")
+            };
+            if round == 0 {
+                sentence = first + &second;
+                assert!(session.user.preferred_typing_choice(raw).is_none());
+            } else {
+                assert_eq!(first + &second, sentence);
+            }
+            session.clear();
+        }
+        assert_eq!(
+            session.user.preferred_typing_choice(raw).unwrap().word,
+            sentence
+        );
+        session.set_learning_enabled(false);
+        let saved = session.user.snapshot();
+        type_in(&mut session, raw);
+        let _ = session.pick(0);
+        assert_eq!(session.user.snapshot(), saved);
     }
 
     #[test]
